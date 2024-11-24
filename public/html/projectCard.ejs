@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%- title %></title>
+    <%- include('parts/header.ejs'); %>
+    
+    <link rel="stylesheet" href="/css/projectCard.css">
+        
+    <script type="text/javascript" src="/js/ui/component/CloseButton.js"></script>
+    <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
+    <script type="text/javascript" src="/js/page/pin.js"></script>
+    <script type="text/javascript" src="/js/pageBuilder.js"></script>
+
+</head>
+
+<body>
+    
+
+<div class="main" id="main">
+    <script type='text/javascript'>
+        PageBuilder.build(PAGES.PROJECT, <%- JSON.stringify(data) %>);
+    </script>
+        
+    
+</div>
+<%- include("parts/footer.ejs") %>
+</body>
+</html>

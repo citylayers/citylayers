@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "noImplicitAny": false,
+    "declaration": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "target": "ES5",
+    "outDir": "./dst",
+    "rootDir": "src",
+    // "sourceMap": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.spec.ts", "node_modules/**/*", "node_modules"]
+}

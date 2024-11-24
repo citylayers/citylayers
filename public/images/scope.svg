@@ -1,0 +1,17 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="22" cy="22" r="21" stroke="#184751" stroke-width="2"/>
+<line x1="22" y1="7" x2="22" y2="1" stroke="#184751" stroke-width="2"/>
+<line x1="22" y1="43" x2="22" y2="37" stroke="#184751" stroke-width="2"/>
+<line x1="7" y1="22" x2="1" y2="22" stroke="#184751" stroke-width="2"/>
+<line x1="43" y1="22" x2="37" y2="22" stroke="#184751" stroke-width="2"/>
+<path d="M20 20L14 14" stroke="#184751" stroke-width="0.5"/>
+<path d="M24 20L30 14" stroke="#184751" stroke-width="0.5"/>
+<path d="M20 20L14 14" stroke="#184751" stroke-width="0.5"/>
+<path d="M24 20L30 14" stroke="#184751" stroke-width="0.5"/>
+<path d="M20 24L14 30" stroke="#184751" stroke-width="0.5"/>
+<path d="M24 24L30 30" stroke="#184751" stroke-width="0.5"/>
+<path d="M7 22H37" stroke="#184751" stroke-width="0.5" stroke-dasharray="0.35 1"/>
+<path d="M20 22H24" stroke="#184751" stroke-width="0.5"/>
+<path d="M22 37V7" stroke="#184751" stroke-width="0.5" stroke-dasharray="0.35 1"/>
+<path d="M22 24V20" stroke="#184751" stroke-width="0.5"/>
+</svg>

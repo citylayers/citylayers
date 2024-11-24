@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map it! <%- title %></title>
+    <%- include('parts/header.ejs'); %>
+    
+    <link rel="stylesheet" href="/css/landing.css">
+        
+    <script type="text/javascript" src="/js/logic/config.js"></script>
+    <script type="text/javascript" src="/js/logic/projectInfo.js"></script>
+    <script type="text/javascript" src="/js/logic/project.js"></script>
+    
+    <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/landing.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/home.js"></script>
+    <script type="text/javascript" src="/js/page/pin.js"></script>
+    <script type="text/javascript" src="/js/pageBuilder.js"></script>
+
+</head>
+
+<body>
+    
+
+<div class="main" id="main">
+    <script type='text/javascript'>
+        console.log( <%- JSON.stringify(data) %>);
+        PageBuilder.build(PAGES.MAP, <%- JSON.stringify(data) %>);
+
+    </script>
+        
+    
+</div>
+<%- include("parts/footer.ejs") %>
+</body>
+</html>
