@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> <%- title %> </title>
+    <%- include('parts/header.ejs'); %>
+    <link rel="stylesheet" href="/css/dataCollection.css">
+    <link rel="stylesheet" href="/css/map.css">
+    <link rel="stylesheet" href="/css/scope.css">
+
+    <script type="text/javascript" src="/js/ui/component/hrElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/inputElement.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/question.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+        
+    
+    <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/team.js"></script>
+
+    
+    <script type="text/javascript" src="/js/question/question.js"></script>
+    <script type="text/javascript" src="/js/question/answerTree.js"></script>
+    <script type="text/javascript" src="/js/question/answerParser.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/qPanel.js"></script>
+
+    <script type="text/javascript" src="/js/page/pin.js"></script>
+    <script type="text/javascript" src="/js/pageBuilder.js"></script>
+
+    <script type="text/javascript" src="/js/karta/positioning.js"></script>
+    <script type="text/javascript" src="/js/ui/component/pinButton.js"></script>
+    <script type="text/javascript" src="/js/karta/karta.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/home.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/karta.js"></script>
+    <script type="text/javascript" src="/js/ui/component/scope.js"></script>
+
+</head>
+
+<body>
+    
+
+<div id="main" class="main">
+    <script type='text/javascript'>
+        
+        PageBuilder.build(PAGES.PIN, <%- JSON.stringify(data) %>);
+
+    </script>
+        
+    
+</div>
+<%- include("parts/footer.ejs") %>
+</body>
+</html>

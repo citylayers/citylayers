@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team</title>
+    <%- include('parts/header.ejs'); %>
+    
+    <link rel="stylesheet" href="/css/team.css">
+        
+    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/team.js"></script>
+    <script type="text/javascript" src="/js/page/pin.js"></script>
+    <script type="text/javascript" src="/js/pageBuilder.js"></script>
+
+</head>
+
+<body>
+    
+
+    <div class="main" id="main">
+        <div class="legalpanel">
+            <div class="legalheader">
+                <a href="/">
+                    <img class="logo" src="/images/logo_2.svg">
+                </a>
+            </div>
+            <script type='text/javascript'>
+                
+                PageBuilder.build(PAGES.TEAM, <%- JSON.stringify(data) %>);
+
+            </script>
+        </div>
+            
+        
+    </div>
+    <%- include("parts/footer.ejs") %>  
+</body>
+</html>
