@@ -58,7 +58,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## 🏙 About The Project
 
 Welcome to Citylayers! Have you ever wanted to make your own research in the city but never found a smooth way to do it? Here you will find everything you need for your research!
 
@@ -89,7 +89,7 @@ Citylayers is a tool for carrying out urban surveys and crowdsourcing data. Ther
 <!-- GETTING STARTED -->
 ## 🚀 Getting Started
 
-### Usage
+### 👨🏻‍💻 Usage
 
 * Explore different Citylayers initiatives
 * Contribute by adding your observations onto the map
@@ -99,27 +99,27 @@ Citylayers is a tool for carrying out urban surveys and crowdsourcing data. Ther
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## How to cite
+## 📋 How to cite
 
-> Citylayers, (2024), https://citylayers.visualculture.tuwien.ac.at/
+> Citylayers, (2023), https://citylayers.visualculture.tuwien.ac.at/
 
 or use Github citation on the right of the page for APA or bibtex formats
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Contact
+## 🤝 Contact
 
-**Project:** Lovro  - [e-mail](mailto:lovro.koncar-gamulin@tuwien.ac.at) - [LinkedIn](https://www.linkedin.com/in/lovro-koncar-gamulin/)
-**Research:** Androniki - [e-mail](mailto:androniki.pappa1@gmail.com) - [LinkedIn](https://www.linkedin.com/in/androniki-pappa/) 
-**Tech:** Stasja - [@stasya00](https://stasyafedorova.wixsite.com/designautomation) - [e-mail](mailto:0.0stasya@gmail.com) - [LinkedIn][https://linkedin.com/in/stanislava-fedorova]
+**💼 Project:** Lovro  - [e-mail](mailto:lovro.koncar-gamulin@tuwien.ac.at) - [LinkedIn](https://www.linkedin.com/in/lovro-koncar-gamulin/)\
+**🔬 Research:** Androniki - [e-mail](mailto:androniki.pappa1@gmail.com) - [LinkedIn](https://www.linkedin.com/in/androniki-pappa/)\
+**👨🏻‍💻 Tech:** Stasja - [@stasya00](https://stasyafedorova.wixsite.com/designautomation) - [e-mail](mailto:0.0stasya@gmail.com) - [LinkedIn][https://linkedin.com/in/stanislava-fedorova]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+## ☀️ Acknowledgments
 
 * [TU Wien](https://www.tuwien.at/)
 * [Wienextra](https://www.wienxtra.at/)
