@@ -459,7 +459,7 @@ app.post("/submit", (req, res) => {
         const indata = req.body;
         return db.write(QUERYS.SUBMIT_BETA, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image})
             .then(obs => {
-                return res.render('sunburstResult', {data: indata.data})
+                return res.render('postSuccess', {data: indata.data})
             }
         );
         }

@@ -74,32 +74,51 @@ class QPanel extends ContentPanel{
         
 
         let d = QPanel.make_form();
-        fetch('/upload', {
-            method: 'POST',
-            body: d
-            })
-            .then(response => {
-                response.json().then(response=>{
-                    
-                indata.image = response.content;
-                fetch('/submit', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(indata)
+        if (d.get("image")!=undefined && d.get("image")!=null){
+            fetch('/upload', {
+                method: 'POST',
+                body: d
                 })
-                    .then(response => {
-                        window.location.href = "/success"
+                .then(response => {
+                    response.json().then(response=>{
+                        
+                    indata.image = response.content;
+                    fetch('/submit', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(indata)
                     })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            })})
-            .catch(error => {
-                console.log(error);
-            });
-    }
+                        .then(response => {
+                            window.location.href = "/success"
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                })})
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+        else{
+            
+            fetch('/submit', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(indata)
+            })
+                .then(response => {
+                    window.location.href = "/success"
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+        }
 
 }
 
+}
