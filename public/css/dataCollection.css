@@ -115,10 +115,12 @@
     text-decoration: underline;
     background-color: var(--primary-color);
     border-style: none;
+    cursor: pointer;
 }
 
 .back-button{
     border-style: none;
+    cursor: pointer;
 }
 
 .primary-button {
@@ -128,6 +130,7 @@
     right: 0;
     z-index: 10;
     margin: 24px auto;
+    cursor: pointer;
 }
 
 #img-uploader {
@@ -259,6 +262,7 @@ button {
     font-size: 14px;
     width: 120px;
     height: 32px;
+    cursor: pointer;
 }
 
 .next-button {
@@ -266,11 +270,13 @@ button {
     color: white;
     padding: 4px 16px;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .next-button.skip {
     background-color: var(--tertiary-color);
     color: var(--secondary-color);
+    cursor: pointer;
 }
 
 .back-button::before {
@@ -282,6 +288,7 @@ button {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     margin-bottom: 1px;
+    cursor: pointer;
 }
 
 input[type="range"] {
