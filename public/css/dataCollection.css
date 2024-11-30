@@ -124,13 +124,10 @@
 }
 
 .primary-button {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     z-index: 10;
     margin: 24px auto;
     cursor: pointer;
+    width: 100%;
 }
 
 #img-uploader {
