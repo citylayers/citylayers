@@ -41,6 +41,13 @@ const QUERYS = {
             MERGE (p: Place {lat: $lat, lon: $lon})
             MERGE (p)<-[:REGISTERED]-(o:Observation {date: datetime()})<-[:ILLUSTRATED]-(img: Illustration {name: $image}) 
             CREATE (n)<-[r:EVALUATES {value: obs.value}]-(o) RETURN n, r, o, obs`,
+    SUBMIT_NO_IMAGE: `WITH $data AS data 
+            UNWIND data AS obs
+            MATCH (n) 
+            WHERE elementId(n) = obs.id 
+            MERGE (p: Place {lat: $lat, lon: $lon})
+            MERGE (p)<-[:REGISTERED]-(o:Observation {date: datetime()})
+            CREATE (n)<-[r:EVALUATES {value: obs.value}]-(o) RETURN n, r, o, obs`,
     ID_QUESTION: `MATCH (${GRAPH_KEYS.NODE}) WHERE elementId(${GRAPH_KEYS.NODE}) = $name RETURN ${GRAPH_KEYS.NODE}`,
     PROJECTS: `MATCH (${GRAPH_KEYS.PROJECT}:Project) RETURN ${GRAPH_KEYS.PROJECT}`,
     PROJECT_NAME: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name}) RETURN ${GRAPH_KEYS.PROJECT}`,

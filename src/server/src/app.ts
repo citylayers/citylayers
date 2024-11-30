@@ -457,11 +457,17 @@ app.post("/submit", (req, res) => {
         } 
     else{
         const indata = req.body;
-        return db.write(QUERYS.SUBMIT_BETA, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image})
-            .then(obs => {
-                return res.render('postSuccess', {data: indata.data})
-            }
-        );
+        let query = QUERYS.SUBMIT_BETA;
+        if (indata.image!=undefined && indata.image!=null){
+            query = QUERYS.SUBMIT_NO_IMAGE;
+        }
+        //return 
+        db.write(query, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image});
+        //     .then(obs => {
+        //         return res.render('postSuccess', {data: indata.data})
+        //     }
+        // );
+        return res.render('postSuccess');
         }
     }
 );
