@@ -357,7 +357,7 @@
         font-size: 12pt;
     }
     .cover {
-        width: auto;
+        width: 100%;
         padding: 5%;
         justify-content: center;
         justify-self: center;
@@ -401,7 +401,8 @@
         grid-row-start: 7;
     }
     .imagecontainer > img {
-        height: 600px;
+        max-height: 600px;
+        height: auto;
     }
 
 

@@ -74,7 +74,7 @@ class QPanel extends ContentPanel{
         
 
         let d = QPanel.make_form();
-        fetch('http://localhost:3000/upload', {
+        fetch('/upload', {
             method: 'POST',
             body: d
             })
@@ -82,7 +82,7 @@ class QPanel extends ContentPanel{
                 response.json().then(response=>{
                     
                 indata.image = response.content;
-                fetch('http://localhost:3000/submit', {
+                fetch('/submit', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json'
@@ -90,6 +90,7 @@ class QPanel extends ContentPanel{
                     body: JSON.stringify(indata)
                 })
                     .then(response => {
+                        window.location.href = "/success"
                     })
                     .catch(error => {
                         console.log(error);

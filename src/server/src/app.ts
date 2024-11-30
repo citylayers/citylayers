@@ -135,6 +135,17 @@ app.get('/impressum', (req, res) => {
 
 });
 
+app.get('/success', (req, res) => {
+
+    // The render method takes the name of the HTML
+    // page to be rendered as input
+    // This page should be in the views folder
+    // in the root directory.
+    res.render('postSuccess');
+
+});
+
+
 app.get("/team", (req, res) =>{
     let team = [];
     let projects = [];
