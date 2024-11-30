@@ -457,10 +457,9 @@ app.post("/submit", (req, res) => {
         } 
     else{
         const indata = req.body;
-        console.log(indata.image);
         let query = (indata.image!="" && indata.image!=undefined && indata.image!=null)? QUERYS.SUBMIT_BETA: QUERYS.SUBMIT_NO_IMAGE;
         
-        console.log(query);
+        
         //return 
         db.write(query, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image});
         //     .then(obs => {
