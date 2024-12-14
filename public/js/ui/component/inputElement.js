@@ -17,11 +17,17 @@ class InputElement extends CElement {
     }
     load() { }
 
-    activateNext(tree, nextids){
+    activate(value){
+        let res = value==undefined || value == true ? false : true;
+        console.log(res);
+        this.getElement().disabled = res;
+    }
+
+    activateNext(nextids){
         if (nextids==undefined){
             return
         }
-        if (tree.getAnswer(this.id)!=undefined){
+        if (tree.get(this.id)!=undefined){
             let nextid = nextids.get(this.id);
             if (nextid!=undefined){
                 nextid = `qa-container_${nextid}`;
@@ -30,25 +36,25 @@ class InputElement extends CElement {
         }
     }
 
-    action(ev, tree, next){
-        tree.addAnswer(this.id, ev.target.value);
+    action(ev, next){
+        tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
 
     }
 
-    initiate(answerTree, nextid) {
-        let element = this.init_input(answerTree, nextid);
+    initiate(nextid) {
+        let element = this.init_input(nextid);
         this.init_extra(element);
     }
 
-    init_input(answerTree, nextid){
+    init_input(nextid){
         let element = document.createElement(this.t);
         element.setAttribute('type', this.input_type);
         element.setAttribute('name', this.name);
         element.setAttribute("class", this.name);
         element.setAttribute("id", this.make_id());
         element.onchange = (ev)=>{
-            this.action(ev, answerTree, nextid)
+            this.action(ev, nextid)
         };
         this.getParent().appendChild(element);
         return element;
@@ -77,8 +83,8 @@ class ImageInputElement extends InputElement {
         this.input_type = INPUT_TYPES.FILE;
     }
 
-    action(ev, tree, next){
-        this.activateNext(tree, next);
+    action(ev, next){
+        this.activateNext(next);
         const file = ev.target.files[0];
         
         if (file) {
@@ -88,7 +94,7 @@ class ImageInputElement extends InputElement {
             //     this.image_src = event.target.result;
             // }
             fileReader.readAsDataURL(file);
-            tree.addAnswer("image", file);
+            tree.add("image", file);
             // this.place_data["image"] = file;
         }
 
@@ -105,22 +111,28 @@ class InputContainer extends ContentPanel {
     constructor(parent, id, content){
         super(parent, id, content);
         this.content = content ? content : ["", "or skip"];
+        this.components = [];
         this.elements = [];
     }
 
-    
+    activate(value){
+        this.elements.forEach(s=>{
+            s.activate(value);
+        })
+    }
 
     getElement() {
         return document.getElementById(`${this.name}_${this.id}`);
     }
 
-    load(answerTree, nextid) {
-        this.elements.forEach((el, i) => {
+    load(nextid) {
+        this.elements = this.components.map((el, i) => {
             let element = new el(this.make_id(), this.id, 
                                  this.content instanceof Array ? this.content[i] : this.content);
-                                 
-            element instanceof InputElement ? element.initiate(answerTree, nextid) : element.initiate();
-            element instanceof InputContainer ? element.load(answerTree, nextid) : element.load();
+            
+            element instanceof InputElement ? element.initiate(nextid) : element.initiate();
+            element instanceof InputContainer ? element.load(nextid) : element.load();
+            return element;
         });
     }
 }
@@ -130,7 +142,7 @@ class ImageInputContainer extends InputContainer {
     constructor(parent, id){
         super(parent);
         this.content = ["", "or skip"];
-        this.elements = [ImageInputContainerElement, SpanElement];
+        this.components = [ImageInputContainerElement, SpanElement];
     }
 }
 
@@ -139,7 +151,7 @@ class TextInputContainer extends InputContainer {
     constructor(parent, id, content){
         super(parent, id);
         this.content = content;
-        this.elements = [TextInputElement];
+        this.components = [TextInputElement];
     }
 }
 
@@ -147,7 +159,7 @@ class ImageInputContainerElement extends InputContainer {
     constructor(parent, id){
         super(parent, id);
         this.name = CLASSNAMES.IMGINPUT_CONTAINER;
-        this.elements = [ImageInputElement, ImagePreviewElement, TextElement];
+        this.components = [ImageInputElement, ImagePreviewElement, TextElement];
         this.content = ["", "", "Upload an image"];
     }
 }
@@ -157,10 +169,12 @@ class RangeInputElement extends InputElement {
     constructor(parent, id, content) {
         super(parent, id, content);
         this.content = content;
+        let min = this.content.values ? this.content.values["min"] : 0;
+        let max = this.content.values ? this.content.values["max"] : 100;
         this.values = new Map(
             [
-                [RANGE_LABELS.MIN, this.content.values ? this.content.values["min"] : 0],
-                [RANGE_LABELS.MAX, this.content.values ? this.content.values["max"] : 100],
+                [RANGE_LABELS.MIN, min],
+                [RANGE_LABELS.MAX, max],
             ]
         );
         this.input_type = INPUT_TYPES.RANGE;
@@ -177,7 +191,7 @@ class RangeLabelElement extends InputContainer {
     static name = CLASSNAMES.RANGE_CONTAINER;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.elements = [SpanElement, SpanElement];
+        this.components = [SpanElement, SpanElement];
         this.content = content.labels ? [content.labels[RANGE_LABELS.MIN], content.labels[RANGE_LABELS.MAX]] : ["Less", "More"];
     }
 
@@ -188,7 +202,7 @@ class RangeContainerElement extends InputContainer {
     static name = CLASSNAMES.TAG_CONTAINER;
     constructor(parent, id, content){
         super(parent, id, content);
-        this.elements = [RangeInputElement, RangeLabelElement];
+        this.components = [RangeInputElement, RangeLabelElement];
     }
 
 }
@@ -198,9 +212,14 @@ class CheckboxContainerElement extends InputContainer {
     constructor(parent, id, checks){
         super(parent, id, checks);
         this.content = checks;
-        this.elements = checks.map(c=>CheckboxElement);
+        this.components = checks.map(c=>CheckboxElement);
     }
-
+    activate(value){
+        
+        this.elements.forEach(s=>{
+            s.activate(value);
+        })
+    }
     
 }
 
@@ -209,10 +228,13 @@ class CheckboxElement extends InputContainer {
     constructor(parent, id, content){
         super(parent, content.id, content);
         this.content = content;
-        this.elements = [CheckboxInputElement, CheckboxLabelElement];
+        this.components = [CheckboxInputElement, CheckboxLabelElement];
     }
-    make_id() {
-        return `${this.name}_${this.id}_${this.content.name}`
+    activate(value){
+        
+        this.elements.forEach(s=>{
+            s.activate(value);
+        })
     }
 }
 
@@ -223,13 +245,18 @@ class CheckboxInputElement extends InputElement {
         this.input_type = INPUT_TYPES.CHECKBOX;
     }
 
+    activate(value){
+        let res = value==undefined || value == true ? false : true;
+        this.getElement().disabled = res;
+    }
+
 
     init_extra(element){
         };
 
-    action(ev, tree, next){
-        tree.addAnswer(this.id, ev.target.checked);
-        this.activateNext(tree, next);
+    action(ev, next){
+        tree.add(this.id, ev.target.checked);
+        this.activateNext(next);
 
     }
 }
@@ -240,6 +267,11 @@ class CheckboxLabelElement extends InputElement {
         super(parent, id, content);
         this.content = content.name ? content.name : content;
         this.t = "div";
+    }
+
+    activate(value){
+        let res = value==undefined || value == true ? false : true;
+        this.getElement().disabled = res;
     }
 
     initiate() {
@@ -254,3 +286,6 @@ class CheckboxLabelElement extends InputElement {
     }
 
 }
+
+
+

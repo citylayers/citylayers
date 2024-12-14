@@ -5,11 +5,26 @@
     <%- include('parts/header.ejs'); %>
     
     <link rel="stylesheet" href="/css/landing.css">
+    <link rel="stylesheet" href="/css/map.css">
+    <link rel="stylesheet" href="/css/container.css">
+    <link rel="stylesheet" href="/css/controller.css">
         
     <script type="text/javascript" src="/js/logic/config.js"></script>
     <script type="text/javascript" src="/js/logic/projectInfo.js"></script>
     <script type="text/javascript" src="/js/logic/project.js"></script>
+
+    <script type="text/javascript" src="/js/ui/component/inputElement.js"></script>
+    <script type="text/javascript" src="/js/question/pubsub.js"></script>
+    <script type="text/javascript" src="/js/question/question.js"></script>
+    <script type="text/javascript" src="/js/question/answerParser.js"></script>
+    <script type="text/javascript" src="/js/question/answerTree.js"></script>
+    <script type="text/javascript" src="/js/question/controlTree.js"></script>
+    <script type="text/javascript" src="/js/question/controllerElement.js"></script>
+    <script type="text/javascript" src="/js/question/controller.js"></script>
+    <script type="text/javascript" src="/js/question/controllerParser.js"></script>
     
+    <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/slider.js"></script>
     <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
     <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
@@ -19,6 +34,12 @@
     <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
     <script type="text/javascript" src="/js/ui/panel/home.js"></script>
     <script type="text/javascript" src="/js/page/pin.js"></script>
+    <script type="text/javascript" src="/js/karta/positioning.js"></script>
+    <script type="text/javascript" src="/js/karta/karta.js"></script>
+    <script type="text/javascript" src="/js/ui/component/switch.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/categoryController.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/configPanel.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/dashboard.js"></script>
     <script type="text/javascript" src="/js/pageBuilder.js"></script>
 
 </head>
@@ -29,7 +50,9 @@
 <div class="main" id="main">
     <script type='text/javascript'>
         console.log( <%- JSON.stringify(data) %>);
-        PageBuilder.build(PAGES.MAP, <%- JSON.stringify(data) %>);
+        const pubsub = new PubSub();
+        const tree = new ControlTree();
+        PageBuilder.build(PAGES.KARTA, <%- JSON.stringify(data) %>);
 
     </script>
         

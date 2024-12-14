@@ -43,6 +43,7 @@
     font-size: 12px;
     overflow-y: scroll;
     padding-bottom: 100px;
+    scrollbar-width: none;
 }
 
 .aboutpanel {
@@ -68,6 +69,7 @@
   max-width: 90%;
   /* width: calc(100vw - var(--margin-2)); */
 }
+
 .categorysidepanel {
   display: flex;
   flex-direction: column;
@@ -113,10 +115,6 @@
   z-index: 100;
   margin: var(--margin-1) auto;
 }
-
-
-
-
 
 .config {
   cursor: pointer;
@@ -169,8 +167,9 @@
 .categorycontainer {
   display: flex;
   flex-direction: column;
+  width: -webkit-fill-available;
   background-color: var(--primary-color);
-  color: var(--tertiary-color);
+  /* color: var(--tertiary-color); */
   padding: 12px 24px;
   border-radius: 10px;
 }
@@ -187,7 +186,7 @@
   font-weight: 500;
   margin-bottom: 2px;
   justify-items: flex-end;
-
+  padding: 0px;
   /* flex-wrap: nowrap;
   display: grid;
   grid-template-columns: 0.5fr 2fr 1fr;
@@ -204,6 +203,7 @@
 .categoryheadertitle{
   /* margin-right: 33%; */
   margin-bottom: 5%;
+  text-transform: capitalize;
 }
 
 .sliderlabelcontainer {
@@ -252,7 +252,7 @@ input[type=range]::-webkit-slider-thumb {
   }  */
 
   input[type=range]::-webkit-slider-thumb:hover {
-    background: #C4B5F0;
+    background: var(--secondary-color);
   } 
 
 
@@ -261,14 +261,14 @@ input[type=range]::-moz-range-thumb{
   pointer-events: all;
   width: 16px;
   height: 16px;
-  background-color: #C4B5F0;
+  background-color: var(--secondary-color);
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
 }
 
 
-.panel.category div:nth-child(1 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+/* .panel.category div:nth-child(1 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category1);
 }
 
@@ -290,7 +290,7 @@ input[type=range]::-moz-range-thumb{
 
 .panel.category div:nth-child(6 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category6);
-}
+} */
 
 .panel.category div:nth-child(n of div.categorycontainer) > .categoryslider > input[type=range]:disabled::-webkit-slider-thumb{
   background-color: var(--tertiary-color);
@@ -536,9 +536,9 @@ input[type="range"].startSlider {
   font-size: 12px;
 }
 
-.tag input:checked + .tag-element {
+/* .tag input:checked + .tag-element {
   background-color: var(--primary-color);
-}
+} */
 
 .tag input:checked + .tag-element::after {
   content: "✕";

@@ -7,10 +7,9 @@ class ConfigPanel extends ContentPanel{
     }
 
     constructor(parent){
-        super(parent, "id");
+        super(parent);
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
-        this.id = "id";
         this.elements = [];
     }
 
@@ -20,17 +19,19 @@ class ConfigPanel extends ContentPanel{
             element.initiate();
             element.load();
         });
-        config.categories.forEach((category, c) => {
-            this.add(category);
-            document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
-        });
+        if (config!=undefined && config!=null){
+            config.filter(s => s.name!=null && s.name!=undefined && s.name!="").forEach((category, c) => {
+                this.add(category);
+                //document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
+            });
+        }
     }
 
 
     add(category) {
-        let div = new CategoryElement(this.make_id(), category);
-        div.initiate();
-        div.load();
+        let element = new CategoryController(this.make_id(), category);
+        element.initiate();
+        element.load();
     }
 
 }

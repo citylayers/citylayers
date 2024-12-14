@@ -117,7 +117,7 @@ class ProjectSwitch extends CElement{
         e1.setAttribute("type", "checkbox");
 
         e1.onchange = ()=>{
-            CityLayersPanel.activateProject(this.project, ProjectSwitch.isActive(this.id));
+            // CityLayersPanel.activateProject(this.project, ProjectSwitch.isActive(this.id));
 
         }
         let e2 = document.createElement("span");

@@ -4,6 +4,7 @@ const CLASSNAMES = {
     SWITCH: "switch",
 
     MAIN_PANEL: "panel citylayers",
+    DASHBOARD: "dashboard",
     HOME_PANEL: "home",
     LANDING_PANEL : "landing",
     CATEGORY_PANEL: "panel category",
@@ -14,6 +15,10 @@ const CLASSNAMES = {
     MAIN_CONTAINER: "main",
 
     CONFIG: "config",
+
+    CONTROLLER_BODY: "controllerbody",
+    CONTROLLER_Q: "controllerq",
+    CONTROLLER: "controller",
     
     CATEGORY_SLIDER_CONTAINER: "categoryslider",
     CATEGORY_HEADER: "categoryheader",

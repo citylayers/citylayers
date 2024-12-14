@@ -4,6 +4,7 @@ const PAGES = {
     PRIVACY: "privacy",
     IMPRESSUM: "impressum",
     HOME: "home",
+    KARTA: "karta",
     PROJECT: "project",
     PIN: "pin"
 
@@ -17,7 +18,9 @@ class PageBuilder{
         [PAGES.IMPRESSUM, PageBuilder.no_build],
         [PAGES.HOME, PageBuilder.buildHomePage],
         [PAGES.PROJECT, PageBuilder.buildProjectPage],
-        [PAGES.PIN, PinPage.build],]
+        [PAGES.PIN, PinPage.build],
+        [PAGES.KARTA, PageBuilder.buildKarta],
+    ]
     )
 
     static build(page, content){
@@ -46,6 +49,11 @@ class PageBuilder{
 
     static buildProjectPage(content){
         let page = new ProjectCardPanel("main", content);
+        page.initiate();
+        page.load(content);
+    }
+    static buildKarta(content){
+        let page = new Dashboard("main");
         page.initiate();
         page.load(content);
     }

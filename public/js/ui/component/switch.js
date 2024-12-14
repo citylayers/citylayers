@@ -7,14 +7,14 @@ class Switch extends CElement{
 
         super(parent, id);
         this.name = CLASSNAMES.SWITCH;
-        this.id = `${id}`;
+        // this.id = `${id}`;
         
         this.category = category;
         this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
     }
 
     static isActive(label) {
-        let d = document.getElementById(`${this._name}_${label}`);
+        let d = document.getElementById(`${label}`);
         return d.children[0].checked;
     }
 
@@ -29,10 +29,6 @@ class Switch extends CElement{
 
         e1.onchange = ()=>{
             this.activate();
-            // CityLayersPanel.activation(this.category, 
-            //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
-            //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
-            // DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
 
         }
         let e2 = document.createElement("span");

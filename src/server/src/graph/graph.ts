@@ -1,7 +1,7 @@
 
 import neo4j from 'neo4j-driver';
 import {Driver, Session, QueryResult, RecordShape} from 'neo4j-driver';
-// var neo4j = require('neo4j-driver');
+
 const URI = process.env.NEO4J_URI; 
 const USER = process.env.NEO4J_USER; 
 const PASSWORD = process.env.NEO4J_PWD; 
@@ -14,6 +14,7 @@ const MODE = {
 const GRAPH_KEYS = {
     ANSWER: "answer",
     ANSWER1: "answer1",
+    CATEGORY: "category",
     CHOICE: "choice",
     CONFIG: "c",
     CONTENT: "content",
@@ -33,6 +34,9 @@ const GRAPH_KEYS = {
 }
 
 const QUERYS = {
+    OBSERVATIONS: `match (p: Place)<-[r:REGISTERED]-(o:Observation)-
+                    [e:EVALUATES]->(a:Answer)(()<-[]-()){0,4}(:Question)-
+                    [s]-()-[]-(pr:Project {name: $name}) return p,o;`,
     SUBMIT: `MERGE (place: Place {lon: $lon, lat: $lat})<-[:REGISTERED]-(o:Observation {date: datetime()})`,
     SUBMIT_BETA: `WITH $data AS data 
             UNWIND data AS obs
@@ -93,12 +97,12 @@ const QUERYS = {
             [${GRAPH_KEYS.STEP}:ASKS]->(${GRAPH_KEYS.QUESTION}:Question)-[:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)
                 RETURN 
                 CASE 
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="range" THEN { ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, \
+                WHEN ${GRAPH_KEYS.ANSWER}.atype="range" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, \
                 content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
                                         value: {min: ${GRAPH_KEYS.ANSWER}.min, max: ${GRAPH_KEYS.ANSWER}.max}, 
                                         label: {min: ${GRAPH_KEYS.ANSWER}.minlabel, max: ${GRAPH_KEYS.ANSWER}.maxlabel}} } }
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="multicategory" THEN { step: step.step,
+                WHEN ${GRAPH_KEYS.ANSWER}.atype="multicategory" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step,
                 ${GRAPH_KEYS.CONTENT}: {${GRAPH_KEYS.QUESTION}: {id: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
                         content: COLLECT {
@@ -106,7 +110,7 @@ const QUERYS = {
                                         return {atype: child.atype, name: child.name}
                                 }
                 } } }
-                ELSE { ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
+                ELSE { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype} } }
                 END AS ${GRAPH_KEYS.RESULT}
                 order by ${GRAPH_KEYS.STEP}.step`,
@@ -175,6 +179,7 @@ class DBConnection{
         if (this.session==undefined){
             this.initSession(MODE.READ);
         }
+        
         return this.session.run(query, param, { timeout: 3000 } )
                 .then(result => {
                     this.reset();

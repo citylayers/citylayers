@@ -9,9 +9,11 @@ import { AnswerParser, ANSWERS } from "../../server/src/parser/question";
 
 class QASet{
     step: number;
+    name: string;
     content: QAPair[];
-    constructor(step:number, content:QAPair[]){
+    constructor(step:number, name:string="", content:QAPair[]){
         this.step = step;
+        this.name = name;
         this.content = content ? content : [];
     }
     add(qapair:QAPair){

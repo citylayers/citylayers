@@ -1,6 +1,5 @@
 import express from 'express';
 import {config, configDotenv} from 'dotenv';
-import neo4j, { DateTime } from 'neo4j-driver';
 import path from 'path';
 import multer from 'multer';
 
@@ -105,15 +104,6 @@ app.get('/accessibility', (req, res) => {
 
 });
 
-app.get('/accessibility1', (req, res) => {
-
-    // The render method takes the name of the HTML
-    // page to be rendered as input
-    // This page should be in the views folder
-    // in the root directory.
-    res.render('layout', {module: "accessibility"});
-
-});
 
 app.get('/privacy', (req, res) => {
 
@@ -369,7 +359,9 @@ app.get("/pin/:project", (req, res) => {
             .then(qs =>{
                 
                 return qs.records.map(r=>{
+                    
                     let q = new QASet(r.get(GRAPH_KEYS.RESULT).step, 
+                    r.get(GRAPH_KEYS.RESULT).category, 
                     [r.get(GRAPH_KEYS.RESULT).content]); 
                     q.convertContent(); 
                     return q});
@@ -399,17 +391,34 @@ app.get("/pin/:project", (req, res) => {
                         })
                     });
         })
+        .then(qas => {
+            
+            res.render('addPin', {data: qas, title: project})
+        }
+        );
+    }
+);
+
+app.get("/map/:project", (req, res) => {
+    
+    let project = req.params.project;
+    
+    db.read(QUERYS.Q1, {"name": project.replaceAll("%20", " ")})
+            .then(qs =>{
+                
+                return qs.records.map(r=>{
+                    let q = new QASet(r.get(GRAPH_KEYS.RESULT).step,
+                    r.get(GRAPH_KEYS.RESULT).category, 
+                    [r.get(GRAPH_KEYS.RESULT).content]); 
+                    q.convertContent(); 
+                    return q});
+                })
         .then(qs=>{
             
-            return db.read(QUERYS.Q2.replace("$ids", [...qs.filter(r=>r.content.filter(qa=>qa.prev_id!=undefined).length>0)
-                                                            .map(r=>r.content.filter(qa=>qa.prev_id!=undefined)
-                                                                             .map(qa=>qa.answer.getIds().map(id=>`"${id}"`).toString()))].toString()), {})
+            return db.read(QUERYS.Q2.replace("$ids", [...qs.map(r=>r.content.map(qa=>`"${qa.answer.id}"`)[0])].toString()), {})
                     .then(r1 =>{
                         return qs.map(qaset=>{
-                            if (qaset.content.filter(qa=>qa.prev_id!=undefined).length==0){
-                                return qaset;
-                            }
-                            let followup = r1.records.filter(r=>qaset.content.filter((q,i)=>i>0).map(qapair=>qapair.answer.getIds())[0]
+                            let followup = r1.records.filter(r=>qaset.content.map(qapair=>qapair.answer.id)
                                 .includes(r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.PREV]));
                             if (followup.length==0){
                                 return qaset;
@@ -423,25 +432,17 @@ app.get("/pin/:project", (req, res) => {
                             }).forEach(
                                 q=>{
                                     qaset.add(q);
+                                    
                                 }
                             );
-                            
                             return qaset;
                         })
                     });
         })
         .then(qas => {
             
-            res.render('addPin', {data: qas, title: project})
-        }
-        );
-    }
-);
-
-app.get("/map/:project", (req, res) => {
-    
-    let project = req.params.project;
-    res.render("map", {project: project});
+            res.render('karta', {data: qas, title: project})
+        })
     }
 );
 
