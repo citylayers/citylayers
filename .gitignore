@@ -4,5 +4,6 @@ dist
 
 .keys
 *.backup
+*.env
 public/views
 public/uploads/*

@@ -182,7 +182,7 @@ class QContainer extends ContentPanel{
         
         this.content.forEach((qs:QASet, i:number)=>{
             qs.content.forEach(
-            (qa, j)=>qa.make(this.make_id(), (i==step-1 && (j==0 || this.tree.getAnswer(qa.prev_id)!=undefined)
+            (qa, j)=>qa.make(this.make_id(), (i==step-1 && (j==0 || this.tree.get(qa.prev_id)!=undefined)
 
             ), this.tree))
         }
