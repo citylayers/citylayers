@@ -72,6 +72,18 @@
     width: 100%;
 }
 
+.leaflet-heatmap-layer{
+    height: auto;
+    width: auto;
+
+}
+
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+
 /* Dahsboard only */
 /* .tag .tag-element {
     font-size: 8pt;

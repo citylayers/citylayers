@@ -11,6 +11,9 @@ import { ProjectRecognition, ProjectInfo, ProjectPeriod } from '../../logic/proj
 import { Config } from '../../logic/config';
 import {Project} from '../../logic/project';
 import { QAPair, QASet } from '../../logic/question/question';
+import {Place, Answer, Observation, Point} from '../../logic/observation';
+import onlyUnique from "./graph/utils";
+
 import * as fs from 'node:fs';
 // import { TeamPanel } from '../ui/panel/teamPanel';
 
@@ -19,6 +22,8 @@ configDotenv({path:".env"});
 const app = express();
 const port = process.env["PORT"] || 3000;
 const domain = process.env["DOMAIN"] || "localhost"; 
+
+console.log(process.env["NEO4J_URI"])
 
 app.use(express.static(path.join(__dirname, '../../../public')));
 app.use(express.static(path.join(__dirname, '../../../public/uploads')));
@@ -438,10 +443,26 @@ app.get("/map/:project", (req, res) => {
                             return qaset;
                         })
                     });
+        }).then(qas=>{
+            return db.read(QUERYS.OBS, {"name": project.replaceAll("%20", " ")})
+            .then(qs =>{     
+                return qs.records.map(r=>r.get(GRAPH_KEYS.RESULT).id)
+                                 .filter(onlyUnique)
+                                 .map(p=>{
+                                        let records =  qs.records.filter(r=>r.get(GRAPH_KEYS.RESULT).id==p);
+                                        let record = records[0].get(GRAPH_KEYS.RESULT);
+                                        let place = new Place(p, record.lat, record.lon);
+                                        let obs = records.map(r=>{return new Observation(r.get(GRAPH_KEYS.RESULT).obs, 
+                                                                                r.get(GRAPH_KEYS.RESULT).answer)});
+                                        return new Point(place, obs);
+                                    });
+                })
+            .then(obs=>{
+                return {qas:qas, obs:obs}
+            })
         })
-        .then(qas => {
-            
-            res.render('karta', {data: qas, title: project})
+        .then(d => {
+            res.render('karta', {data: d, title: project})
         })
     }
 );

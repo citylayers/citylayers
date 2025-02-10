@@ -24,6 +24,5 @@ class PubSub{
       publish(payload){
        // publish payload to existing subscribers by invoking them
         this.subscribers.forEach(subscriber => subscriber(payload));
-        console.log(payload);
       }
 }

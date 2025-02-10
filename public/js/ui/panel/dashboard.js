@@ -11,7 +11,13 @@ class Dashboard extends ContentPanel{
         this.elements.forEach(el => {
             let element = new el(this.make_id(), "");
             element.initiate();
-            element.load(config);
+            
+            if (el==ConfigPanel){
+                element.load(config.qas);
+            }
+            else{
+                element.load(config.obs);
+            }
             
         });
 

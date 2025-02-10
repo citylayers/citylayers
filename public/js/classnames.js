@@ -8,6 +8,7 @@ const CLASSNAMES = {
     HOME_PANEL: "home",
     LANDING_PANEL : "landing",
     CATEGORY_PANEL: "panel category",
+    CONTROLLER_CONTAINER: "controller container",
     // PROJECT_PANEL: "panel project",
     CATEGORY_CONTAINER: "categorycontainer",
     TITLE: "title",
@@ -15,6 +16,7 @@ const CLASSNAMES = {
     MAIN_CONTAINER: "main",
 
     CONFIG: "config",
+    CONFIG_HEADER: "configheader",
 
     CONTROLLER_BODY: "controllerbody",
     CONTROLLER_Q: "controllerq",
@@ -56,6 +58,8 @@ const CLASSNAMES = {
     COMMENTPANEL_CLOSE: "commentpanelclose",
     COMMENTSEARCH: "commentsearch",
     SELECTCOMMENT: "selected",
+
+    COLORPICKER: "colorpicker", 
 
     CLICK: "click",
     GRAD: "grad",

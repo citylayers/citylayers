@@ -34,17 +34,18 @@
     width: 100%;
     padding-bottom: 5%;
   }
-  .panel.category {
-    min-width: 300px;
-    /* max-width: 350px; */
-    /* height: 100vh; */
+
+  .panel.category{
     padding: 12px;
-    row-gap: var(--margin-1);
+    row-gap: 20px;
     font-size: 12px;
     overflow-y: scroll;
-    padding-bottom: 100px;
-    scrollbar-width: none;
-}
+    /* padding-bottom: 100px; */
+    scrollbar-width: none; 
+    min-width: 300px;
+  }
+
+  
 
 .aboutpanel {
   display: flex;
@@ -132,6 +133,8 @@
     height: 100vh;
     width: 30%;
     height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
     /* width: 38vw; */
   }
   .panel.citylayers {
@@ -149,6 +152,8 @@
     max-width: calc(350px - var(--margin-2));
     margin: var(--margin-1);
   }
+
+  
 }
 
 

@@ -22,14 +22,21 @@
     <script type="text/javascript" src="/js/question/controllerElement.js"></script>
     <script type="text/javascript" src="/js/question/controller.js"></script>
     <script type="text/javascript" src="/js/question/controllerParser.js"></script>
-    
+    <script type="text/javascript" src="/js/ui/component/colorpicker.js"></script>
+    <script type="text/javascript" src="/js/ui/component/gradientElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/hrElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/slider.js"></script>
+    <script type="text/javascript" src="/js/ui/component/infoElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
     <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
     <script type="text/javascript" src="/js/ui/panel/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/GradientContainer.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/configHeader.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainer.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/vischoiceContainer.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/landing.js"></script>
     <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
     <script type="text/javascript" src="/js/ui/panel/home.js"></script>
@@ -41,6 +48,7 @@
     <script type="text/javascript" src="/js/ui/panel/configPanel.js"></script>
     <script type="text/javascript" src="/js/ui/panel/dashboard.js"></script>
     <script type="text/javascript" src="/js/pageBuilder.js"></script>
+    <script type="text/javascript" src="/js/karta/leaflet-heat.js"></script>
 
 </head>
 
@@ -49,7 +57,7 @@
 
 <div class="main" id="main">
     <script type='text/javascript'>
-        console.log( <%- JSON.stringify(data) %>);
+        // console.log("DATA", <%- JSON.stringify(data) %>);
         const pubsub = new PubSub();
         const tree = new ControlTree();
         PageBuilder.build(PAGES.KARTA, <%- JSON.stringify(data) %>);

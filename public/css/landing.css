@@ -149,6 +149,7 @@
   align-self: center;
   z-index: 3;
   cursor: pointer;
+  padding: 0px;
 }
 
 .title{

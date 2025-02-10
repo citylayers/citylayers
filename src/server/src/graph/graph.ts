@@ -1,10 +1,16 @@
-
+import {config, configDotenv} from 'dotenv';
 import neo4j from 'neo4j-driver';
 import {Driver, Session, QueryResult, RecordShape} from 'neo4j-driver';
 
-const URI = process.env.NEO4J_URI; 
-const USER = process.env.NEO4J_USER; 
-const PASSWORD = process.env.NEO4J_PWD; 
+if (process.env["NEO4J_URI"]==undefined){
+    configDotenv({path:".env"});
+}
+const URI = process.env["NEO4J_URI"]; 
+const USER = process.env["NEO4J_USER"]; 
+const PASSWORD = process.env["NEO4J_PWD"]; 
+
+console.log(process.env["NEO4J_URI"]);
+console.log(URI);
 
 const MODE = {
     READ: 0,
@@ -20,8 +26,12 @@ const GRAPH_KEYS = {
     CONTENT: "content",
     ID: "id",
     ILLUSTRATION: "illustration",
+    LAT: "lat",
+    LON: "lon",
     NODE: "node",
+    OBSERVATION: "obs",
     PARTNER: "partner",
+    PLACE: "place",
     PREV: "prev",
     PROJECT: "p",
     RECOGNITION: "recognition",
@@ -34,9 +44,17 @@ const GRAPH_KEYS = {
 }
 
 const QUERYS = {
-    OBSERVATIONS: `match (p: Place)<-[r:REGISTERED]-(o:Observation)-
-                    [e:EVALUATES]->(a:Answer)(()<-[]-()){0,4}(:Question)-
-                    [s]-()-[]-(pr:Project {name: $name}) return p,o;`,
+    OBSERVATIONS: `match (p:Place)<-[r:REGISTERED]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[:ISANSWERED]-()
+                    <-[:ASKS]-(c:Config)<-[]-(pr:Project {name: "Mobility Dashboard"}) 
+                    return {content: {obs: o, obs_id: elementId(o), place_id: elementId(p), place:p}};`,
+
+    OBS: `match (p:Place)<-[]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[]-()<-[]-(c:Config)<-[]-(pr:Project {name: $name}) 
+            with collect(p) as places, collect(elementId(o)) as obs
+            match (p)<-[:REGISTERED]-(o:Observation)-[e:EVALUATES]->(a:Answer) where elementId(o) in obs
+            with p, o, collect({id: elementId(a), value: e.value}) as answers
+            return { ${GRAPH_KEYS.LON}: p.lon, ${GRAPH_KEYS.LAT}: p.lat, ${GRAPH_KEYS.ID}: elementId(p), 
+            ${GRAPH_KEYS.OBSERVATION}: elementId(o), ${GRAPH_KEYS.ANSWER}: answers } AS ${GRAPH_KEYS.RESULT}`,
+            
     SUBMIT: `MERGE (place: Place {lon: $lon, lat: $lat})<-[:REGISTERED]-(o:Observation {date: datetime()})`,
     SUBMIT_BETA: `WITH $data AS data 
             UNWIND data AS obs
@@ -149,8 +167,6 @@ const QUERYS = {
                     return ${GRAPH_KEYS.PROJECT}, w, ${GRAPH_KEYS.TEAMMEMBER}, rel, ${GRAPH_KEYS.ROLE}`,
 }
 
-
-
 class DBConnection{
     driver: Driver;
     session: Session;
@@ -160,33 +176,36 @@ class DBConnection{
         this.session = undefined;
     }
     async init(){
-        try {
-            this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });
-            const serverInfo = await this.driver.getServerInfo();
-            // this.initSession();
-          } catch(err) {
-                console.log(`Connection error\n${err}\nCause: ${err.cause}`)
-          }
+        console.log(URI, USER, PASSWORD);
+        if (this.driver==undefined){
+            try {
+                this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });
+                const serverInfo = await this.driver.getServerInfo();
+                // this.initSession();
+            } catch(err) {
+                    console.log(`Connection error\n${err}\nCause: ${err.cause}`)
+            }
+            }
         //   await this.driver.close();
     } 
 
-    initSession(mode:number=0){
-        this.session = mode==MODE.WRITE ? this.driver.session({ defaultAccessMode: neo4j.session.WRITE }) : this.driver.session({ defaultAccessMode: neo4j.session.READ });
-        
+    async initSession(mode:number=0){
+            return this.init().then(k=>
+                this.session = mode==MODE.WRITE ? this.driver.session(
+                    { defaultAccessMode: neo4j.session.WRITE }) : this.driver.session({ defaultAccessMode: neo4j.session.READ })
+            )
     }
 
     async read(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        if (this.session==undefined){
-            this.initSession(MODE.READ);
-        }
-        
-        return this.session.run(query, param, { timeout: 3000 } )
+        return this.initSession(MODE.READ).then(k=>{
+                return this.session.run(query, param, { timeout: 3000 } )
                 .then(result => {
                     this.reset();
                     return result;
-                })
-                    
+                })     
+            }) 
         }
+
     reset(){
         if (this.session!=undefined){
             this.session.close();
@@ -202,13 +221,14 @@ class DBConnection{
          */
         this.reset()
         
-        if (this.session==undefined){
-            this.initSession(MODE.WRITE);
-        }
-        return this.session.run(query, param, { timeout: 3000 } ).then(result => {
+        return  this.initSession(MODE.WRITE).then(k=>{
+                return this.session.run(query, param, { timeout: 3000 } ).then(result => {
                     this.reset();
                     return result;
                 })
+            })
+        
+        
                     
         }
         
