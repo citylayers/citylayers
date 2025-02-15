@@ -63,6 +63,7 @@ a:active {
     --margin-2: 24px;
     --margin-3: 36px;
     --margin-4: 48px;
+    --vis-opacity: 100%;
 
     --category1: #3ACE8E;
     --category2: #3ACE8E;

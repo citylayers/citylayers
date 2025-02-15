@@ -9,7 +9,7 @@ class ImageContainerElement extends ContentPanel{
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.make_id(), uuidv4(),
                                     this.id, this.images[e]);
             element.initiate();
             element.load();

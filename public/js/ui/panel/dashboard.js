@@ -16,7 +16,7 @@ class Dashboard extends ContentPanel{
                 element.load(config.qas);
             }
             else{
-                element.load(config.obs);
+                element.load(config);
             }
             
         });

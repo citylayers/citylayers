@@ -21,9 +21,10 @@ class ControllerContainer extends ContentPanel{
         if (config!=undefined && config!=null){
             config.filter(s => s.name!=null && s.name!=undefined && s.name!="").forEach((category, c) => {
                 this.add(category);
-                //document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
             });
         }
+        vischoicepubsub.subscribe(ControllerContainerManager.update);
+        
     }
 
 

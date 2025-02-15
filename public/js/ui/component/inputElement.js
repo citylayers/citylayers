@@ -19,7 +19,6 @@ class InputElement extends CElement {
 
     activate(value){
         let res = value==undefined || value == true ? false : true;
-        console.log(res);
         this.getElement().disabled = res;
     }
 
@@ -169,8 +168,8 @@ class RangeInputElement extends InputElement {
     constructor(parent, id, content) {
         super(parent, id, content);
         this.content = content;
-        let min = this.content.values ? this.content.values["min"] : 0;
-        let max = this.content.values ? this.content.values["max"] : 100;
+        let min = this.content.values ? this.content.values[RANGE_LABELS.MIN] : 0;
+        let max = this.content.values ? this.content.values[RANGE_LABELS.MAX] : 100;
         this.values = new Map(
             [
                 [RANGE_LABELS.MIN, min],
@@ -285,6 +284,50 @@ class CheckboxLabelElement extends InputElement {
         element.appendChild(element1);
     }
 
+}
+
+class SingleChoiceInputElement extends InputElement {
+    static name = "input";
+    constructor(parent, id, content) {
+        super(parent, id, content);
+        this.id = id;
+        this.content = content; //content ? content.replaceAll("\\n", "<br>") : "";
+        this.t = "input";
+        this.input_type = "radio";
+    }
+    load() { }
+
+    activate(value){
+        let res = value==undefined || value == true ? false : true;
+        this.getElement().disabled = res;
+    }
+
+    activateNext(nextids){
+    }
+
+    action(ev, next){
+        this.content(ev, next);
+    }
+
+    initiate(nextid) {
+        let element = this.init_input(nextid);
+        this.init_extra(element);
+    }
+
+    init_input(nextid){
+        let element = document.createElement(this.t);
+        element.setAttribute('type', this.input_type);
+        element.setAttribute('name', this.name);
+        element.setAttribute("class", this.name);
+        element.setAttribute("id", this.make_id());
+        element.onchange = (ev)=>{
+            this.action(ev, nextid)
+        };
+        this.getParent().appendChild(element);
+        return element;
+
+    }
+    init_extra(element){}
 }
 
 

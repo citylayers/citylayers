@@ -60,19 +60,32 @@ class ControllerHeader extends CElement{
         // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.elements = [CategoryInfo, 
                         CategoryLabel, 
-                        CategorySwitch];
+                        CategorySwitch,
+                        ColorPickerElement,
+                        ];
+        this.args = [[this.category], 
+                     [this.category], 
+                     [this.category], 
+                     ["color picker", (ev)=>{
+                        colorpubsub.publish();
+                     }]
+                    ]
     }
 
 
     load(activation){
+        let id = this.category.content.map(c=>c.answer)
+            .filter(a=>a.type==ANSWERS.RANGE)[0].id;
         for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), uuidv4(), this.category);
+            let element = new this.elements[e](this.make_id(), id, ...this.args[e]);
 
             element.initiate(activation);
         }
     }
 
-    activate(on){}
+    activate(on){
+
+    }
 }
 
 class ControllerBody extends CElement{
@@ -154,6 +167,7 @@ class CategoryLabel extends CElement{
 
 class CategorySwitch extends Switch{
     static _name = CLASSNAMES.CATEGORY_SWITCH;
+
     constructor(parent, id, category){
         super(parent, id, category);
         this.name = CLASSNAMES.CATEGORY_SWITCH;
@@ -169,12 +183,23 @@ class CategorySwitch extends Switch{
         let e1 = document.createElement("input");
         e1.setAttribute("type", "checkbox");
 
-        e1.onchange = ()=>{
+        e1.onchange = (ev)=>{
 
             // update map observations
             // activate sliders and tags
             
             activation(CategorySwitch.isActive(this.make_id()));
+            let id = this.category.content.map(c=>c.answer)
+            .filter(a=>a.type==ANSWERS.RANGE)[0].id;
+            let slider = document.getElementById(`categoryslider_${id}`);
+
+            CategorySwitch.isActive(this.make_id()) ?
+            tree.add(id, new Map(
+            [
+                [RANGE_LABELS.MIN, slider.children[0].value],
+                [RANGE_LABELS.MAX, slider.children[1].value],
+            ]
+        )) : tree.remove(id);
 
             // CityLayersPanel.activation(this.category, 
             //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 

@@ -1,6 +1,5 @@
 
 
-
 class HrElement extends CElement{
     constructor(parent, id) {
         super(parent, id);
@@ -20,7 +19,7 @@ class HrElement extends CElement{
 
     static updateColor(ev, gradientEnd){
         /* which */
-        document.getElementsByTagName("hr")[0].style.setProperty(gradientEnd, ev.target.value)
+        document.getElementsByTagName("hr")[0].style.setProperty(gradientEnd, ev.target.value);
     }
     
 }

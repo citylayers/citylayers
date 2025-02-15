@@ -1,3 +1,5 @@
+
+
 .main{
     height: 100vh;
     width: 100%;
@@ -8,8 +10,6 @@
     display: flex;
     flex-direction: row;
 }
-
-
 
 .main-map{
     display: flex;
@@ -75,6 +75,7 @@
 .leaflet-heatmap-layer{
     height: auto;
     width: auto;
+    opacity: var(--vis-opacity);
 
 }
 

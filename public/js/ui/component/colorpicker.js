@@ -1,8 +1,8 @@
 
 class ColorPickerElement extends CElement {
-    constructor(parent, id, onchange) {
+    constructor(parent, id, name, onchange) {
         super(parent, id);
-        this.name = CLASSNAMES.COLORPICKER;
+        this.name = name ? name : CLASSNAMES.COLORPICKER;
         this.value = "#014751";
         this.onchange = onchange ? onchange : ()=> {};
     }

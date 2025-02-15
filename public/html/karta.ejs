@@ -19,11 +19,12 @@
     <script type="text/javascript" src="/js/question/answerParser.js"></script>
     <script type="text/javascript" src="/js/question/answerTree.js"></script>
     <script type="text/javascript" src="/js/question/controlTree.js"></script>
+    <script type="text/javascript" src="/js/ui/component/colorpicker.js"></script>
     <script type="text/javascript" src="/js/question/controllerElement.js"></script>
     <script type="text/javascript" src="/js/question/controller.js"></script>
     <script type="text/javascript" src="/js/question/controllerParser.js"></script>
-    <script type="text/javascript" src="/js/ui/component/colorpicker.js"></script>
-    <script type="text/javascript" src="/js/ui/component/gradientElement.js"></script>
+    
+    
     <script type="text/javascript" src="/js/ui/component/hrElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/slider.js"></script>
@@ -31,12 +32,15 @@
     <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
     <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/sidePanel.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
     <script type="text/javascript" src="/js/ui/panel/team.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/GradientContainer.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/configHeader.js"></script>
-    <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainer.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/vischoiceContainer.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainerManager.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainer.js"></script>
+    
     <script type="text/javascript" src="/js/ui/panelcomponent/landing.js"></script>
     <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
     <script type="text/javascript" src="/js/ui/panel/home.js"></script>
@@ -59,6 +63,10 @@
     <script type='text/javascript'>
         // console.log("DATA", <%- JSON.stringify(data) %>);
         const pubsub = new PubSub();
+        const colorpubsub = new PubSub();
+        const vischoicepubsub = new PubSub();
+        let globalvisualization = new GlobalVisualization(VIS.GRADIENT);
+        
         const tree = new ControlTree();
         PageBuilder.build(PAGES.KARTA, <%- JSON.stringify(data) %>);
 

@@ -3,6 +3,7 @@
 }
 
 
+
 input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -243,9 +244,17 @@ input[type="range"]::-moz-range-thumb {
     flex-direction: row;
 }
 
+.subcontainer.vischoice > .vischoice.disabled{
+    
+    pointer-events: none;
+    cursor: not-allowed;
+}
 
+.vischoice.selected > .icon{
+    border: var(--secondary-color) solid 2px;
+}
 
-.vischoice.icon{
+.vischoice > .icon{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -259,11 +268,16 @@ input[type="range"]::-moz-range-thumb {
     box-shadow: 3px 2px 6px 1px rgba(1, 71, 81, 0.25);
 }
 
-.vischoice.icon:active{
+.vischoice > .icon:active{
     border: var(--secondary-color) solid 3px;
 }
-.vischoice.icon::checked{
+.vischoice > .icon::checked{
     border: var(--secondary-color) solid 3px;
+}
+
+.disabled{
+    filter: grayscale(1);
+    cursor: not-allowed;
 }
 
 .vischoice:disabled{
@@ -275,7 +289,7 @@ input[type="range"]::-moz-range-thumb {
     cursor:not-allowed;
 }
 
-.vischoice.icon > .descr{
+.vischoice > .descr{
     display: flex;
     flex-direction: row;
 }
@@ -287,6 +301,11 @@ input[type="range"]::-moz-range-thumb {
     padding-top: 5px;
     text-decoration: underline;
     padding: 0px;
+}
+
+.vischoice > input[type="radio"] {
+    appearance: none;
+    --webkit-appearance: none;
 }
 
 .descr{
@@ -348,7 +367,7 @@ input[type="color"]::-webkit-color-swatch {
     justify-self: flex-end;
 }
 
-.colorpicker {
+.picker {
     padding: 0px;
     width: 25px;
     height: 25px;

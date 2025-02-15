@@ -59,10 +59,11 @@ const CLASSNAMES = {
     COMMENTSEARCH: "commentsearch",
     SELECTCOMMENT: "selected",
 
-    COLORPICKER: "colorpicker", 
+    COLORPICKER: "color picker", 
 
     CLICK: "click",
     GRAD: "grad",
+    GRADPICKER: "gradient picker", 
 
     PROJECT_PANEL: "projectpanel",
     CARD : "card",

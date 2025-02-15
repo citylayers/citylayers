@@ -11,9 +11,13 @@ class GradientContainer extends ContentPanel{
         super(parent, "id");
         this.name = "gradient subcontainer";
         this.elements = [HrElement, ColorPickerElement, ColorPickerElement];
-        this.args = ["",
-            (ev)=>{ HrElement.updateColor(ev, GRADBAR_ENDS.START)},
-            (ev)=>{ HrElement.updateColor(ev, GRADBAR_ENDS.END)}
+        this.args = [[""],
+           [ CLASSNAMES.GRADPICKER, (ev)=>{ HrElement.updateColor(ev, GRADBAR_ENDS.START);
+                colorpubsub.publish();
+            }],
+            [ CLASSNAMES.GRADPICKER, 
+            (ev)=>{ HrElement.updateColor(ev, GRADBAR_ENDS.END); 
+                colorpubsub.publish()}]
         ]
     }
 
@@ -21,7 +25,7 @@ class GradientContainer extends ContentPanel{
         for (let e=0; e<this.elements.length; e++){
             
             let element = new this.elements[e](this.make_id(), 
-                                               `${e}`, this.args[e]);
+                                               `${e}`, ...this.args[e]);
 
             element.initiate();
             element.load();

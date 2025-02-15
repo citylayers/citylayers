@@ -102,10 +102,23 @@ class ProjectCardBody extends CElement{
             if (this.elements[e]==AddPinButton && this.content.info.mappable==false){
                 continue
             }
-            let element = new this.elements[e](this.make_id(), 
+            let element = undefined;
+
+            // TODO: refactor
+            if (this.elements[e]==ImageElement){
+
+                element = new this.elements[e](this.make_id(), uuidv4(), 
                                     this.classes[e], 
                                     e < this.args.length ? this.args[e] : undefined
                                 );
+            }
+            else{
+                element = new this.elements[e](this.make_id(), 
+                                    this.classes[e], 
+                                    e < this.args.length ? this.args[e] : undefined
+                                );
+            }
+            
             
             element.initiate();
             element.load();

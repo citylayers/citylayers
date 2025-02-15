@@ -2,7 +2,7 @@ class Logo extends ImageElement {
     
     constructor(parent, illustration) {
         let content = illustration ? illustration : new Illustration("/images/logo_2.svg", "/");
-        super(parent, CLASSNAMES.LOGO, content);
+        super(parent, uuidv4(), CLASSNAMES.LOGO, content);
         this.name = CLASSNAMES.LOGO;
          // U+02715
     }
