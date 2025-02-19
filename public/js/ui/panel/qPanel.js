@@ -20,7 +20,6 @@ class QPanel extends ContentPanel{
         qasets.unshift(kartaset);
         QPanel.totalSteps = qasets.length -1;
         QPanel.tree = answerTree;
-               
         this.elements.forEach((el, i) => {
             
             let element = el == QContainer ? new el(this.make_id(), qasets, answerTree) : 

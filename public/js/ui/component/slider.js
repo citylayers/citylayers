@@ -35,7 +35,7 @@ class DoubleRangeContainerElement extends InputContainer{
     }
 
     action(ev, next){
-        tree.add(this.id, this.getCurrentValue());
+        QPanel.tree.add(this.id, this.getCurrentValue());
         // this.activateNext(tree, next);
 
     }

@@ -26,7 +26,7 @@ class InputElement extends CElement {
         if (nextids==undefined){
             return
         }
-        if (tree.get(this.id)!=undefined){
+        if (QPanel.tree.get(this.id)!=undefined){
             let nextid = nextids.get(this.id);
             if (nextid!=undefined){
                 nextid = `qa-container_${nextid}`;
@@ -36,8 +36,8 @@ class InputElement extends CElement {
     }
 
     action(ev, next){
-        tree.add(this.id, ev.target.value);
-        this.activateNext(tree, next);
+        QPanel.tree.add(this.id, ev.target.value);
+        this.activateNext(QPanel.tree, next);
 
     }
 
@@ -93,7 +93,7 @@ class ImageInputElement extends InputElement {
             //     this.image_src = event.target.result;
             // }
             fileReader.readAsDataURL(file);
-            tree.add("image", file);
+            QPanel.tree.add("image", file);
             // this.place_data["image"] = file;
         }
 
@@ -254,7 +254,7 @@ class CheckboxInputElement extends InputElement {
         };
 
     action(ev, next){
-        tree.add(this.id, ev.target.checked);
+        QPanel.tree.add(this.id, ev.target.checked);
         this.activateNext(next);
 
     }
