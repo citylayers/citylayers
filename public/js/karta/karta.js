@@ -157,7 +157,10 @@ class LayerInitializer{
                 markers: [this.markers(obs)]
             } :
             {
-                osm: this.osm()
+                osm: this.osm(),
+                heat: [],
+                flat: [],
+                markers: []
             }
 
         
