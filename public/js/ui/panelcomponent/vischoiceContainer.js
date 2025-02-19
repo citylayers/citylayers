@@ -124,8 +124,9 @@ class VisChoiceContainer extends ContentPanel{
         this.name = VisChoiceContainer.name;
         this.elements = [VisChoice, VisChoice, VisChoice];
         this.args = [
-            VIS.HIGHLIGHT, 
             VIS.GRADIENT, 
+            VIS.HIGHLIGHT, 
+            
             VIS.ELEMENTS
         ]
     }
