@@ -13,8 +13,7 @@ class HrElement extends CElement{
         el.setAttribute('class', "gradient bar");
         el.setAttribute('id', this.id);
         this.getParent().appendChild(el);
-        el.style.setProperty(GRADBAR_ENDS.START, "var(--secondary-color)");
-        el.style.setProperty(GRADBAR_ENDS.END, "var(--secondary-color)");
+        return el;
     }
 
     static updateColor(ev, gradientEnd){

@@ -27,7 +27,11 @@ class GradientContainer extends ContentPanel{
             let element = new this.elements[e](this.make_id(), 
                                                `${e}`, ...this.args[e]);
 
-            element.initiate();
+            let el = element.initiate();
+            if (this.elements[e]==HrElement){
+                el.style.setProperty(GRADBAR_ENDS.START, "var(--secondary-color)");
+                el.style.setProperty(GRADBAR_ENDS.END, "var(--secondary-color)");
+            }
             element.load();
         }
     }
