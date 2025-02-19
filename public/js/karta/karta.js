@@ -45,10 +45,15 @@ class Karta extends CElement{
             Karta.layers.heat.forEach(l=>l.addTo(Karta.content));
             Karta.layers.flat.forEach(l=>l.addTo(Karta.content));
             // VisualizationManager.managed_layer = Karta.layers.heat;
-
-            pubsub.subscribe(this.update);
-            colorpubsub.subscribe(this.update);
-            vischoicepubsub.subscribe(this.update);
+            try {
+                pubsub.subscribe(this.update);
+                colorpubsub.subscribe(this.update);
+                vischoicepubsub.subscribe(this.update);
+                
+            } catch (error) {
+                
+            }
+            
         }
     }
 
