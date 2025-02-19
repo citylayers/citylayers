@@ -28,6 +28,7 @@ class InputElement extends CElement {
         }
         if (QPanel.tree.get(this.id)!=undefined){
             let nextid = nextids.get(this.id);
+            console.log(nextid);
             if (nextid!=undefined){
                 nextid = `qa-container_${nextid}`;
                 document.getElementById(nextid).style.display=DISPLAY.FLEX;
