@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'citylayers',
-      script: 'dist/server/src/app.js',
+      script: 'dist/server/app.js',
       env: {
         NODE_ENV: 'development',
         PORT: 3001,
