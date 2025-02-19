@@ -1,8 +1,8 @@
 
 
 class Position{
-    static lat = 50;
-    static lon = 10;
+    static lat = 48.210033;
+    static lon = 16.363449;
 
     static make(){
         if (navigator && navigator.geolocation) {

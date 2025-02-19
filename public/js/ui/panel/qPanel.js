@@ -53,8 +53,8 @@ class QPanel extends ContentPanel{
 
         const d = new FormData();
 
-        if (QPanel.tree.getAnswer("image")!=undefined && QPanel.tree.getAnswer("image")!=null && QPanel.tree.getAnswer("image")!=""){
-            d.set("image", QPanel.tree.getAnswer("image"));
+        if (QPanel.tree.get("image")!=undefined && QPanel.tree.get("image")!=null && QPanel.tree.get("image")!=""){
+            d.set("image", QPanel.tree.get("image"));
         }
 
         return d

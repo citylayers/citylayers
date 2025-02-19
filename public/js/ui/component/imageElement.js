@@ -1,9 +1,9 @@
 class ImageElement extends CElement {
     
-    constructor(parent, classname, image) {
+    constructor(parent, id, classname, image) {
         // image is instance of Illustration
-        super(parent, classname);
-        this.name = classname? classname : CLASSNAMES.LOGO;
+        super(parent, id);
+        this.name = classname ? classname : CLASSNAMES.LOGO;
         this.content = image; // Illustration
     }
 
@@ -24,9 +24,9 @@ class ImageElement extends CElement {
 
 class ImagePreviewElement extends ImageElement {
     
-    constructor(parent, classname) {
+    constructor(parent, id, classname) {
         // image is instance of Illustration
-        super(parent, classname);
+        super(parent, id);
         this.name = classname? classname : CLASSNAMES.LOGO;
         this.id = IDS.IMG_PREVIEW;
         this.content = new Illustration("", "", "Upload"); // Illustration

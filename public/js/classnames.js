@@ -4,9 +4,11 @@ const CLASSNAMES = {
     SWITCH: "switch",
 
     MAIN_PANEL: "panel citylayers",
+    DASHBOARD: "dashboard",
     HOME_PANEL: "home",
     LANDING_PANEL : "landing",
     CATEGORY_PANEL: "panel category",
+    CONTROLLER_CONTAINER: "controller container",
     // PROJECT_PANEL: "panel project",
     CATEGORY_CONTAINER: "categorycontainer",
     TITLE: "title",
@@ -14,6 +16,11 @@ const CLASSNAMES = {
     MAIN_CONTAINER: "main",
 
     CONFIG: "config",
+    CONFIG_HEADER: "configheader",
+
+    CONTROLLER_BODY: "controllerbody",
+    CONTROLLER_Q: "controllerq",
+    CONTROLLER: "controller",
     
     CATEGORY_SLIDER_CONTAINER: "categoryslider",
     CATEGORY_HEADER: "categoryheader",
@@ -52,8 +59,11 @@ const CLASSNAMES = {
     COMMENTSEARCH: "commentsearch",
     SELECTCOMMENT: "selected",
 
+    COLORPICKER: "color picker", 
+
     CLICK: "click",
     GRAD: "grad",
+    GRADPICKER: "gradient picker", 
 
     PROJECT_PANEL: "projectpanel",
     CARD : "card",

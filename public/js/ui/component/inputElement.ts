@@ -36,7 +36,7 @@ class InputElement extends CElement {
         if (nextids==undefined){
             return
         }
-        if (tree.getAnswer(this.id)!=undefined){
+        if (tree.get(this.id)!=undefined){
             let nextid = nextids.get(this.id);
             if (nextid!=undefined){
                 nextid = `qa-container_${nextid}`;
@@ -46,7 +46,7 @@ class InputElement extends CElement {
     }
 
     action(ev:any, tree:AnswerTree, next:Map<string, string>){
-        tree.addAnswer(this.id, ev.target.value);
+        tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
 
     }
@@ -108,7 +108,7 @@ class ImageInputElement extends InputElement {
 
     action(ev:any, tree:AnswerTree, next:Map<string, string>){
         this.activateNext(tree, next);
-        tree.addAnswer(this.id, ev.target.files[0]);
+        tree.add(this.id, ev.target.files[0]);
         // console.log(tree.content);
         // const file = e.target.files[0];
             //     if (file) {

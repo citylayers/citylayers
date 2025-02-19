@@ -5,6 +5,7 @@
     "target": "ES2021",
     "moduleResolution": "node",
     "sourceMap": true,
+    "types": ["node"],
     "outDir": "dist"
   },
   "lib": ["es2015"],

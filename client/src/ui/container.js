@@ -244,10 +244,7 @@ class CategorySwitch extends Switch{
 
         e1.onchange = ()=>{
             
-            CityLayersPanel.activation(this.category, 
-                            CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
-                            CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
-            DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
+           
 
         }
         let e2 = document.createElement("span");
@@ -330,14 +327,14 @@ class SubcategoryTag extends CElement {
         let category = _id.replace(`${_cname}_`, "");
         let new_id = `${this.name}_${this.id}`;
 
-        let container = SubcategoryTagContainer.getByCategory(category);
+        let container = ControllerMultiCategorical.getByCategory(category);
         let existing_ids = Array.from(container.children).map(el => el.id);
 
         if (existing_ids.includes(new_id)) {
             document.getElementById(new_id).remove();
         }
         else {
-            SubcategoryTagContainer.addLabel(category, this.id, true);
+            ControllerMultiCategorical.addLabel(category, this.id, true);
         }
         ConfigPanel.markertoggle(this.subcat_id, !existing_ids.includes(new_id));
     }

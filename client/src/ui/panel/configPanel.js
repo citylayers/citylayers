@@ -20,10 +20,15 @@ class ConfigPanel extends ContentPanel{
             element.initiate();
             element.load();
         });
-        config.categories.forEach((category, c) => {
-            this.add(category);
-            document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
-        });
+        if (config!=undefined && config!=null){
+            
+            config.categories.forEach((category, c) => {
+                this.add(category);
+                document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
+            });
+
+        }
+        
     }
 
 

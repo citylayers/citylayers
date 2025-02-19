@@ -32,7 +32,7 @@ class SocialContainer extends ContentPanel{
     load() {
         Object.keys(SOCIAL).forEach(el => {
             let element = new ImageElement(
-                this.make_id(), "social", new Illustration(
+                this.make_id(), uuidv4(), "social", new Illustration(
                 `/images/social/${SOCIAL[el]}`, SOCIAL_LINKS.get(SOCIAL[el]))
             );
             element.initiate();

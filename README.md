@@ -112,7 +112,7 @@ or use Github citation on the right of the page for APA or bibtex formats
 
 **💼 Project:** Lovro  - [e-mail](mailto:lovro.koncar-gamulin@tuwien.ac.at) - [LinkedIn](https://www.linkedin.com/in/lovro-koncar-gamulin/)\
 **🔬 Research:** Androniki - [e-mail](mailto:androniki.pappa1@gmail.com) - [LinkedIn](https://www.linkedin.com/in/androniki-pappa/)\
-**👨🏻‍💻 Tech:** Stasja - [@stasya00](https://stasyafedorova.wixsite.com/designautomation) - [e-mail](mailto:0.0stasya@gmail.com) - [LinkedIn][https://linkedin.com/in/stanislava-fedorova]
+**👨🏻‍💻 Tech:** Stasja - [@stasya00](https://stasyafedorova.wixsite.com/designautomation) - [e-mail](mailto:0.0stasya@gmail.com) - [LinkedIn](https://linkedin.com/in/stanislava-fedorova)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

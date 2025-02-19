@@ -1,6 +1,5 @@
 import express from 'express';
 import {config, configDotenv} from 'dotenv';
-import neo4j, { DateTime } from 'neo4j-driver';
 import path from 'path';
 import multer from 'multer';
 
@@ -12,6 +11,9 @@ import { ProjectRecognition, ProjectInfo, ProjectPeriod } from '../../logic/proj
 import { Config } from '../../logic/config';
 import {Project} from '../../logic/project';
 import { QAPair, QASet } from '../../logic/question/question';
+import {Place, Answer, Observation, Point} from '../../logic/observation';
+import onlyUnique from "./graph/utils";
+
 import * as fs from 'node:fs';
 // import { TeamPanel } from '../ui/panel/teamPanel';
 
@@ -20,6 +22,8 @@ configDotenv({path:".env"});
 const app = express();
 const port = process.env["PORT"] || 3000;
 const domain = process.env["DOMAIN"] || "localhost"; 
+
+console.log(process.env["NEO4J_URI"])
 
 app.use(express.static(path.join(__dirname, '../../../public')));
 app.use(express.static(path.join(__dirname, '../../../public/uploads')));
@@ -105,15 +109,6 @@ app.get('/accessibility', (req, res) => {
 
 });
 
-app.get('/accessibility1', (req, res) => {
-
-    // The render method takes the name of the HTML
-    // page to be rendered as input
-    // This page should be in the views folder
-    // in the root directory.
-    res.render('layout', {module: "accessibility"});
-
-});
 
 app.get('/privacy', (req, res) => {
 
@@ -369,7 +364,9 @@ app.get("/pin/:project", (req, res) => {
             .then(qs =>{
                 
                 return qs.records.map(r=>{
+                    
                     let q = new QASet(r.get(GRAPH_KEYS.RESULT).step, 
+                    r.get(GRAPH_KEYS.RESULT).category, 
                     [r.get(GRAPH_KEYS.RESULT).content]); 
                     q.convertContent(); 
                     return q});
@@ -399,17 +396,34 @@ app.get("/pin/:project", (req, res) => {
                         })
                     });
         })
+        .then(qas => {
+            
+            res.render('addPin', {data: qas, title: project})
+        }
+        );
+    }
+);
+
+app.get("/map/:project", (req, res) => {
+    
+    let project = req.params.project;
+    
+    db.read(QUERYS.Q1, {"name": project.replaceAll("%20", " ")})
+            .then(qs =>{
+                
+                return qs.records.map(r=>{
+                    let q = new QASet(r.get(GRAPH_KEYS.RESULT).step,
+                    r.get(GRAPH_KEYS.RESULT).category, 
+                    [r.get(GRAPH_KEYS.RESULT).content]); 
+                    q.convertContent(); 
+                    return q});
+                })
         .then(qs=>{
             
-            return db.read(QUERYS.Q2.replace("$ids", [...qs.filter(r=>r.content.filter(qa=>qa.prev_id!=undefined).length>0)
-                                                            .map(r=>r.content.filter(qa=>qa.prev_id!=undefined)
-                                                                             .map(qa=>qa.answer.getIds().map(id=>`"${id}"`).toString()))].toString()), {})
+            return db.read(QUERYS.Q2.replace("$ids", [...qs.map(r=>r.content.map(qa=>`"${qa.answer.id}"`)[0])].toString()), {})
                     .then(r1 =>{
                         return qs.map(qaset=>{
-                            if (qaset.content.filter(qa=>qa.prev_id!=undefined).length==0){
-                                return qaset;
-                            }
-                            let followup = r1.records.filter(r=>qaset.content.filter((q,i)=>i>0).map(qapair=>qapair.answer.getIds())[0]
+                            let followup = r1.records.filter(r=>qaset.content.map(qapair=>qapair.answer.id)
                                 .includes(r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.PREV]));
                             if (followup.length==0){
                                 return qaset;
@@ -423,25 +437,33 @@ app.get("/pin/:project", (req, res) => {
                             }).forEach(
                                 q=>{
                                     qaset.add(q);
+                                    
                                 }
                             );
-                            
                             return qaset;
                         })
                     });
+        }).then(qas=>{
+            return db.read(QUERYS.OBS, {"name": project.replaceAll("%20", " ")})
+            .then(qs =>{     
+                return qs.records.map(r=>r.get(GRAPH_KEYS.RESULT).id)
+                                 .filter(onlyUnique)
+                                 .map(p=>{
+                                        let records =  qs.records.filter(r=>r.get(GRAPH_KEYS.RESULT).id==p);
+                                        let record = records[0].get(GRAPH_KEYS.RESULT);
+                                        let place = new Place(p, record.lat, record.lon);
+                                        let obs = records.map(r=>{return new Observation(r.get(GRAPH_KEYS.RESULT).obs, 
+                                                                                r.get(GRAPH_KEYS.RESULT).answer)});
+                                        return new Point(place, obs);
+                                    });
+                })
+            .then(obs=>{
+                return {qas:qas, obs:obs}
+            })
         })
-        .then(qas => {
-            
-            res.render('addPin', {data: qas, title: project})
-        }
-        );
-    }
-);
-
-app.get("/map/:project", (req, res) => {
-    
-    let project = req.params.project;
-    res.render("map", {project: project});
+        .then(d => {
+            res.render('karta', {data: d, title: project})
+        })
     }
 );
 

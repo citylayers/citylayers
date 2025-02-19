@@ -7,30 +7,18 @@ class ConfigPanel extends ContentPanel{
     }
 
     constructor(parent){
-        super(parent, "id");
+        super(parent);
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
-        this.id = "id";
-        this.elements = [];
+        this.elements = [ConfigHeader, ControllerContainer];
     }
 
     load(config) {
         this.elements.forEach(el => {
             let element = new el(this.make_id(), "main");
             element.initiate();
-            element.load();
+            element.load(config);
         });
-        config.categories.forEach((category, c) => {
-            this.add(category);
-            document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
-        });
-    }
-
-
-    add(category) {
-        let div = new CategoryElement(this.make_id(), category);
-        div.initiate();
-        div.load();
     }
 
 }

@@ -26,13 +26,6 @@ class CategorySidePanel extends CElement {
         this.args = [() => { CategorySidePanel.toggle(category); }]
     }
 
-    getParent() {
-        let elements = document.getElementsByClassName(this.parent);
-        if (elements.length > 0) {
-            return elements[0];
-        }
-    }
-
     load() {
         for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.content, e<this.args.length?this.args[e]:undefined);
@@ -40,17 +33,19 @@ class CategorySidePanel extends CElement {
             element.load();
         }
 
-        this.getElement().style.display = "none";
+        this.getElement().style.display = DISPLAY.NONE;
     }
 
     static toggle(category) {
+        console.log(category);
+        
         let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category.name}`);
         let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category.name}`);
-        if (sidePanel.style.display === "none") {
+        if (sidePanel.style.display === DISPLAY.NONE) {
             this.hideAll();
         }
         container.classList.toggle("simple-drop-shadow");
-        sidePanel.style.display = sidePanel.style.display === "none" ? "flex" : "none";
+        sidePanel.style.display = sidePanel.style.display === DISPLAY.NONE ? DISPLAY.FLEX : DISPLAY.NONE;
         document.body.style.setProperty(`--side-panel-color`, `#${category.color}`);
     }
 
@@ -60,7 +55,7 @@ class CategorySidePanel extends CElement {
         Array.from(panels).forEach(panel => {
         })
         for (let i = 0; i < panels.length; i++) {
-            panels[i].style.display = "none";
+            panels[i].style.display = DISPLAY.NONE;
             containers[i].classList.remove("simple-drop-shadow");            
         }
     }

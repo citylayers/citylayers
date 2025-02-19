@@ -170,7 +170,7 @@ class QContainer extends ContentPanel{
         this.content.forEach((qs, i)=>{
             qs.content.forEach(
             (qa, j)=>{qa.initiate(this.make_id(), (i==step && 
-                                            (j==0 || this.tree.getAnswer(qa.prev_id)!=undefined)
+                                            (j==0 || this.tree.get(qa.prev_id)!=undefined)
 
             ), this.tree)}
         )
@@ -184,7 +184,7 @@ class QContainer extends ContentPanel{
         this.content.forEach((qs, i)=>{
             qs.content.forEach(
             (qa, j)=>{qa.make(this.make_id(), (i==step && 
-                                            (j==0 || this.tree.getAnswer(qa.prev_id)!=undefined)
+                                            (j==0 || this.tree.get(qa.prev_id)!=undefined)
 
             ), this.tree)}
         )

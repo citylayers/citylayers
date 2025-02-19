@@ -1,10 +1,16 @@
-
+import {config, configDotenv} from 'dotenv';
 import neo4j from 'neo4j-driver';
 import {Driver, Session, QueryResult, RecordShape} from 'neo4j-driver';
-// var neo4j = require('neo4j-driver');
-const URI = process.env.NEO4J_URI; 
-const USER = process.env.NEO4J_USER; 
-const PASSWORD = process.env.NEO4J_PWD; 
+
+if (process.env["NEO4J_URI"]==undefined){
+    configDotenv({path:".env"});
+}
+const URI = process.env["NEO4J_URI"]; 
+const USER = process.env["NEO4J_USER"]; 
+const PASSWORD = process.env["NEO4J_PWD"]; 
+
+console.log(process.env["NEO4J_URI"]);
+console.log(URI);
 
 const MODE = {
     READ: 0,
@@ -14,13 +20,18 @@ const MODE = {
 const GRAPH_KEYS = {
     ANSWER: "answer",
     ANSWER1: "answer1",
+    CATEGORY: "category",
     CHOICE: "choice",
     CONFIG: "c",
     CONTENT: "content",
     ID: "id",
     ILLUSTRATION: "illustration",
+    LAT: "lat",
+    LON: "lon",
     NODE: "node",
+    OBSERVATION: "obs",
     PARTNER: "partner",
+    PLACE: "place",
     PREV: "prev",
     PROJECT: "p",
     RECOGNITION: "recognition",
@@ -33,6 +44,17 @@ const GRAPH_KEYS = {
 }
 
 const QUERYS = {
+    OBSERVATIONS: `match (p:Place)<-[r:REGISTERED]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[:ISANSWERED]-()
+                    <-[:ASKS]-(c:Config)<-[]-(pr:Project {name: "Mobility Dashboard"}) 
+                    return {content: {obs: o, obs_id: elementId(o), place_id: elementId(p), place:p}};`,
+
+    OBS: `match (p:Place)<-[]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[]-()<-[]-(c:Config)<-[]-(pr:Project {name: $name}) 
+            with collect(p) as places, collect(elementId(o)) as obs
+            match (p)<-[:REGISTERED]-(o:Observation)-[e:EVALUATES]->(a:Answer) where elementId(o) in obs
+            with p, o, collect({id: elementId(a), value: e.value}) as answers
+            return { ${GRAPH_KEYS.LON}: p.lon, ${GRAPH_KEYS.LAT}: p.lat, ${GRAPH_KEYS.ID}: elementId(p), 
+            ${GRAPH_KEYS.OBSERVATION}: elementId(o), ${GRAPH_KEYS.ANSWER}: answers } AS ${GRAPH_KEYS.RESULT}`,
+            
     SUBMIT: `MERGE (place: Place {lon: $lon, lat: $lat})<-[:REGISTERED]-(o:Observation {date: datetime()})`,
     SUBMIT_BETA: `WITH $data AS data 
             UNWIND data AS obs
@@ -93,12 +115,12 @@ const QUERYS = {
             [${GRAPH_KEYS.STEP}:ASKS]->(${GRAPH_KEYS.QUESTION}:Question)-[:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)
                 RETURN 
                 CASE 
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="range" THEN { ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, \
+                WHEN ${GRAPH_KEYS.ANSWER}.atype="range" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, \
                 content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
                                         value: {min: ${GRAPH_KEYS.ANSWER}.min, max: ${GRAPH_KEYS.ANSWER}.max}, 
                                         label: {min: ${GRAPH_KEYS.ANSWER}.minlabel, max: ${GRAPH_KEYS.ANSWER}.maxlabel}} } }
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="multicategory" THEN { step: step.step,
+                WHEN ${GRAPH_KEYS.ANSWER}.atype="multicategory" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step,
                 ${GRAPH_KEYS.CONTENT}: {${GRAPH_KEYS.QUESTION}: {id: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
                         content: COLLECT {
@@ -106,7 +128,7 @@ const QUERYS = {
                                         return {atype: child.atype, name: child.name}
                                 }
                 } } }
-                ELSE { ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
+                ELSE { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
                                         ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype} } }
                 END AS ${GRAPH_KEYS.RESULT}
                 order by ${GRAPH_KEYS.STEP}.step`,
@@ -145,8 +167,6 @@ const QUERYS = {
                     return ${GRAPH_KEYS.PROJECT}, w, ${GRAPH_KEYS.TEAMMEMBER}, rel, ${GRAPH_KEYS.ROLE}`,
 }
 
-
-
 class DBConnection{
     driver: Driver;
     session: Session;
@@ -156,32 +176,36 @@ class DBConnection{
         this.session = undefined;
     }
     async init(){
-        try {
-            this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });
-            const serverInfo = await this.driver.getServerInfo();
-            // this.initSession();
-          } catch(err) {
-                console.log(`Connection error\n${err}\nCause: ${err.cause}`)
-          }
+        console.log(URI, USER, PASSWORD);
+        if (this.driver==undefined){
+            try {
+                this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });
+                const serverInfo = await this.driver.getServerInfo();
+                // this.initSession();
+            } catch(err) {
+                    console.log(`Connection error\n${err}\nCause: ${err.cause}`)
+            }
+            }
         //   await this.driver.close();
     } 
 
-    initSession(mode:number=0){
-        this.session = mode==MODE.WRITE ? this.driver.session({ defaultAccessMode: neo4j.session.WRITE }) : this.driver.session({ defaultAccessMode: neo4j.session.READ });
-        
+    async initSession(mode:number=0){
+            return this.init().then(k=>
+                this.session = mode==MODE.WRITE ? this.driver.session(
+                    { defaultAccessMode: neo4j.session.WRITE }) : this.driver.session({ defaultAccessMode: neo4j.session.READ })
+            )
     }
 
     async read(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        if (this.session==undefined){
-            this.initSession(MODE.READ);
-        }
-        return this.session.run(query, param, { timeout: 3000 } )
+        return this.initSession(MODE.READ).then(k=>{
+                return this.session.run(query, param, { timeout: 3000 } )
                 .then(result => {
                     this.reset();
                     return result;
-                })
-                    
+                })     
+            }) 
         }
+
     reset(){
         if (this.session!=undefined){
             this.session.close();
@@ -197,13 +221,14 @@ class DBConnection{
          */
         this.reset()
         
-        if (this.session==undefined){
-            this.initSession(MODE.WRITE);
-        }
-        return this.session.run(query, param, { timeout: 3000 } ).then(result => {
+        return  this.initSession(MODE.WRITE).then(k=>{
+                return this.session.run(query, param, { timeout: 3000 } ).then(result => {
                     this.reset();
                     return result;
                 })
+            })
+        
+        
                     
         }
         

@@ -1,16 +1,25 @@
 
 
 class HrElement extends CElement{
-    constructor(parent) {
-        super(parent);
+    constructor(parent, id) {
+        super(parent, id);
         this.name = "";
         this.content = "";
     }
     load() { }
 
     initiate() {
-        let element = document.createElement("hr");
-        this.getParent().appendChild(element);
+        let el = document.createElement("hr");
+        el.setAttribute('class', "gradient bar");
+        el.setAttribute('id', this.id);
+        this.getParent().appendChild(el);
+        el.style.setProperty(GRADBAR_ENDS.START, "var(--secondary-color)");
+        el.style.setProperty(GRADBAR_ENDS.END, "var(--secondary-color)");
+    }
+
+    static updateColor(ev, gradientEnd){
+        /* which */
+        document.getElementsByTagName("hr")[0].style.setProperty(gradientEnd, ev.target.value);
     }
     
 }

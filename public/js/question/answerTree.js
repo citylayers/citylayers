@@ -9,13 +9,13 @@ class AnswerTree{
         
     }
 
-    addAnswer(q, a){
+    add(q, a){
         // q - elementId
         // a - value
             this.content.set(q, a);
         }
         
-    getAnswer(id){
+    get(id){
         return this.content.get(id) ? this.content.get(id) : undefined;
     }
 

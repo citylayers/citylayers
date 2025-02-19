@@ -11,7 +11,7 @@ class LandingIllustration extends ContentPanel{
     load() {
         this.images.forEach(el => {
             let illustration = new Illustration(el)
-            let element = new ImageElement(this.make_id(),"image", illustration);
+            let element = new ImageElement(this.make_id(),uuidv4(), "image", illustration);
             element.initiate();
             element.load();
         });
