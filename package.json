@@ -4,8 +4,8 @@
   "main": "server/dst/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node --env-file=.env dist/server/src/app.js ",
-    "build": "tsc src/server/src",
+    "start": "tsc && node --env-file=.env dist/src/server/app.js ",
+    "build": "tsc src/server/src/",
     "dev": "nodemon src/server/src/app.ts --env-file=.env"
   },
   "keywords": [],
@@ -22,7 +22,7 @@
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "express": "^4.17.1",

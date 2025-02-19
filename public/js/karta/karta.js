@@ -23,9 +23,14 @@ class Karta extends CElement{
         return CLASSNAMES.MAP;
     }
     load(config) {
+        let obs = undefined;
+        let controls = undefined;
+        if (config!=undefined){
+            obs = config.obs;
+            controls = config.qas;
 
-        let obs = config.obs;
-        let controls = config.qas;
+        }
+            
 
         if (Karta.content===undefined){
             let lat = Position.lat;
@@ -144,12 +149,19 @@ class LayerInitializer{
     
 
     static make(controls, obs){
-        return {
-            osm: this.osm(),
-            heat: [this.heat(controls)],
-            flat: this.flat(controls),
-            markers: [this.markers(obs)]
-        }
+        return controls!=undefined? 
+             {
+                osm: this.osm(),
+                heat: [this.heat(controls)],
+                flat: this.flat(controls),
+                markers: [this.markers(obs)]
+            } :
+            {
+                osm: this.osm()
+            }
+
+        
+        
     }
 }
 

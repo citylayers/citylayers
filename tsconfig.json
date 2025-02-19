@@ -6,8 +6,12 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "types": ["node"],
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
   },
   "lib": ["es2015"],
+  "include": ["src/server/src/*", "dist/app.js"],
   "exclude": ["client", "node_modules", "public"]
 }
