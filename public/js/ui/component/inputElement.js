@@ -22,13 +22,12 @@ class InputElement extends CElement {
         this.getElement().disabled = res;
     }
 
-    activateNext(nextids){
+    activateNext(tree, nextids){
         if (nextids==undefined){
             return
         }
-        if (QPanel.tree.get(this.id)!=undefined){
+        if (tree.get(this.id)!=undefined){
             let nextid = nextids.get(this.id);
-            console.log(nextid);
             if (nextid!=undefined){
                 nextid = `qa-container_${nextid}`;
                 document.getElementById(nextid).style.display=DISPLAY.FLEX;
@@ -36,25 +35,25 @@ class InputElement extends CElement {
         }
     }
 
-    action(ev, next){
+    action(ev, next, tree){
         QPanel.tree.add(this.id, ev.target.value);
-        this.activateNext(QPanel.tree, next);
+        this.activateNext(tree, next);
 
     }
 
-    initiate(nextid) {
-        let element = this.init_input(nextid);
+    initiate(nextid, tree) {
+        let element = this.init_input(nextid, tree);
         this.init_extra(element);
     }
 
-    init_input(nextid){
+    init_input(nextid, tree){
         let element = document.createElement(this.t);
         element.setAttribute('type', this.input_type);
         element.setAttribute('name', this.name);
         element.setAttribute("class", this.name);
         element.setAttribute("id", this.make_id());
         element.onchange = (ev)=>{
-            this.action(ev, nextid)
+            this.action(ev, nextid, tree)
         };
         this.getParent().appendChild(element);
         return element;
@@ -125,13 +124,13 @@ class InputContainer extends ContentPanel {
         return document.getElementById(`${this.name}_${this.id}`);
     }
 
-    load(nextid) {
+    load(nextid, tree) {
         this.elements = this.components.map((el, i) => {
             let element = new el(this.make_id(), this.id, 
                                  this.content instanceof Array ? this.content[i] : this.content);
             
-            element instanceof InputElement ? element.initiate(nextid) : element.initiate();
-            element instanceof InputContainer ? element.load(nextid) : element.load();
+            element instanceof InputElement ? element.initiate(nextid, tree) : element.initiate();
+            element instanceof InputContainer ? element.load(nextid, tree) : element.load();
             return element;
         });
     }
@@ -254,9 +253,9 @@ class CheckboxInputElement extends InputElement {
     init_extra(element){
         };
 
-    action(ev, next){
+    action(ev, next, tree){
         QPanel.tree.add(this.id, ev.target.checked);
-        this.activateNext(next);
+        this.activateNext(tree, next);
 
     }
 }
@@ -303,26 +302,26 @@ class SingleChoiceInputElement extends InputElement {
         this.getElement().disabled = res;
     }
 
-    activateNext(nextids){
+    activateNext(tree, nextids){
     }
 
-    action(ev, next){
-        this.content(ev, next);
+    action(ev, next, tree){
+        this.content(ev, next, tree);
     }
 
-    initiate(nextid) {
-        let element = this.init_input(nextid);
+    initiate(nextid, tree) {
+        let element = this.init_input(nextid, tree);
         this.init_extra(element);
     }
 
-    init_input(nextid){
+    init_input(nextid, tree){
         let element = document.createElement(this.t);
         element.setAttribute('type', this.input_type);
         element.setAttribute('name', this.name);
         element.setAttribute("class", this.name);
         element.setAttribute("id", this.make_id());
         element.onchange = (ev)=>{
-            this.action(ev, nextid)
+            this.action(ev, nextid, tree)
         };
         this.getParent().appendChild(element);
         return element;

@@ -37,7 +37,6 @@ class CategorySidePanel extends CElement {
     }
 
     static toggle(category) {
-        console.log(category);
         
         let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category.name}`);
         let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category.name}`);

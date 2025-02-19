@@ -447,7 +447,6 @@ class MarkerManager{
                 let icon_path = e.target.options.icon.options.iconUrl == 
                                             TAG_ICONS.NORMAL ? TAG_ICONS.SELECTED : TAG_ICONS.NORMAL
                 e.target.setIcon(this.makeIcon(icon_path));
-                console.log(e.target.options);
     
                 // MapPanel.toggleComment(id, _icon_path==TAG_ICONS.SELECTED);
             

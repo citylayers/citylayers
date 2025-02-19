@@ -107,7 +107,7 @@ class Answer{
         if (this.element==undefined){
             this.element = new this.answer(parent_id, this.id, this.content);
             this.element.initiate();
-            this.element.load(tree, nextids);
+            this.element.load(nextids, tree);
         }
 
         // this.element.show(display);
