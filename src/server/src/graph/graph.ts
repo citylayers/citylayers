@@ -9,8 +9,6 @@ const URI = process.env["NEO4J_URI"];
 const USER = process.env["NEO4J_USER"]; 
 const PASSWORD = process.env["NEO4J_PWD"]; 
 
-console.log(process.env["NEO4J_URI"]);
-console.log(URI);
 
 const MODE = {
     READ: 0,
@@ -176,7 +174,7 @@ class DBConnection{
         this.session = undefined;
     }
     async init(){
-        console.log(URI, USER, PASSWORD);
+        
         if (this.driver==undefined){
             try {
                 this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });

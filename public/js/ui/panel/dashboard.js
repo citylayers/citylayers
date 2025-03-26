@@ -8,6 +8,7 @@ class Dashboard extends ContentPanel{
     
     load(config) {
         // Positioner.make();
+        
         this.elements.forEach(el => {
             let element = new el(this.make_id(), "");
             element.initiate();

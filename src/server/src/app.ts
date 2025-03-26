@@ -23,13 +23,12 @@ const app = express();
 const port = process.env["PORT"] || 3000;
 const domain = process.env["DOMAIN"] || "localhost"; 
 
-console.log(process.env["NEO4J_URI"])
 
-app.use(express.static(path.join(__dirname, '../../../public')));
-app.use(express.static(path.join(__dirname, '../../../public/uploads')));
+app.use(express.static(path.join(__dirname, '../../../../public')));
+app.use(express.static(path.join(__dirname, '../../../../public/uploads')));
 app.use(express.json())
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../../../public/html'));
+app.set('views', path.join(__dirname, '../../../../public/html'));
 
 const fileFilter = (req, file, cb) => {
     const filetypes = /.png|.jpg|.jpeg/
@@ -55,7 +54,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, fileFilter });
   
   
-const uploadsDir = path.join(__dirname, '../../../public/uploads');
+const uploadsDir = path.join(__dirname, '../../../../public/uploads');
 if (!fs.existsSync(uploadsDir)){
     fs.mkdirSync(uploadsDir);
 }
@@ -374,6 +373,7 @@ app.get("/pin/:project", (req, res) => {
         .then(qs=>{
             return db.read(QUERYS.Q2.replace("$ids", [...qs.map(r=>r.content.map(qa=>`"${qa.answer.id}"`)[0])].toString()), {})
                     .then(r1 =>{
+                        
                         return qs.map(qaset=>{
                             let followup = r1.records.filter(r=>qaset.content.map(qapair=>qapair.answer.id)
                                 .includes(r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.PREV]));
@@ -392,6 +392,37 @@ app.get("/pin/:project", (req, res) => {
                                     
                                 }
                             );
+                            return qaset;
+                        })
+                    });
+        })
+        .then(qs=>{
+ 
+            return db.read(QUERYS.Q2.replace("$ids", [...qs.filter(r=>r.content.filter(qa=>qa.prev_id!=undefined).length>0)
+            .map(r=>r.content.filter(qa=>qa.prev_id!=undefined)
+                                .map(qa=>qa.answer.getIds().map(id=>`"${id}"`).toString()))].toString()), {})
+                    .then(r1 =>{
+                        return qs.map(qaset=>{
+                            if (qaset.content.filter(qa=>qa.prev_id!=undefined).length==0){
+                                return qaset;
+                            }
+                            let followup = r1.records.filter(r=>qaset.content.filter((q,i)=>i>0).map(qapair=>qapair.answer.getIds())[0]
+                                .includes(r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.PREV]));
+                            if (followup.length==0){
+                                return qaset;
+                            }
+                            followup.map(r=>{
+                                let q = new QAPair(r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.CONTENT][GRAPH_KEYS.QUESTION],
+                                                   r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.CONTENT][GRAPH_KEYS.ANSWER],
+                                                   r.get(GRAPH_KEYS.RESULT)[GRAPH_KEYS.PREV]);
+                                q.convertContent();
+                                return q;
+                            }).forEach(
+                                q=>{
+                                    qaset.add(q);
+                                }
+                            );
+
                             return qaset;
                         })
                     });
@@ -452,8 +483,7 @@ app.get("/map/:project", (req, res) => {
                                         let records =  qs.records.filter(r=>r.get(GRAPH_KEYS.RESULT).id==p);
                                         let record = records[0].get(GRAPH_KEYS.RESULT);
                                         let place = new Place(p, record.lat, record.lon);
-                                        let obs = records.map(r=>{return new Observation(r.get(GRAPH_KEYS.RESULT).obs, 
-                                                                                r.get(GRAPH_KEYS.RESULT).answer)});
+                                        let obs = records.map(r=>{return new Observation(r.get(GRAPH_KEYS.RESULT).obs, r.get(GRAPH_KEYS.RESULT).answer)});
                                         return new Point(place, obs);
                                     });
                 })
