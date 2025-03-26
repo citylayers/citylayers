@@ -4,8 +4,8 @@
   "main": "server/dst/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node --env-file=.env dist/src/server/app.js ",
-    "build": "tsc src/server/src/",
+    "start": "tsc && node --env-file=.env dist/src/server/src/app.js ",
+    "build": "tsc --project tsconfig.json",
     "dev": "nodemon src/server/src/app.ts --env-file=.env"
   },
   "keywords": [],
