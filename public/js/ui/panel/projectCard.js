@@ -51,7 +51,8 @@ class ProjectCardBody extends CElement{
                         LegalText, 
                         ImageElement, 
                         ProjectSlogan,
-                        AddPinButton,                        
+                        AddPinButton,
+                        DashboardButton,                        
                         ProjectPeriodInfo,
                         ProjectCardText,
                         ImageContainerElement,
@@ -64,6 +65,7 @@ class ProjectCardBody extends CElement{
                         LEGAL_CLASSNAMES.TITLE, 
                         CLASSNAMES.COVER, 
                         CLASSNAMES.PROJECT_DESCRIPTION,
+                        "",
                         "",
                         CLASSNAMES.PERIOD,
                         CLASSNAMES.PROJECT_DESCRIPTION,
@@ -78,6 +80,7 @@ class ProjectCardBody extends CElement{
                      content.name, 
                      cover, 
                      content.info.subtitle,
+                     content.name,
                      content.name,
                      content.info,
                      content.info.description,
@@ -99,7 +102,7 @@ class ProjectCardBody extends CElement{
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            if (this.elements[e]==AddPinButton && this.content.info.mappable==false){
+            if ((this.elements[e]==AddPinButton || this.elements[e]==DashboardButton) && this.content.info.mappable==false){
                 continue
             }
             let element = undefined;

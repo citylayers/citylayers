@@ -73,7 +73,7 @@ class QPanel extends ContentPanel{
         
 
         let d = QPanel.make_form();
-        if (d.get("image")!=undefined && d.get("image")!=null){
+        if (d.get("image")!=undefined && d.get("image")!=null && d.get("image")!=""){
             fetch('/upload', {
                 method: 'POST',
                 body: d

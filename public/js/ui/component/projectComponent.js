@@ -244,6 +244,19 @@ class AddPinButton extends CButton {
     }
 }
 
+class DashboardButton extends CButton {
+
+    constructor(parent, id, project) {
+        super(parent, project);
+        this.name = "projectButton";
+        this.content = "Explore";
+        this.project = project;
+        this.onclick = () => {
+            window.location.href = `/map/${this.project}`;
+        }
+    }
+}
+
 class ProjectCardText extends TextElement {
     constructor(parent, name, content) {
         super(parent, name, content);

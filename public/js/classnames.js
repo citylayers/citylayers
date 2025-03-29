@@ -168,7 +168,7 @@ const LEGAL_LINKS = new Map([
    [LEGAL.ACCESSIBILITY, "/accessibility"],
 ]);
 const SECTIONMAP = {
-    EXPLORE: ["explore", "explore"],
+    EXPLORE: ["explore", "map/Mobility Dashboard"],
     TEAM: ["team", "team"],
     ABOUT: ["about", "about"],
 }

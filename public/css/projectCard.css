@@ -311,7 +311,7 @@
         display: grid;
         font-size: 10pt;
         grid-template-columns: 1fr;
-        grid-row-start: 8;
+        grid-row-start: 9;
         grid-column-start: 2;
         grid-column-end: 3;
     }
@@ -398,7 +398,7 @@
         width: 100%;
         scrollbar-width: none;
 
-        grid-row-start: 7;
+        grid-row-start: 8;
     }
     .imagecontainer > img {
         max-height: 600px;
@@ -407,10 +407,9 @@
 
 
     .projectButton {
-        border-radius: 2px;
+        border-radius: 5px;
         background-color: var(--secondary-color);
         color: var(--tertiary-color);
-
         grid-column-start: 2;
         grid-row-start: 5;
         grid-column-end: 3;
@@ -421,15 +420,18 @@
         align-self: flex-end;
         padding: 3%;
         z-index: 4;
-
+    }
+    .projectButton:nth-of-type(2) {
+        grid-row-start: 6;
+        grid-row-end: 7;
     }
     
     .projectdescription {
         grid-column-start: 1;
-        grid-row-start: 6;
+        grid-row-start: 7;
         grid-column-end: 3;
         display: inline-grid;
-        grid-row-end: 6;
+        grid-row-end: 8;
     }
     .projectstatus {
         grid-column-start: 1;
@@ -444,9 +446,9 @@
         height: auto;
         width: 100%;
         grid-column-start: 1;
-        grid-row-start: 9;
+        grid-row-start: 10;
         grid-column-end: 3;
-        grid-row-end: 9;
+        grid-row-end: 10;
         display: flex;
         flex-direction: row;
         align-self: flex-end;
