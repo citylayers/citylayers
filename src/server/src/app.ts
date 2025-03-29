@@ -22,13 +22,14 @@ configDotenv({path:".env"});
 const app = express();
 const port = process.env["PORT"] || 3000;
 const domain = process.env["DOMAIN"] || "localhost"; 
+const PubPath = '../../../public';
+const PublicPath = process.env.NODE_ENV=="dev" ? PubPath : `../${PubPath}`;
 
-
-app.use(express.static(path.join(__dirname, '../../../../public')));
-app.use(express.static(path.join(__dirname, '../../../../public/uploads')));
+app.use(express.static(path.join(__dirname, PublicPath)));
+app.use(express.static(path.join(__dirname, `${PublicPath}/uploads`)));
 app.use(express.json())
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../../../../public/html'));
+app.set('views', path.join(__dirname, `${PublicPath}/html`));
 
 const fileFilter = (req, file, cb) => {
     const filetypes = /.png|.jpg|.jpeg/
@@ -54,7 +55,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, fileFilter });
   
   
-const uploadsDir = path.join(__dirname, '../../../../public/uploads');
+const uploadsDir = path.join(__dirname, `${PublicPath}/uploads`);
 if (!fs.existsSync(uploadsDir)){
     fs.mkdirSync(uploadsDir);
 }

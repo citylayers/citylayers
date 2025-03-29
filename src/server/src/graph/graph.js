@@ -45,8 +45,7 @@ if (process.env["NEO4J_URI"] == undefined) {
 var URI = process.env["NEO4J_URI"];
 var USER = process.env["NEO4J_USER"];
 var PASSWORD = process.env["NEO4J_PWD"];
-console.log(process.env["NEO4J_URI"]);
-console.log(URI);
+
 var MODE = {
     READ: 0,
     WRITE: 1
