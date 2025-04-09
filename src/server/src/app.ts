@@ -18,11 +18,12 @@ import * as fs from 'node:fs';
 // import { TeamPanel } from '../ui/panel/teamPanel';
 
 
-configDotenv({path:".env"});
+configDotenv({path:".dev.env"});
 const app = express();
 const port = process.env["PORT"] || 3000;
 const domain = process.env["DOMAIN"] || "localhost"; 
 const PubPath = '../../../public';
+console.log("ENV:", process.env.NODE_ENV)
 const PublicPath = process.env.NODE_ENV=="dev" ? PubPath : `../${PubPath}`;
 
 app.use(express.static(path.join(__dirname, PublicPath)));
@@ -512,9 +513,11 @@ app.post("/submit", (req, res) => {
         const indata = req.body;
         let query = (indata.image!="" && indata.image!=undefined && indata.image!=null)? QUERYS.SUBMIT_BETA: QUERYS.SUBMIT_NO_IMAGE;
         
-        
+        console.log("Query:", query);
+        console.log("Data:", indata);
         //return 
-        db.write(query, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image});
+        let r = db.write(query, {"lat": indata.coords.lat, "lon": indata.coords.lon, "data": indata.data, "image": indata.image});
+        console.log("Result:", r);
         //     .then(obs => {
         //         return res.render('postSuccess', {data: indata.data})
         //     }
