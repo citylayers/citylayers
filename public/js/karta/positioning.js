@@ -11,6 +11,7 @@ class Position{
                 function success(pos) {
                     Position.lat = pos.coords.latitude;
                     Position.lon = pos.coords.longitude;
+                    console.log(`Latitude: ${pos.coords.latitude}`);
                 },
                 
                 function (error) {
@@ -22,6 +23,14 @@ class Position{
             );
         }
     }
+
+    static update(lat, lon){
+        Position.lat = lat;
+        Position.lon = lon;
+        console.log(`updated to: Latitude: ${lat} Longitude: ${lon}`);
+
+    }
+
     // static load() {
     //     if (navigator) {
             

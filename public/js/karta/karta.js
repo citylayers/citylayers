@@ -28,10 +28,8 @@ class Karta extends CElement{
         if (config!=undefined){
             obs = config.obs;
             controls = config.qas;
-
         }
             
-
         if (Karta.content===undefined){
             let lat = Position.lat;
             let lon = Position.lon;
@@ -50,11 +48,33 @@ class Karta extends CElement{
                 colorpubsub.subscribe(this.update);
                 vischoicepubsub.subscribe(this.update);
                 
-            } catch (error) {
-                
-            }
+            } catch (error) { }
+            Karta.updatePositionOnMapMove();
             
         }
+    }
+
+    static updatePositionOnMapMove() {
+        if (Karta.content) {
+            Karta.content.on('moveend', () => {
+                const center = Karta.content.getCenter();
+                Position.update(center.lat, center.lng);
+            });
+        }
+        const centerCoordinates = getMapCenterCoordinates();
+        if (centerCoordinates) {
+            console.log(`Center Latitude: ${centerCoordinates.lat}, Longitude: ${centerCoordinates.lon}`);
+        } else {
+            console.log("Map is not initialized.");
+        }
+    }
+
+    static getMapCenterCoordinates() {
+        if (Karta.content) {
+            const center = Karta.content.getCenter();
+            return { lat: center.lat, lon: center.lng };
+        }
+        return null; // Return null if the map is not initialized
     }
 
     static _checkOne(leaf, answer_leaf){
