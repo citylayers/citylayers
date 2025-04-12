@@ -53,6 +53,13 @@ class Karta extends CElement{
             
         }
     }
+    static getMapCenterCoordinates() {
+        if (Karta.content) {
+            const center = Karta.content.getCenter();
+            return { lat: center.lat, lon: center.lng };
+        }
+        return null; // Return null if the map is not initialized
+    }
 
     static updatePositionOnMapMove() {
         if (Karta.content) {
@@ -69,13 +76,7 @@ class Karta extends CElement{
         }
     }
 
-    static getMapCenterCoordinates() {
-        if (Karta.content) {
-            const center = Karta.content.getCenter();
-            return { lat: center.lat, lon: center.lng };
-        }
-        return null; // Return null if the map is not initialized
-    }
+    
 
     static _checkOne(leaf, answer_leaf){
         if (answer_leaf==undefined || answer_leaf==null || answer_leaf.length==0){
