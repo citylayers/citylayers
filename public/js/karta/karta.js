@@ -68,7 +68,7 @@ class Karta extends CElement{
                 Position.update(center.lat, center.lng);
             });
         }
-        const centerCoordinates = getMapCenterCoordinates();
+        const centerCoordinates = Karta.getMapCenterCoordinates();
         if (centerCoordinates) {
             console.log(`Center Latitude: ${centerCoordinates.lat}, Longitude: ${centerCoordinates.lon}`);
         } else {
