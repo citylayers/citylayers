@@ -1,4 +1,4 @@
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 import { Project } from "../../../../logic/project";
 import { CElement } from "../component/celement";
 import { CloseButton } from "../component/closeButton";

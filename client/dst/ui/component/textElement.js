@@ -16,13 +16,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeaderElement = exports.TextElement = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var celement_1 = require("./celement");
 var TextElement = (function (_super) {
     __extends(TextElement, _super);
     function TextElement(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = classnames_1.CLASSNAMES.TEXT;
+        _this.name = ClassNames_1.CLASSNAMES.TEXT;
         _this.id = id;
         _this.content = content ? content.replaceAll("\\n", "<br>") : "";
         return _this;
@@ -42,7 +42,7 @@ var HeaderElement = (function (_super) {
     __extends(HeaderElement, _super);
     function HeaderElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.HEADER;
+        _this.name = ClassNames_1.CLASSNAMES.HEADER;
         return _this;
     }
     return HeaderElement;

@@ -1,5 +1,5 @@
 import { ContentPanel } from "../panel/contentPanel";
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 import { TeamMember } from "../../../../logic/teammember";
 import { TextElement } from "../component/textElement";
 import { LinkElement } from "../component/linkElement";

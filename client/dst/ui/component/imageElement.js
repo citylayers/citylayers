@@ -16,14 +16,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImagePreviewElement = exports.ImageElement = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var celement_1 = require("./celement");
 var illustration_1 = require("../../../../logic/illustration");
 var ImageElement = (function (_super) {
     __extends(ImageElement, _super);
     function ImageElement(parent, id, image, name) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = name ? name : classnames_1.CLASSNAMES.LOGO;
+        _this.name = name ? name : ClassNames_1.CLASSNAMES.LOGO;
         _this.content = image ? image : new illustration_1.Illustration("", "", "");
         return _this;
     }
@@ -47,8 +47,8 @@ var ImagePreviewElement = (function (_super) {
     __extends(ImagePreviewElement, _super);
     function ImagePreviewElement(parent, id, name) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = name ? name : classnames_1.CLASSNAMES.LOGO;
-        _this.id = classnames_1.IDS.IMG_PREVIEW;
+        _this.name = name ? name : ClassNames_1.CLASSNAMES.LOGO;
+        _this.id = ClassNames_1.IDS.IMG_PREVIEW;
         _this.content = new illustration_1.Illustration("", "", "Upload");
         return _this;
     }

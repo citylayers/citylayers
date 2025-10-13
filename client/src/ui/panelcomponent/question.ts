@@ -1,6 +1,6 @@
 import { ContentPanel } from "../panel/contentPanel";
 import { LineLogo } from "../component/logo";
-import { CLASSNAMES, DISPLAY } from "../../../classnames";
+import { CLASSNAMES, DISPLAY } from "../../constants/ClassNames";
 import { CButton } from "../component/cbutton";
 import { HrElement } from "../component/hrElement";
 import { CElement } from "../component/celement";

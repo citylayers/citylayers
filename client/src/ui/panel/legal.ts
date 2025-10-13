@@ -1,7 +1,7 @@
 import { CElement } from "../component/celement";
 import {ContentPanel} from "./contentPanel";
 
-import { LEGAL_CLASSNAMES, CLASSNAMES } from "../../../classnames";
+import { LEGAL_CLASSNAMES, CLASSNAMES } from "../../constants/ClassNames";
 import { Logo } from "../component/logo";
 import { CloseButton } from "../component/closeButton";
 import { TextElement } from "../component/textElement";

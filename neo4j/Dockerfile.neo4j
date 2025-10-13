@@ -1,0 +1,21 @@
+FROM neo4j:latest
+
+# Ta bort inbäddat ENV-lösenord, vi skickar det vid deployment
+# ENV NEO4J_AUTH=neo4j/6ty6zc9rtk5ETSjQ3TUROHNv1UzNvsBHXgW8kd7WuRw 
+
+# Ställ in minnesinställningar (dessa är oförändrade)
+ENV NEO4J_dbms_memory_pagecache_size=1G
+ENV NEO4J_dbms_memory_heap_initial__size=1G
+ENV NEO4J_dbms_memory_heap_max__size=2G
+# Lyssningsadresser ställs in vid deployment i deploy_vm.sh
+
+# Exponera portar
+EXPOSE 7474 7687
+
+# Skapa volymer för data persistence
+VOLUME /data
+VOLUME /logs
+
+# Hälso-koll (Använder nu variabeln i cypher-shell)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD cypher-shell -u neo4j -p ${NEO4J_AUTH#*/} "RETURN 1" || exit 1

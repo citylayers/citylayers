@@ -1,35 +1,36 @@
-import { CLASSNAMES } from "../../../classnames";
-// import {ContentElement} from "./contentElement";
+import { ClassName } from "../../constants/ClassNames";
 import { Illustration } from "../../../../logic/illustration";
 import { ImageElement } from "./imageElement";
 
-
+/**
+ * Logo component.
+ * Extends ImageElement with logo-specific behavior.
+ */
 class Logo extends ImageElement {
-    content: Illustration;
-    constructor(parent:string, illustration?:Illustration) {
-        let content = illustration ? illustration : new Illustration("/images/logo_2.svg", "/");
-        super(parent, CLASSNAMES.LOGO, content);
-        this.name = CLASSNAMES.LOGO;
-         // U+02715
+    constructor(parentId: string, illustration?: Illustration) {
+        const content = illustration || new Illustration("/images/logo_2.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }
 
-class ColorLogo extends Logo {
-    content: Illustration;
-    constructor(parent:string) {
-        let content = new Illustration("/images/logo_full.svg", "/");
-        super(parent, content);
-        this.name = CLASSNAMES.LOGO;
+/**
+ * Color logo variant.
+ */
+class ColorLogo extends ImageElement {
+    constructor(parentId: string) {
+        const content = new Illustration("/images/logo_full.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }
 
-class LineLogo extends Logo {
-    content: Illustration;
-    constructor(parent:string) {
-        let content = new Illustration("/images/logo_2.svg", "/");
-        super(parent, content);
-        this.name = CLASSNAMES.LOGO;
+/**
+ * Line logo variant.
+ */
+class LineLogo extends ImageElement {
+    constructor(parentId: string) {
+        const content = new Illustration("/images/logo_2.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }
 
-export {Logo, ColorLogo, LineLogo};
+export { Logo, ColorLogo, LineLogo };

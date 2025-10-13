@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeamPanel = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var textElement_1 = require("../component/textElement");
 var legal_1 = require("./legal");
 var teamComponent_1 = require("../panelcomponent/teamComponent");
@@ -24,7 +24,7 @@ var TeamPanel = (function (_super) {
     __extends(TeamPanel, _super);
     function TeamPanel(parent) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = classnames_1.CLASSNAMES.HOME_PANEL;
+        _this.name = ClassNames_1.CLASSNAMES.HOME_PANEL;
         _this.elements = [textElement_1.TextElement, teamComponent_1.TeamMemberContainer];
         return _this;
     }

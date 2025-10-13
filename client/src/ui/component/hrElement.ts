@@ -1,24 +1,17 @@
+import { BaseComponent } from "./BaseComponent";
 
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
-
-class HrElement extends CElement{
-    id: string;
-    parent: string;
-    content: string;
-    name: string;
-    constructor(parent:string) {
-        super(parent);
-        this.name = "";
-        this.content = "";
+/**
+ * Horizontal rule element component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class HrElement extends BaseComponent {
+    constructor(parentId: string) {
+        super(parentId, "");
     }
-    load() { }
 
-    initiate() {
-        let element = document.createElement("hr");
-        this.getParent().appendChild(element);
+    protected getElementTag(): string {
+        return 'hr';
     }
-    
 }
 
-export {HrElement};
+export { HrElement };

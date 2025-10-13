@@ -1,4 +1,4 @@
-import { CLASSNAMES, DISPLAY, RANGE_LABELS } from "../../../classnames";
+import { CLASSNAMES, DISPLAY, RANGE_LABELS } from "../../constants/ClassNames";
 import {ContentPanel} from "../panel/contentPanel";
 import { CElement } from "../component/celement";
 import { ColorLogo } from "../component/logo";

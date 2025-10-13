@@ -1,27 +1,35 @@
-// import { CLASSNAMES } from "../../classnames";
-import { CButton } from "./cbutton";
-// import {CElement} from "./celement";
-import {CityLayersPanel} from "../panel/citylayerspanel";
+import { BaseComponent } from "./BaseComponent";
 
-class PinButton extends CButton {
-    
-    constructor(parent:string) {
-        super(parent, "");
-        this.name = "pinButton";
+/**
+ * Pin button component for adding location pins.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class PinButton extends BaseComponent {
+    private content: string;
+    private onClickHandler: () => void;
+
+    constructor(parentId: string, getCoordinates: () => { lat: number; lon: number }) {
+        super(parentId, "pinButton primary-button");
         this.content = "Add a pin";
+        this.onClickHandler = () => {
+            const coords = getCoordinates();
+            window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lon}`;
+        };
     }
 
-    initiate() {
-        var element = document.createElement("button");
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
         element.innerHTML = this.content;
-        element.setAttribute('class', "" + this.name + " primary-button");
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            let coords = CityLayersPanel.getCoords();
-            window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lon}`;
-        });
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.onClickHandler);
     }
 }
 
-export {PinButton};
+export { PinButton };

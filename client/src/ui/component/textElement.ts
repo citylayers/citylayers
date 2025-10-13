@@ -1,33 +1,54 @@
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
+import { ClassName } from "../../constants/ClassNames";
+import { BaseComponent } from "./BaseComponent";
 
-class TextElement extends CElement {
-    id: string;
-    parent: string;
-    onclick: ()=>{};
-    name: string; 
-    constructor(parent:string, id:string, content?:any) {
-        super(parent, id);
-        this.name = CLASSNAMES.TEXT;
-        this.id = id;
-        this.content = content ? content.replaceAll("\\n", "<br>") : "";
+/**
+ * Text element component for displaying formatted text.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class TextElement extends BaseComponent {
+    protected textContent: string;
+
+    constructor(parentId: string, id: string, content?: string) {
+        super(parentId, ClassName.TEXT, id);
+        this.textContent = content ? content.replaceAll("\\n", "<br>") : "";
     }
-    load() { }
 
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.textContent;
+        return element;
     }
-}
 
-class HeaderElement extends TextElement{
-    constructor(parent:string, id:string, content?:any){
-        super(parent, id, content);
-        this.name = CLASSNAMES.HEADER;
+    protected updateContent(element: HTMLElement): void {
+        if (typeof this.content === 'string') {
+            element.innerHTML = this.content.replaceAll("\\n", "<br>");
+        }
     }
 }
 
-export {TextElement, HeaderElement};
+/**
+ * Header element component.
+ * Specialized TextElement with header styling.
+ */
+class HeaderElement extends BaseComponent {
+    protected textContent: string;
+
+    constructor(parentId: string, id: string, content?: string) {
+        super(parentId, ClassName.HEADER, id);
+        this.textContent = content ? content.replaceAll("\\n", "<br>") : "";
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.textContent;
+        return element;
+    }
+
+    protected updateContent(element: HTMLElement): void {
+        if (typeof this.content === 'string') {
+            element.innerHTML = this.content.replaceAll("\\n", "<br>");
+        }
+    }
+}
+
+export { TextElement, HeaderElement };

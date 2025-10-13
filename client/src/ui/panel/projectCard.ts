@@ -1,4 +1,4 @@
-import { CLASSNAMES, LEGAL_CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES, LEGAL_CLASSNAMES } from "../../constants/ClassNames";
 import {CElement} from "../component/celement";
 import {LegalPanel} from "./legal";
 import { Logo } from "../component/logo";

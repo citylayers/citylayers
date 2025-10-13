@@ -1,5 +1,5 @@
 
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 import {CElement} from "./celement";
 
 class CButton extends CElement {

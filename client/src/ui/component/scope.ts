@@ -1,23 +1,26 @@
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
+import { BaseComponent } from "./BaseComponent";
 
-class Scope extends CElement{
-    id: string;
-    parent: string;
-    name: string; 
-    constructor(parent:string){
-        super(parent);
-        this.name = "scope";
-        this.content = "/images/scope.svg"; // U+02715
+/**
+ * Scope image component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class Scope extends BaseComponent {
+    private imageSrc: string;
+
+    constructor(parentId: string) {
+        super(parentId, "scope");
+        this.imageSrc = "/images/scope.svg";
     }
 
-    initiate() {
-        var element = document.createElement("img");
-        element.src = this.content;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
+    protected getElementTag(): string {
+        return 'img';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement() as HTMLImageElement;
+        element.src = this.imageSrc;
+        return element;
     }
 }
 
-export {Scope};
+export { Scope };

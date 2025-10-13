@@ -2,7 +2,7 @@ import { AnswerTree } from "../../../../logic/question/answerTree";
 import { QASet } from "../../../../logic/question/question";
 import { CElement } from "../component/celement";
 import { ContentPanel } from "./contentPanel";
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 
 import { QHeader, QFooter, QAContainer, QContainer } from "../panelcomponent/question";
 

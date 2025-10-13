@@ -1,29 +1,33 @@
+import { ClassName } from "../../constants/ClassNames";
+import { BaseComponent } from "./BaseComponent";
 
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
+/**
+ * Close button component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class CloseButton extends BaseComponent {
+    private content: string;
+    private clickHandler: () => void;
 
-class CloseButton extends CElement {
-    id: string;
-    parent: string;
-    content: string;
-    onclick: ()=>{};
-    name: string;
-    
-    constructor(parent:string, category:string, onclick:any) {
-        super(parent, category?category : "id");
-        this.name = CLASSNAMES.CLOSE;
+    constructor(parentId: string, id: string, onClick?: () => void) {
+        super(parentId, ClassName.CLOSE, id);
         this.content = "✕"; // U+02715
-        this.onclick = onclick ? onclick : () => { }; //CategorySidePanel.toggle(category) 
+        this.clickHandler = onClick || (() => {});
     }
 
-    initiate() {
-        let element = document.createElement("button");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
         element.innerHTML = this.content;
-        element.onclick = this.onclick;
-        this.getParent().appendChild(element);
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
     }
 }
 
-export {CloseButton}
+export { CloseButton };

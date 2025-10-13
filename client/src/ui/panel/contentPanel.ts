@@ -1,58 +1,63 @@
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "../component/celement";
+import { ClassName, DisplayStyle } from "../../constants/ClassNames";
+import { BaseComponent } from "../component/BaseComponent";
 
-class ContentPanel extends CElement{
+/**
+ * Content panel base class for panels with dynamic content.
+ * Extends BaseComponent with panel-specific functionality.
+ *
+ * Design Pattern: Template Method Pattern
+ */
+class ContentPanel extends BaseComponent {
+    protected elements: any[];
 
-    constructor(parent:string, id:string, content?:any){
-        super(parent, id, content);
-        this.name = CLASSNAMES.CATEGORY_PANEL;
-        this.parent = parent ? parent : "body";
+    constructor(parentId: string, id: string, content?: any) {
+        super(parentId || "body", ClassName.CATEGORY_PANEL, id, content);
         this.elements = [];
     }
 
-    load(categories:any[], args:any) {
+    /**
+     * Override getParent to handle body element
+     */
+    public getParent(): HTMLElement | null {
+        if (this.parentId === "body") {
+            return document.body;
+        }
+        return document.getElementById(this.parentId);
+    }
+
+    /**
+     * Load child elements (legacy pattern support)
+     */
+    public load(categories?: any[], args?: any): void {
+        // Legacy load pattern for old-style elements
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), this.id);
+            let element = new el(this.makeId(), this.id);
             element.initiate();
             element.load();
         });
-        // categories ?
-        // categories.forEach((category, c) => {
-        //     this.addCategory(category);
-        //     document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
-        // }) : ()=>{};
+
+        // Modern pattern: load BaseComponent children
+        super.load();
     }
 
-
-    add(element:any, args:any) {
-        // let div = new CategoryElement(this.make_id(), category);
-        // div.initiate();
-        // div.load();
+    /**
+     * Add element (placeholder for subclass implementations)
+     */
+    public add(element: any, args: any): void {
+        // To be implemented by subclasses
     }
 
-    // getElement() {
-    //     let elements = document.getElementsByClassName(this.name);
-    //     if (elements.length > 0) {
-    //         return elements[0];
-    //     }
-    //     return this.initiate();
-    // }
-
-    getParent() {
-        if (this.parent=="body"){
-            return document.body;
-        }
-        return document.getElementById(this.parent);
-    }
-
-
-    static activate(on:boolean){
-        let mode = on == true ? "flex" : "none";
-        let elements = document.getElementsByClassName(this.name);
+    /**
+     * Static method to activate/deactivate panels by class name
+     */
+    public static activate(on: boolean): void {
+        const mode = on ? DisplayStyle.FLEX : DisplayStyle.NONE;
+        const elements = document.getElementsByClassName(ClassName.CATEGORY_PANEL);
         if (elements.length > 0) {
-            let el = elements[0] as HTMLElement;
+            const el = elements[0] as HTMLElement;
             el.style.display = mode;
         }
     }
 }
-export {ContentPanel};
+
+export { ContentPanel };

@@ -16,13 +16,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContentPanel = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var celement_1 = require("../component/celement");
 var ContentPanel = (function (_super) {
     __extends(ContentPanel, _super);
     function ContentPanel(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.CATEGORY_PANEL;
+        _this.name = ClassNames_1.CLASSNAMES.CATEGORY_PANEL;
         _this.parent = parent ? parent : "body";
         _this.elements = [];
         return _this;

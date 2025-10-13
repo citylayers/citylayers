@@ -16,13 +16,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloseButton = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var celement_1 = require("./celement");
 var CloseButton = (function (_super) {
     __extends(CloseButton, _super);
     function CloseButton(parent, category, onclick) {
         var _this = _super.call(this, parent, category ? category : "id") || this;
-        _this.name = classnames_1.CLASSNAMES.CLOSE;
+        _this.name = ClassNames_1.CLASSNAMES.CLOSE;
         _this.content = "✕";
         _this.onclick = onclick ? onclick : function () { };
         return _this;

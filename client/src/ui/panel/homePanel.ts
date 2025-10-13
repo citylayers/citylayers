@@ -1,4 +1,4 @@
-import { CLASSNAMES} from "../../../classnames";
+import { CLASSNAMES} from "../../constants/ClassNames";
 import {ContentPanel} from "./contentPanel";
 import {LandingIllustration, GeneralContent} from "../panelcomponent/landing";
 import { ProjectPanel } from "../component/projectComponent";

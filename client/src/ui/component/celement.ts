@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 
 class CElement {
     

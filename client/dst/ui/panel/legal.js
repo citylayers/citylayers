@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LegalPanel = void 0;
 var celement_1 = require("../component/celement");
 var contentPanel_1 = require("./contentPanel");
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var logo_1 = require("../component/logo");
 var closeButton_1 = require("../component/closeButton");
 var textElement_1 = require("../component/textElement");
@@ -35,7 +35,7 @@ var LegalPanel = (function (_super) {
     __extends(LegalPanel, _super);
     function LegalPanel(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.LEGAL_CLASSNAMES.PANEL;
+        _this.name = ClassNames_1.LEGAL_CLASSNAMES.PANEL;
         _this.elements = [LegalHeader, LegalBody];
         _this.content = content;
         return _this;
@@ -54,10 +54,10 @@ var LegalHeader = (function (_super) {
     __extends(LegalHeader, _super);
     function LegalHeader(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.LEGAL_CLASSNAMES.HEADER;
+        _this.name = ClassNames_1.LEGAL_CLASSNAMES.HEADER;
         _this.content = content;
         _this.elements = [logo_1.Logo, closeButton_1.CloseButton];
-        _this.args = [classnames_1.CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
+        _this.args = [ClassNames_1.CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
         return _this;
     }
     LegalHeader.prototype.initiate = function () {
@@ -78,10 +78,10 @@ var LegalBody = (function (_super) {
     __extends(LegalBody, _super);
     function LegalBody(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.LEGAL_CLASSNAMES.BODY;
+        _this.name = ClassNames_1.LEGAL_CLASSNAMES.BODY;
         _this.content = content;
         _this.elements = [textElement_1.TextElement, LegalBodyContent];
-        _this.classes = [classnames_1.LEGAL_CLASSNAMES.TITLE, classnames_1.LEGAL_CLASSNAMES.LEGALBODYCONTENT];
+        _this.classes = [ClassNames_1.LEGAL_CLASSNAMES.TITLE, ClassNames_1.LEGAL_CLASSNAMES.LEGALBODYCONTENT];
         _this.args = [content[0].title, content];
         return _this;
     }
@@ -98,10 +98,10 @@ var LegalBodyContent = (function (_super) {
     __extends(LegalBodyContent, _super);
     function LegalBodyContent(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.LEGAL_CLASSNAMES.BODY;
+        _this.name = ClassNames_1.LEGAL_CLASSNAMES.BODY;
         _this.content = content;
         _this.elements = __spreadArray([], content.map(function (e) { return (e.link != undefined && e.link != null && e.link != "") ? LegalLinkText : textElement_1.TextElement; }), true);
-        _this.classes = __spreadArray([], content.map(function (e) { return e.formatting == 1 ? classnames_1.LEGAL_CLASSNAMES.TEXT_F : classnames_1.LEGAL_CLASSNAMES.TEXT; }), true);
+        _this.classes = __spreadArray([], content.map(function (e) { return e.formatting == 1 ? ClassNames_1.LEGAL_CLASSNAMES.TEXT_F : ClassNames_1.LEGAL_CLASSNAMES.TEXT; }), true);
         _this.args = __spreadArray([], content.map(function (e) { return e.content; }), true);
         return _this;
     }
@@ -131,7 +131,7 @@ var LegalLinkText = (function (_super) {
     __extends(LegalLinkText, _super);
     function LegalLinkText(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.LEGAL_CLASSNAMES.TEXT;
+        _this.name = ClassNames_1.LEGAL_CLASSNAMES.TEXT;
         _this.content = content ? content[0].replaceAll("\\n", "<br>") : "";
         _this.link = content ? content[1] : "/";
         return _this;

@@ -1,4 +1,4 @@
-import { CLASSNAMES , SECTIONMAP} from "../../../classnames";
+import { CLASSNAMES , SECTIONMAP} from "../../constants/ClassNames";
 import {CElement} from "./celement";
 import { ContentPanel } from "../panel/contentPanel";
 import { Project } from "../../../../logic/project";

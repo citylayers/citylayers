@@ -1,5 +1,5 @@
 
-import { CLASSNAMES } from "../../../classnames";
+import { CLASSNAMES } from "../../constants/ClassNames";
 import { TeamMember } from "../../../../logic/teammember";
 import { TextElement } from "../component/textElement";
 import { LegalPanel } from "./legal";

@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineLogo = exports.ColorLogo = exports.Logo = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var illustration_1 = require("../../../../logic/illustration");
 var imageElement_1 = require("./imageElement");
 var Logo = (function (_super) {
@@ -24,8 +24,8 @@ var Logo = (function (_super) {
     function Logo(parent, illustration) {
         var _this = this;
         var content = illustration ? illustration : new illustration_1.Illustration("/images/logo_2.svg", "/");
-        _this = _super.call(this, parent, classnames_1.CLASSNAMES.LOGO, content) || this;
-        _this.name = classnames_1.CLASSNAMES.LOGO;
+        _this = _super.call(this, parent, ClassNames_1.CLASSNAMES.LOGO, content) || this;
+        _this.name = ClassNames_1.CLASSNAMES.LOGO;
         return _this;
     }
     return Logo;
@@ -37,7 +37,7 @@ var ColorLogo = (function (_super) {
         var _this = this;
         var content = new illustration_1.Illustration("/images/logo_full.svg", "/");
         _this = _super.call(this, parent, content) || this;
-        _this.name = classnames_1.CLASSNAMES.LOGO;
+        _this.name = ClassNames_1.CLASSNAMES.LOGO;
         return _this;
     }
     return ColorLogo;
@@ -49,7 +49,7 @@ var LineLogo = (function (_super) {
         var _this = this;
         var content = new illustration_1.Illustration("/images/logo_2.svg", "/");
         _this = _super.call(this, parent, content) || this;
-        _this.name = classnames_1.CLASSNAMES.LOGO;
+        _this.name = ClassNames_1.CLASSNAMES.LOGO;
         return _this;
     }
     return LineLogo;

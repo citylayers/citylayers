@@ -17,14 +17,14 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeamMemberContainer = void 0;
 var contentPanel_1 = require("../panel/contentPanel");
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var textElement_1 = require("../component/textElement");
 var linkElement_1 = require("../component/linkElement");
 var TeamMemberContainer = (function (_super) {
     __extends(TeamMemberContainer, _super);
     function TeamMemberContainer(parent, id, team) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = classnames_1.CLASSNAMES.TEAM_MEMBER_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.TEAM_MEMBER_CONTAINER;
         _this.elements = [TeamPersonCard];
         _this.content = team;
         return _this;
@@ -45,7 +45,7 @@ var TeamPersonCard = (function (_super) {
     function TeamPersonCard(parent, id, content) {
         var _this = _super.call(this, parent, id, content.id) || this;
         _this.id = content.id;
-        _this.name = classnames_1.CLASSNAMES.TEAM_MEMBER_CARD;
+        _this.name = ClassNames_1.CLASSNAMES.TEAM_MEMBER_CARD;
         _this.elements = [textElement_1.TextElement,
             RoleContainer];
         _this.content = content;
@@ -70,7 +70,7 @@ var RoleContainer = (function (_super) {
     function RoleContainer(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
         _this.id = id;
-        _this.name = classnames_1.CLASSNAMES.ROLE_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.ROLE_CONTAINER;
         ;
         _this.elements = [RoleElement];
         _this.content = content;
@@ -91,7 +91,7 @@ var RoleElement = (function (_super) {
     function RoleElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content.id) || this;
         _this.id = "".concat(parent, "_").concat(id);
-        _this.name = classnames_1.CLASSNAMES.ROLE_ELEMENT;
+        _this.name = ClassNames_1.CLASSNAMES.ROLE_ELEMENT;
         _this.elements = [
             linkElement_1.LinkElement,
             textElement_1.TextElement
