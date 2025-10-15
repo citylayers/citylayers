@@ -1,6 +1,6 @@
 
 import { CLASSNAMES } from "../../constants/ClassNames";
-import { TeamMember } from "../../../../logic/teammember";
+import { TeamMember } from '../../../../src/logic/teammember';
 import { TextElement } from "../component/textElement";
 import { LegalPanel } from "./legal";
 import { TeamMemberContainer } from "../panelcomponent/teamComponent";
@@ -21,7 +21,7 @@ class TeamPanel extends LegalPanel{
 
     load(team:TeamMember[]) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "team");
+            let element = new el(this.makeId(), "team");
             element.initiate();
             el==TeamMemberContainer ? element.load(team) : element.load();
         });

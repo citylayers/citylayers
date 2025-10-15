@@ -17,34 +17,44 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeaderElement = exports.TextElement = void 0;
 var ClassNames_1 = require("../../constants/ClassNames");
-var celement_1 = require("./celement");
+var BaseComponent_1 = require("./BaseComponent");
 var TextElement = (function (_super) {
     __extends(TextElement, _super);
-    function TextElement(parent, id, content) {
-        var _this = _super.call(this, parent, id) || this;
-        _this.name = ClassNames_1.CLASSNAMES.TEXT;
-        _this.id = id;
-        _this.content = content ? content.replaceAll("\\n", "<br>") : "";
+    function TextElement(parentId, id, content) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.TEXT, id) || this;
+        _this.textContent = content ? content.replaceAll("\\n", "<br>") : "";
         return _this;
     }
-    TextElement.prototype.load = function () { };
-    TextElement.prototype.initiate = function () {
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        this.getParent().appendChild(element);
+    TextElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.textContent;
+        return element;
+    };
+    TextElement.prototype.updateContent = function (element) {
+        if (typeof this.content === 'string') {
+            element.innerHTML = this.content.replaceAll("\\n", "<br>");
+        }
     };
     return TextElement;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 exports.TextElement = TextElement;
 var HeaderElement = (function (_super) {
     __extends(HeaderElement, _super);
-    function HeaderElement(parent, id, content) {
-        var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.CLASSNAMES.HEADER;
+    function HeaderElement(parentId, id, content) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.HEADER, id) || this;
+        _this.textContent = content ? content.replaceAll("\\n", "<br>") : "";
         return _this;
     }
+    HeaderElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.textContent;
+        return element;
+    };
+    HeaderElement.prototype.updateContent = function (element) {
+        if (typeof this.content === 'string') {
+            element.innerHTML = this.content.replaceAll("\\n", "<br>");
+        }
+    };
     return HeaderElement;
-}(TextElement));
+}(BaseComponent_1.BaseComponent));
 exports.HeaderElement = HeaderElement;

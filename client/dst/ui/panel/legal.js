@@ -25,12 +25,13 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LegalPanel = void 0;
-var celement_1 = require("../component/celement");
 var contentPanel_1 = require("./contentPanel");
+var BaseComponent_1 = require("../component/BaseComponent");
 var ClassNames_1 = require("../../constants/ClassNames");
 var logo_1 = require("../component/logo");
 var closeButton_1 = require("../component/closeButton");
 var textElement_1 = require("../component/textElement");
+var ClassNames_2 = require("../../constants/ClassNames");
 var LegalPanel = (function (_super) {
     __extends(LegalPanel, _super);
     function LegalPanel(parent, id, content) {
@@ -57,7 +58,7 @@ var LegalHeader = (function (_super) {
         _this.name = ClassNames_1.LEGAL_CLASSNAMES.HEADER;
         _this.content = content;
         _this.elements = [logo_1.Logo, closeButton_1.CloseButton];
-        _this.args = [ClassNames_1.CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
+        _this.args = [ClassNames_2.CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
         return _this;
     }
     LegalHeader.prototype.initiate = function () {
@@ -129,23 +130,25 @@ var LegalBodyContent = (function (_super) {
 }(contentPanel_1.ContentPanel));
 var LegalLinkText = (function (_super) {
     __extends(LegalLinkText, _super);
-    function LegalLinkText(parent, id, content) {
-        var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.TEXT;
-        _this.content = content ? content[0].replaceAll("\\n", "<br>") : "";
+    function LegalLinkText(parentId, id, content) {
+        var _this = _super.call(this, parentId, ClassNames_1.LEGAL_CLASSNAMES.TEXT, id) || this;
+        _this.textContent = content ? content[0].replaceAll("\\n", "<br>") : "";
         _this.link = content ? content[1] : "/";
         return _this;
     }
-    LegalLinkText.prototype.load = function () { };
-    LegalLinkText.prototype.initiate = function () {
-        var el = document.createElement("a");
-        el.href = this.link;
-        this.getParent().appendChild(el);
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        el.appendChild(element);
+    LegalLinkText.prototype.createElement = function () {
+        var anchor = document.createElement("a");
+        anchor.href = this.link;
+        var div = document.createElement("div");
+        div.setAttribute('class', this.className);
+        div.setAttribute('id', this.makeId());
+        div.innerHTML = this.textContent;
+        anchor.appendChild(div);
+        var parent = this.getParent();
+        if (parent) {
+            parent.appendChild(anchor);
+        }
+        return div;
     };
     return LegalLinkText;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));

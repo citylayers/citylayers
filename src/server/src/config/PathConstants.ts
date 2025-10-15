@@ -49,15 +49,12 @@ export class PathConfig {
 
     /**
      * Get the public directory path based on environment
-     * In dev: ../../../public
-     * In prod: ../../public
+     * Uses process.cwd() as base for more reliable path resolution
      */
     public getPublicPath(): string {
-        const relativePath = this.env.getMode() === EnvironmentMode.DEVELOPMENT
-            ? path.join(PathSegment.PARENT_THREE_LEVELS, PathSegment.PUBLIC)
-            : path.join(PathSegment.PARENT_ONE_LEVEL, PathSegment.PARENT_THREE_LEVELS, PathSegment.PUBLIC);
-
-        return path.join(this.baseDir, relativePath);
+        // Use process.cwd() which is the project root when running from npm scripts
+        const projectRoot = process.cwd();
+        return path.join(projectRoot, PathSegment.PUBLIC);
     }
 
     /**
@@ -78,11 +75,7 @@ export class PathConfig {
      * Get relative path for static middleware (uploads)
      */
     public getStaticUploadsPath(): string {
-        const relativePath = this.env.getMode() === EnvironmentMode.DEVELOPMENT
-            ? path.join(PathSegment.PARENT_THREE_LEVELS, PathSegment.PUBLIC)
-            : path.join(PathSegment.PARENT_ONE_LEVEL, PathSegment.PARENT_THREE_LEVELS, PathSegment.PUBLIC);
-
-        return path.join(this.baseDir, relativePath, PathSegment.UPLOADS);
+        return path.join(this.getPublicPath(), PathSegment.UPLOADS);
     }
 
     /**

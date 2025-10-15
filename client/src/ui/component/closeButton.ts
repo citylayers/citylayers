@@ -6,12 +6,12 @@ import { BaseComponent } from "./BaseComponent";
  * Extends BaseComponent with proper OOP principles.
  */
 class CloseButton extends BaseComponent {
-    private content: string;
+    private buttonContent: string;
     private clickHandler: () => void;
 
     constructor(parentId: string, id: string, onClick?: () => void) {
         super(parentId, ClassName.CLOSE, id);
-        this.content = "✕"; // U+02715
+        this.buttonContent = "✕"; // U+02715
         this.clickHandler = onClick || (() => {});
     }
 
@@ -21,7 +21,7 @@ class CloseButton extends BaseComponent {
 
     protected createElement(): HTMLElement {
         const element = super.createElement();
-        element.innerHTML = this.content;
+        element.innerHTML = this.buttonContent;
         return element;
     }
 

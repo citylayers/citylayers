@@ -1,334 +1,297 @@
-
-const INPUT_TYPES = {
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CheckboxContainerElement = exports.RangeContainerElement = exports.ImageInputContainer = exports.ImageInputContainerElement = exports.TextInputContainer = exports.InputContainer = void 0;
+var ClassNames_1 = require("../../constants/ClassNames");
+var contentPanel_1 = require("../panel/contentPanel");
+var BaseComponent_1 = require("./BaseComponent");
+var imageElement_1 = require("./imageElement");
+var spanElement_1 = require("./spanElement");
+var textElement_1 = require("./textElement");
+var INPUT_TYPES = {
     TEXT: "text",
     FILE: "file",
     RANGE: "range",
     CHECKBOX: "checkbox"
-}
-
-class InputElement extends CElement {
-    static name = "input";
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.id = id;
-        this.content = content; //content ? content.replaceAll("\\n", "<br>") : "";
-        this.t = "input";
-        this.input_type = INPUT_TYPES.TEXT;
+};
+var InputElement = (function (_super) {
+    __extends(InputElement, _super);
+    function InputElement(parent, id, content) {
+        var _this = _super.call(this, parent, "input", id, content) || this;
+        _this.answerTree = null;
+        _this.nextIds = null;
+        _this.elementTag = "input";
+        _this.inputType = INPUT_TYPES.TEXT;
+        _this.changeHandler = function (ev) {
+            if (_this.answerTree && _this.nextIds) {
+                _this.action(ev, _this.answerTree, _this.nextIds);
+            }
+        };
+        return _this;
     }
-    load() { }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
-    }
-
-    activateNext(tree, nextids){
-        if (nextids==undefined){
-            return
+    InputElement.prototype.initiate = function (answerTree, nextid) {
+        if (answerTree && nextid) {
+            this.answerTree = answerTree;
+            this.nextIds = nextid;
         }
-        if (tree.get(this.id)!=undefined){
-            let nextid = nextids.get(this.id);
-            if (nextid!=undefined){
-                nextid = `qa-container_${nextid}`;
-                document.getElementById(nextid).style.display=DISPLAY.FLEX;
+        _super.prototype.initiate.call(this);
+    };
+    InputElement.prototype.getElementTag = function () {
+        return this.elementTag;
+    };
+    InputElement.prototype.createElement = function () {
+        var element = document.createElement(this.elementTag);
+        element.setAttribute('type', this.inputType);
+        element.setAttribute('name', this.className);
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+        var parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
+    };
+    InputElement.prototype.afterInit = function () {
+        this.addEventListener('change', this.changeHandler);
+        var element = this.getElement();
+        if (element) {
+            this.initExtra(element);
+        }
+    };
+    InputElement.prototype.initExtra = function (element) {
+    };
+    InputElement.prototype.activateNext = function (tree, nextids) {
+        if (nextids === undefined) {
+            return;
+        }
+        if (tree.get(this.id) !== undefined) {
+            var nextid = nextids.get(this.id);
+            if (nextid !== undefined) {
+                nextid = "qa-container_".concat(nextid);
+                var nextElement = document.getElementById(nextid);
+                if (nextElement) {
+                    nextElement.style.display = ClassNames_1.DISPLAY.FLEX;
+                }
             }
         }
-    }
-
-    action(ev, next, tree){
-        QPanel.tree.add(this.id, ev.target.value);
+    };
+    InputElement.prototype.action = function (ev, tree, next) {
+        tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
-
+    };
+    return InputElement;
+}(BaseComponent_1.BaseComponent));
+var TextInputElement = (function (_super) {
+    __extends(TextInputElement, _super);
+    function TextInputElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.className = ClassNames_1.CLASSNAMES.TEXT_INPUT;
+        _this.elementTag = "textarea";
+        _this.inputType = INPUT_TYPES.TEXT;
+        return _this;
     }
-
-    initiate(nextid, tree) {
-        let element = this.init_input(nextid, tree);
-        this.init_extra(element);
-    }
-
-    init_input(nextid, tree){
-        let element = document.createElement(this.t);
-        element.setAttribute('type', this.input_type);
-        element.setAttribute('name', this.name);
-        element.setAttribute("class", this.name);
-        element.setAttribute("id", this.make_id());
-        element.onchange = (ev)=>{
-            this.action(ev, nextid, tree)
-        };
-        this.getParent().appendChild(element);
-        return element;
-
-    }
-    init_extra(element){}
-}
-
-class TextInputElement extends InputElement {
-    static name = CLASSNAMES.TEXT_INPUT;
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.t = "textarea";
-        this.input_type = INPUT_TYPES.TEXT;
-    }
-    init_extra(element){
+    TextInputElement.prototype.initExtra = function (element) {
         element.setAttribute("placeholder", "Type your comment here");
+    };
+    return TextInputElement;
+}(InputElement));
+var ImageInputElement = (function (_super) {
+    __extends(ImageInputElement, _super);
+    function ImageInputElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.className = ClassNames_1.CLASSNAMES.IMG_INPUT;
+        _this.inputType = INPUT_TYPES.FILE;
+        return _this;
     }
-
-}
-
-class ImageInputElement extends InputElement {
-    static name = CLASSNAMES.IMG_INPUT;
-    constructor(parent, name, content) {
-        super(parent, name, content);
-        this.input_type = INPUT_TYPES.FILE;
-    }
-
-    action(ev, next){
-        this.activateNext(next);
-        const file = ev.target.files[0];
-        
-        if (file) {
-            
-            const fileReader = new FileReader();
-            // fileReader.onload = event => {
-            //     this.image_src = event.target.result;
-            // }
-            fileReader.readAsDataURL(file);
-            QPanel.tree.add("image", file);
-            // this.place_data["image"] = file;
-        }
-
-    }
-
-    init_extra(element){
-        element.setAttribute('accept', ".jpg, .png, .jpeg");
-    }
-
-}
-
-class InputContainer extends ContentPanel {
-    static name = CLASSNAMES.IMGINPUT_CONTAINER;
-    constructor(parent, id, content){
-        super(parent, id, content);
-        this.content = content ? content : ["", "or skip"];
-        this.components = [];
-        this.elements = [];
-    }
-
-    activate(value){
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
-    }
-
-    getElement() {
-        return document.getElementById(`${this.name}_${this.id}`);
-    }
-
-    load(nextid, tree) {
-        this.elements = this.components.map((el, i) => {
-            let element = new el(this.make_id(), this.id, 
-                                 this.content instanceof Array ? this.content[i] : this.content);
-            
-            element instanceof InputElement ? element.initiate(nextid, tree) : element.initiate();
-            element instanceof InputContainer ? element.load(nextid, tree) : element.load();
-            return element;
-        });
-    }
-}
-
-class ImageInputContainer extends InputContainer {
-    static name = CLASSNAMES.IMGINPUT_CONTAINER;
-    constructor(parent, id){
-        super(parent);
-        this.content = ["", "or skip"];
-        this.components = [ImageInputContainerElement, SpanElement];
-    }
-}
-
-class TextInputContainer extends InputContainer {
-    static name = CLASSNAMES.TEXTINPUT_CONTAINER;
-    constructor(parent, id, content){
-        super(parent, id);
-        this.content = content;
-        this.components = [TextInputElement];
-    }
-}
-
-class ImageInputContainerElement extends InputContainer {
-    constructor(parent, id){
-        super(parent, id);
-        this.name = CLASSNAMES.IMGINPUT_CONTAINER;
-        this.components = [ImageInputElement, ImagePreviewElement, TextElement];
-        this.content = ["", "", "Upload an image"];
-    }
-}
-
-class RangeInputElement extends InputElement {
-    static name = CLASSNAMES.RANGE_SLIDER;
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.content = content;
-        let min = this.content.values ? this.content.values[RANGE_LABELS.MIN] : 0;
-        let max = this.content.values ? this.content.values[RANGE_LABELS.MAX] : 100;
-        this.values = new Map(
-            [
-                [RANGE_LABELS.MIN, min],
-                [RANGE_LABELS.MAX, max],
-            ]
-        );
-        this.input_type = INPUT_TYPES.RANGE;
-    }
-
-    init_extra(element){
-        element.setAttribute('min', this.values.get(RANGE_LABELS.MIN).toString());
-        element.setAttribute('max', this.values.get(RANGE_LABELS.MAX).toString());
-    }
-
-}
-
-class RangeLabelElement extends InputContainer {
-    static name = CLASSNAMES.RANGE_CONTAINER;
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.components = [SpanElement, SpanElement];
-        this.content = content.labels ? [content.labels[RANGE_LABELS.MIN], content.labels[RANGE_LABELS.MAX]] : ["Less", "More"];
-    }
-
-
-}
-
-class RangeContainerElement extends InputContainer {
-    static name = CLASSNAMES.TAG_CONTAINER;
-    constructor(parent, id, content){
-        super(parent, id, content);
-        this.components = [RangeInputElement, RangeLabelElement];
-    }
-
-}
-
-class CheckboxContainerElement extends InputContainer {
-    static name = CLASSNAMES.TAG_CONTAINER;
-    constructor(parent, id, checks){
-        super(parent, id, checks);
-        this.content = checks;
-        this.components = checks.map(c=>CheckboxElement);
-    }
-    activate(value){
-        
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
-    }
-    
-}
-
-class CheckboxElement extends InputContainer {
-    static name = "tag selectable";
-    constructor(parent, id, content){
-        super(parent, content.id, content);
-        this.content = content;
-        this.components = [CheckboxInputElement, CheckboxLabelElement];
-    }
-    activate(value){
-        
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
-    }
-}
-
-class CheckboxInputElement extends InputElement {
-    static name = CLASSNAMES.TAG_LABEL;
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.input_type = INPUT_TYPES.CHECKBOX;
-    }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
-    }
-
-
-    init_extra(element){
-        };
-
-    action(ev, next, tree){
-        QPanel.tree.add(this.id, ev.target.checked);
+    ImageInputElement.prototype.action = function (ev, tree, next) {
         this.activateNext(tree, next);
-
+        tree.add(this.id, ev.target.files[0]);
+    };
+    ImageInputElement.prototype.initExtra = function (element) {
+        element.setAttribute('accept', ".jpg, .png, .jpeg");
+    };
+    return ImageInputElement;
+}(InputElement));
+var InputContainer = (function (_super) {
+    __extends(InputContainer, _super);
+    function InputContainer(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.content = content ? content : ["", "or skip"];
+        _this.elements = [];
+        return _this;
     }
-}
-
-class CheckboxLabelElement extends InputElement {
-    static name = CLASSNAMES.TAG_LABEL;
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.content = content.name ? content.name : content;
-        this.t = "div";
+    InputContainer.prototype.getElement = function () {
+        return document.getElementById("".concat(this.name, "_").concat(this.id));
+    };
+    InputContainer.prototype.load_ = function (answerTree, nextid) {
+        var _this = this;
+        this.elements.forEach(function (el, i) {
+            var element = new el(_this.make_id(), _this.id, _this.content instanceof Array ? _this.content[i] : _this.content);
+            element instanceof InputElement ? element.initiate(answerTree, nextid) : element.initiate();
+            element instanceof InputContainer ? element.load_(answerTree, nextid) : element.load();
+        });
+    };
+    return InputContainer;
+}(contentPanel_1.ContentPanel));
+exports.InputContainer = InputContainer;
+var ImageInputContainer = (function (_super) {
+    __extends(ImageInputContainer, _super);
+    function ImageInputContainer(parent, id) {
+        var _this = _super.call(this, parent, id) || this;
+        _this.content = ["", "or skip"];
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.elements = [ImageInputContainerElement, spanElement_1.SpanElement];
+        return _this;
     }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
+    return ImageInputContainer;
+}(InputContainer));
+exports.ImageInputContainer = ImageInputContainer;
+var TextInputContainer = (function (_super) {
+    __extends(TextInputContainer, _super);
+    function TextInputContainer(parent, id, content) {
+        var _this = _super.call(this, parent, id) || this;
+        _this.name = ClassNames_1.CLASSNAMES.TEXTINPUT_CONTAINER;
+        _this.content = content;
+        _this.elements = [TextInputElement];
+        return _this;
     }
-
-    initiate() {
-        let element = document.createElement(this.t);
-        element.setAttribute("class", this.name);
-        this.getParent().appendChild(element);
-
-        let element1 = document.createElement("label");
-        element1.setAttribute("class", this.name);
-        element1.innerHTML = this.content;
-        element.appendChild(element1);
+    return TextInputContainer;
+}(InputContainer));
+exports.TextInputContainer = TextInputContainer;
+var ImageInputContainerElement = (function (_super) {
+    __extends(ImageInputContainerElement, _super);
+    function ImageInputContainerElement(parent, id) {
+        var _this = _super.call(this, parent, id) || this;
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.elements = [ImageInputElement, imageElement_1.ImagePreviewElement, textElement_1.TextElement];
+        _this.content = ["", "", "Upload an image"];
+        return _this;
     }
-
-}
-
-class SingleChoiceInputElement extends InputElement {
-    static name = "input";
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.id = id;
-        this.content = content; //content ? content.replaceAll("\\n", "<br>") : "";
-        this.t = "input";
-        this.input_type = "radio";
+    return ImageInputContainerElement;
+}(InputContainer));
+exports.ImageInputContainerElement = ImageInputContainerElement;
+var RangeInputElement = (function (_super) {
+    __extends(RangeInputElement, _super);
+    function RangeInputElement(parent, id, content) {
+        var _a, _b;
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.className = ClassNames_1.CLASSNAMES.RANGE_SLIDER;
+        _this.values = new Map([
+            [ClassNames_1.RANGE_LABELS.MIN, ((_a = _this.content) === null || _a === void 0 ? void 0 : _a.value) ? _this.content.value["min"] : 0],
+            [ClassNames_1.RANGE_LABELS.MAX, ((_b = _this.content) === null || _b === void 0 ? void 0 : _b.value) ? _this.content.value["max"] : 100],
+        ]);
+        _this.inputType = INPUT_TYPES.RANGE;
+        return _this;
     }
-    load() { }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
+    RangeInputElement.prototype.initExtra = function (element) {
+        var _a, _b;
+        element.setAttribute('min', ((_a = this.values.get(ClassNames_1.RANGE_LABELS.MIN)) === null || _a === void 0 ? void 0 : _a.toString()) || '0');
+        element.setAttribute('max', ((_b = this.values.get(ClassNames_1.RANGE_LABELS.MAX)) === null || _b === void 0 ? void 0 : _b.toString()) || '100');
+    };
+    return RangeInputElement;
+}(InputElement));
+var RangeLabelElement = (function (_super) {
+    __extends(RangeLabelElement, _super);
+    function RangeLabelElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = ClassNames_1.CLASSNAMES.RANGE_CONTAINER;
+        _this.elements = [spanElement_1.SpanElement, spanElement_1.SpanElement];
+        _this.content = content.label ? [content.label[ClassNames_1.RANGE_LABELS.MIN], content.label[ClassNames_1.RANGE_LABELS.MAX]] : ["Less", "More"];
+        return _this;
     }
-
-    activateNext(tree, nextids){
+    return RangeLabelElement;
+}(InputContainer));
+var RangeContainerElement = (function (_super) {
+    __extends(RangeContainerElement, _super);
+    function RangeContainerElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = ClassNames_1.CLASSNAMES.TAG_CONTAINER;
+        _this.elements = [RangeInputElement, RangeLabelElement];
+        return _this;
     }
-
-    action(ev, next, tree){
-        this.content(ev, next, tree);
+    return RangeContainerElement;
+}(InputContainer));
+exports.RangeContainerElement = RangeContainerElement;
+var CheckboxContainerElement = (function (_super) {
+    __extends(CheckboxContainerElement, _super);
+    function CheckboxContainerElement(parent, id, checks) {
+        var _this = _super.call(this, parent, id, checks) || this;
+        _this.name = ClassNames_1.CLASSNAMES.TAG_CONTAINER;
+        _this.content = checks;
+        _this.elements = checks.map(function (c) { return CheckboxElement; });
+        return _this;
     }
-
-    initiate(nextid, tree) {
-        let element = this.init_input(nextid, tree);
-        this.init_extra(element);
+    return CheckboxContainerElement;
+}(InputContainer));
+exports.CheckboxContainerElement = CheckboxContainerElement;
+var CheckboxElement = (function (_super) {
+    __extends(CheckboxElement, _super);
+    function CheckboxElement(parent, id, content) {
+        var _this = _super.call(this, parent, content.id, content) || this;
+        _this.name = "tag selectable";
+        _this.content = content;
+        _this.elements = [CheckboxInputElement, CheckboxLabelElement];
+        return _this;
     }
-
-    init_input(nextid, tree){
-        let element = document.createElement(this.t);
-        element.setAttribute('type', this.input_type);
-        element.setAttribute('name', this.name);
-        element.setAttribute("class", this.name);
-        element.setAttribute("id", this.make_id());
-        element.onchange = (ev)=>{
-            this.action(ev, nextid, tree)
-        };
-        this.getParent().appendChild(element);
+    CheckboxElement.prototype.make_id = function () {
+        return "".concat(this.name, "_").concat(this.id, "_").concat(this.content.name);
+    };
+    return CheckboxElement;
+}(InputContainer));
+var CheckboxInputElement = (function (_super) {
+    __extends(CheckboxInputElement, _super);
+    function CheckboxInputElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.className = ClassNames_1.CLASSNAMES.TAG_LABEL;
+        _this.inputType = INPUT_TYPES.CHECKBOX;
+        return _this;
+    }
+    CheckboxInputElement.prototype.initExtra = function (element) {
+    };
+    return CheckboxInputElement;
+}(InputElement));
+var CheckboxLabelElement = (function (_super) {
+    __extends(CheckboxLabelElement, _super);
+    function CheckboxLabelElement(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.className = ClassNames_1.CLASSNAMES.TAG_LABEL;
+        _this.content = (content === null || content === void 0 ? void 0 : content.name) ? content.name : content;
+        _this.elementTag = "div";
+        return _this;
+    }
+    CheckboxLabelElement.prototype.createElement = function () {
+        var element = document.createElement(this.elementTag);
+        element.setAttribute("class", this.className);
+        element.setAttribute("id", this.makeId());
+        var parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
         return element;
-
-    }
-    init_extra(element){}
-}
-
-
-
+    };
+    CheckboxLabelElement.prototype.afterInit = function () {
+        var element = this.getElement();
+        if (element) {
+            var label = document.createElement("label");
+            label.setAttribute("class", this.className);
+            label.innerHTML = this.content;
+            element.appendChild(label);
+        }
+    };
+    return CheckboxLabelElement;
+}(InputElement));

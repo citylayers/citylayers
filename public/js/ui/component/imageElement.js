@@ -1,44 +1,81 @@
-class ImageElement extends CElement {
-    
-    constructor(parent, id, classname, image) {
-        // image is instance of Illustration
-        super(parent, id);
-        this.name = classname ? classname : CLASSNAMES.LOGO;
-        this.content = image; // Illustration
-    }
-
-    initiate() {
-        
-        let element = document.createElement("img");
-        element.src = this.content.path;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        if (this.content.link!="" && this.content.link!=undefined && this.content.link!=null){
-            element.addEventListener("click", () => {
-                window.location.href = this.content.link;
-            });
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImagePreviewElement = exports.ImageElement = void 0;
+var ClassNames_1 = require("../../constants/ClassNames");
+var BaseComponent_1 = require("./BaseComponent");
+var illustration_1 = require("../../../../logic/illustration");
+var ImageElement = (function (_super) {
+    __extends(ImageElement, _super);
+    function ImageElement(parentId, id, image, className) {
+        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, id) || this;
+        _this.illustration = image || new illustration_1.Illustration("", "", "");
+        if (_this.illustration.link && _this.illustration.link !== "") {
+            _this.clickHandler = function () {
+                window.location.href = _this.illustration.link;
+            };
         }
-        this.getParent().appendChild(element);
+        return _this;
     }
-}
-
-class ImagePreviewElement extends ImageElement {
-    
-    constructor(parent, id, classname) {
-        // image is instance of Illustration
-        super(parent, id);
-        this.name = classname? classname : CLASSNAMES.LOGO;
-        this.id = IDS.IMG_PREVIEW;
-        this.content = new Illustration("", "", "Upload"); // Illustration
+    ImageElement.prototype.getElementTag = function () {
+        return 'img';
+    };
+    ImageElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.src = this.illustration.path;
+        return element;
+    };
+    ImageElement.prototype.afterInit = function () {
+        if (this.clickHandler) {
+            this.addEventListener('click', this.clickHandler);
+        }
+    };
+    ImageElement.prototype.setImage = function (illustration) {
+        this.illustration = illustration;
+        var element = this.getElement();
+        if (element) {
+            element.src = illustration.path;
+        }
+    };
+    return ImageElement;
+}(BaseComponent_1.BaseComponent));
+exports.ImageElement = ImageElement;
+var ImagePreviewElement = (function (_super) {
+    __extends(ImagePreviewElement, _super);
+    function ImagePreviewElement(parentId, id, className) {
+        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, ClassNames_1.ElementId.IMG_PREVIEW) || this;
+        _this.illustration = new illustration_1.Illustration("", "", "Upload");
+        return _this;
     }
-
-    initiate() {
-        
-        let element = document.createElement("img");
-        element.src = this.content.path;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.id);
-        this.getParent().appendChild(element);
-    }
-}
-
+    ImagePreviewElement.prototype.getElementTag = function () {
+        return 'img';
+    };
+    ImagePreviewElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.src = this.illustration.path;
+        return element;
+    };
+    ImagePreviewElement.prototype.setImage = function (illustration) {
+        this.illustration = illustration;
+        var element = this.getElement();
+        if (element) {
+            element.src = illustration.path;
+        }
+    };
+    return ImagePreviewElement;
+}(BaseComponent_1.BaseComponent));
+exports.ImagePreviewElement = ImagePreviewElement;

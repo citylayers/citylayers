@@ -1,10 +1,13 @@
-import { CLASSNAMES, DISPLAY, RANGE_LABELS } from "../../constants/ClassNames";
-import {ContentPanel} from "../panel/contentPanel";
-import { CElement } from "../component/celement";
+import { ClassName } from "../../constants/ClassNames";
+import { ContentPanel } from "../panel/contentPanel";
+import { BaseComponent } from "../component/BaseComponent";
 import { ColorLogo } from "../component/logo";
-import { Illustration } from "../../../../logic/illustration";
+import { Illustration } from '../../../../src/logic/illustration';
 import { ImageElement } from "../component/imageElement";
 import { TextElement } from "../component/textElement";
+
+// Legacy imports
+import { CLASSNAMES } from "../../constants/ClassNames";
 
 class LandingIllustration extends ContentPanel{
     images: string[];
@@ -12,19 +15,19 @@ class LandingIllustration extends ContentPanel{
         super(parent, "id");
         this.name = CLASSNAMES.LANDING_ILLUSTRATION;
         this.elements = [ColorLogo, GradElement];
-        this.images = [...Array(15).keys()].filter(e=>e>1).map(
+        this.images = Array.from(Array(15).keys()).filter(e=>e>1).map(
             e=>`images/landing/v0.2.11/${e}.png`);
     }
 
     load() {
         this.images.forEach(el => {
             let illustration = new Illustration(el, "", "")
-            let element = new ImageElement(this.make_id(),"image", illustration);
+            let element = new ImageElement(this.makeId(),"image", illustration);
             element.initiate();
             element.load();
         });
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), this.parent);
+            let element = new el(this.makeId(), this.parent);
             element.initiate();
             element.load();
         });
@@ -42,7 +45,7 @@ class GeneralContent extends ContentPanel{
 
     load() {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), this.parent);
+            let element = new el(this.makeId(), this.parent);
             element.initiate();
             element.load();
         });
@@ -75,11 +78,13 @@ class LandingBrief extends TextElement{
 }
 
 
-class GradElement extends CElement{
-    constructor(parent:string, id:string){
-        super(parent, id);
-        this.content = "";
-        this.name = CLASSNAMES.GRAD;
+/**
+ * Gradient element for landing page.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class GradElement extends BaseComponent {
+    constructor(parentId: string, id: string) {
+        super(parentId, ClassName.GRAD, id);
     }
 }
 

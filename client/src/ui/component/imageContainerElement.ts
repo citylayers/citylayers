@@ -1,5 +1,5 @@
 import { ContentElement } from "./contentElement";
-import { Illustration } from "../../../../logic/illustration";
+import { Illustration } from '../../../../src/logic/illustration';
 import { ImageElement } from "./imageElement";
 
 /**

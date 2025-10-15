@@ -93,13 +93,22 @@ class DBConnection{
     }
 
     async read(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        return this.initSession(DatabaseMode.READ).then(k=>{
-            return this.session.run(query, param, { timeout: this.config.getDefaultTimeout() } )
-                .then(result => {
-                    this.reset();
-                    return result;
-                })
-        })
+        // Create a new session for each query to avoid transaction conflicts
+        // This allows Promise.all to work correctly when multiple queries run in parallel
+        const session = this.driver.session({ defaultAccessMode: neo4j.session.READ });
+        console.log('[DBConnection.read] Created new session for query:', query.substring(0, 50));
+
+        try {
+            const result = await session.run(query, param, { timeout: this.config.getDefaultTimeout() });
+            console.log('[DBConnection.read] Query completed successfully');
+            return result;
+        } catch (error) {
+            console.error('[DBConnection.read] Query failed:', error.message);
+            throw error;
+        } finally {
+            await session.close();
+            console.log('[DBConnection.read] Session closed');
+        }
     }
 
     reset(){
@@ -110,15 +119,15 @@ class DBConnection{
     }
 
     async write(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        this.reset()
+        // Create a new session for each query to avoid transaction conflicts
+        const session = this.driver.session({ defaultAccessMode: neo4j.session.WRITE });
 
-        return  this.initSession(DatabaseMode.WRITE).then(k=>{
-            return this.session.run(query, param, { timeout: this.config.getDefaultTimeout() } )
-                .then(result => {
-                    this.reset();
-                    return result;
-                })
-        })
+        try {
+            const result = await session.run(query, param, { timeout: this.config.getDefaultTimeout() });
+            return result;
+        } finally {
+            await session.close();
+        }
     }
 }
 

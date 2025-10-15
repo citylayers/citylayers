@@ -16,27 +16,29 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PinButton = void 0;
-var cbutton_1 = require("./cbutton");
-var citylayerspanel_1 = require("../panel/citylayerspanel");
+var BaseComponent_1 = require("./BaseComponent");
 var PinButton = (function (_super) {
     __extends(PinButton, _super);
-    function PinButton(parent) {
-        var _this = _super.call(this, parent, "") || this;
-        _this.name = "pinButton";
+    function PinButton(parentId, getCoordinates) {
+        var _this = _super.call(this, parentId, "pinButton primary-button") || this;
         _this.content = "Add a pin";
+        _this.onClickHandler = function () {
+            var coords = getCoordinates();
+            window.location.href = "/pin?lat=".concat(coords.lat, "&lng=").concat(coords.lon);
+        };
         return _this;
     }
-    PinButton.prototype.initiate = function () {
-        var element = document.createElement("button");
+    PinButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    PinButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
         element.innerHTML = this.content;
-        element.setAttribute('class', "" + this.name + " primary-button");
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", function () {
-            var coords = citylayerspanel_1.CityLayersPanel.getCoords();
-            window.location.href = "/pin?lat=".concat(coords.lat, "&lng=").concat(coords.lon);
-        });
+        return element;
+    };
+    PinButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.onClickHandler);
     };
     return PinButton;
-}(cbutton_1.CButton));
+}(BaseComponent_1.BaseComponent));
 exports.PinButton = PinButton;

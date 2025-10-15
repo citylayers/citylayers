@@ -18,16 +18,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuestionContainer = exports.QHeader = exports.QFooter = exports.QAContainer = exports.QContainer = void 0;
 var contentPanel_1 = require("../panel/contentPanel");
 var logo_1 = require("../component/logo");
-var classnames_1 = require("../../../classnames");
-var cbutton_1 = require("../component/cbutton");
+var ClassNames_1 = require("../../constants/ClassNames");
+var BaseComponent_1 = require("../component/BaseComponent");
 var hrElement_1 = require("../component/hrElement");
-var celement_1 = require("../component/celement");
 var textElement_1 = require("../component/textElement");
+var ClassNames_2 = require("../../constants/ClassNames");
 var QHeader = (function (_super) {
     __extends(QHeader, _super);
     function QHeader(parent) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = classnames_1.CLASSNAMES.Q_HEADER;
+        _this.name = ClassNames_2.CLASSNAMES.Q_HEADER;
         _this.elements = [logo_1.LineLogo, ExitButton];
         return _this;
     }
@@ -44,21 +44,29 @@ var QHeader = (function (_super) {
 exports.QHeader = QHeader;
 var ExitButton = (function (_super) {
     __extends(ExitButton, _super);
-    function ExitButton(parent) {
-        var _this = this;
-        var onclick = function () { };
-        _this = _super.call(this, parent, onclick) || this;
-        _this.name = "exit-button";
+    function ExitButton(parentId, onClick) {
+        var _this = _super.call(this, parentId, "exit-button") || this;
         _this.content = "Save and Exit";
         return _this;
     }
+    ExitButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    ExitButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        return element;
+    };
+    ExitButton.getElements = function () {
+        return document.getElementsByClassName("exit-button");
+    };
     return ExitButton;
-}(cbutton_1.CButton));
+}(BaseComponent_1.BaseComponent));
 var QFooter = (function (_super) {
     __extends(QFooter, _super);
     function QFooter(parent, id, steps) {
         var _this = _super.call(this, parent, "qfooter") || this;
-        _this.name = classnames_1.CLASSNAMES.Q_FOOTER;
+        _this.name = ClassNames_2.CLASSNAMES.Q_FOOTER;
         _this.elements = [Steps, hrElement_1.HrElement, NavButtons];
         _this.steps = steps;
         return _this;
@@ -80,34 +88,79 @@ var QFooter = (function (_super) {
 exports.QFooter = QFooter;
 var BackButton = (function (_super) {
     __extends(BackButton, _super);
-    function BackButton(parent, id, onclick) {
-        var _this = _super.call(this, parent, onclick) || this;
-        _this.name = classnames_1.CLASSNAMES.BACK;
+    function BackButton(parentId, id, onClick) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.BACK) || this;
         _this.content = "Back";
+        _this.clickHandler = onClick || (function () { });
         return _this;
     }
+    BackButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    BackButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        return element;
+    };
+    BackButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    BackButton.getElements = function () {
+        return document.getElementsByClassName(ClassNames_1.ClassName.BACK);
+    };
+    BackButton.name = ClassNames_1.ClassName.BACK;
     return BackButton;
-}(cbutton_1.CButton));
+}(BaseComponent_1.BaseComponent));
 var NextButton = (function (_super) {
     __extends(NextButton, _super);
-    function NextButton(parent, id, onclick) {
-        var _this = _super.call(this, parent, onclick) || this;
-        _this.name = classnames_1.CLASSNAMES.NEXT;
+    function NextButton(parentId, id, onClick) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.NEXT) || this;
         _this.content = "Next";
+        _this.clickHandler = onClick || (function () { });
         return _this;
     }
+    NextButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    NextButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        return element;
+    };
+    NextButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    NextButton.getElements = function () {
+        return document.getElementsByClassName(ClassNames_1.ClassName.NEXT);
+    };
+    NextButton.name = ClassNames_1.ClassName.NEXT;
     return NextButton;
-}(cbutton_1.CButton));
+}(BaseComponent_1.BaseComponent));
 var SubmitButton = (function (_super) {
     __extends(SubmitButton, _super);
-    function SubmitButton(parent, id, onclick) {
-        var _this = _super.call(this, parent, onclick) || this;
-        _this.name = classnames_1.CLASSNAMES.SUBMIT;
+    function SubmitButton(parentId, id, onClick) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.SUBMIT) || this;
         _this.content = "Submit";
+        _this.clickHandler = onClick || (function () { });
         return _this;
     }
+    SubmitButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    SubmitButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        return element;
+    };
+    SubmitButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    SubmitButton.getElements = function () {
+        return document.getElementsByClassName(ClassNames_1.ClassName.SUBMIT);
+    };
+    SubmitButton.name = ClassNames_1.ClassName.SUBMIT;
     return SubmitButton;
-}(cbutton_1.CButton));
+}(BaseComponent_1.BaseComponent));
 var NavButtons = (function (_super) {
     __extends(NavButtons, _super);
     function NavButtons(parent, id, onclicks) {
@@ -115,7 +168,7 @@ var NavButtons = (function (_super) {
         if (onclicks === void 0) { onclicks = []; }
         var _this = _super.call(this, parent, id) || this;
         _this.elements = [BackButton, NextButton, SubmitButton];
-        _this.name = classnames_1.CLASSNAMES.NAV;
+        _this.name = ClassNames_2.CLASSNAMES.NAV;
         _this.args = onclicks;
         return _this;
     }
@@ -140,7 +193,7 @@ var NavButtons = (function (_super) {
             if (bb.length > 0) {
                 var cond = _this.buttonConditions.get(b.name);
                 var ba = bb[0];
-                ba.style.display = cond(step, steps) ? classnames_1.DISPLAY.NONE : classnames_1.DISPLAY.BLOCKINLINE;
+                ba.style.display = cond(step, steps) ? ClassNames_2.DISPLAY.NONE : ClassNames_2.DISPLAY.BLOCKINLINE;
             }
         });
     };
@@ -153,20 +206,16 @@ var NavButtons = (function (_super) {
 }(contentPanel_1.ContentPanel));
 var Steps = (function (_super) {
     __extends(Steps, _super);
-    function Steps(parent) {
-        var _this = _super.call(this, parent) || this;
-        _this.name = "steps";
-        _this.content = "";
-        return _this;
+    function Steps(parentId) {
+        return _super.call(this, parentId, "steps") || this;
     }
-    Steps.prototype.load = function () { };
     return Steps;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 var QContainer = (function (_super) {
     __extends(QContainer, _super);
     function QContainer(parent, id, content) {
-        var _this = _super.call(this, parent, classnames_1.CLASSNAMES.Q_CONTAINER) || this;
-        _this.name = classnames_1.CLASSNAMES.Q_CONTAINER;
+        var _this = _super.call(this, parent, ClassNames_2.CLASSNAMES.Q_CONTAINER) || this;
+        _this.name = ClassNames_2.CLASSNAMES.Q_CONTAINER;
         _this.content = content[0];
         _this.elements = [QContainer];
         _this.tree = content[1];
@@ -188,7 +237,7 @@ var QuestionContainer = (function (_super) {
     __extends(QuestionContainer, _super);
     function QuestionContainer(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = classnames_1.CLASSNAMES.QUESTION_CONTAINER;
+        _this.name = ClassNames_2.CLASSNAMES.QUESTION_CONTAINER;
         _this.content = content;
         _this.elements = [textElement_1.TextElement, textElement_1.TextElement];
         return _this;
@@ -219,7 +268,7 @@ var QAContainer = (function (_super) {
     __extends(QAContainer, _super);
     function QAContainer(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.QA_CONTAINER;
+        _this.name = ClassNames_2.CLASSNAMES.QA_CONTAINER;
         _this.elements = [];
         return _this;
     }
@@ -229,7 +278,7 @@ var QAContainer = (function (_super) {
         this.show(display);
     };
     QAContainer.prototype.show = function (display) {
-        this.getElement().style.display = display == false ? classnames_1.DISPLAY.NONE : classnames_1.DISPLAY.FLEX;
+        this.getElement().style.display = display == false ? ClassNames_2.DISPLAY.NONE : ClassNames_2.DISPLAY.FLEX;
     };
     return QAContainer;
 }(contentPanel_1.ContentPanel));
@@ -238,7 +287,7 @@ var QContainer_ = (function (_super) {
     __extends(QContainer_, _super);
     function QContainer_(parent, content) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = classnames_1.CLASSNAMES.Q_PAGE;
+        _this.name = ClassNames_2.CLASSNAMES.Q_PAGE;
         _this.content = content;
         return _this;
     }

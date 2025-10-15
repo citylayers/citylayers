@@ -17,13 +17,13 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QPanel = void 0;
 var contentPanel_1 = require("./contentPanel");
-var classnames_1 = require("../../../classnames");
 var question_1 = require("../panelcomponent/question");
+var ClassNames_1 = require("../../constants/ClassNames");
 var QPanel = (function (_super) {
     __extends(QPanel, _super);
     function QPanel(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = classnames_1.CLASSNAMES.Q_PANEL;
+        _this.name = ClassNames_1.CLASSNAMES.Q_PANEL;
         _this.elements = [question_1.QHeader, question_1.QContainer, question_1.QFooter];
         return _this;
     }

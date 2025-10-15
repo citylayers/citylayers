@@ -1,6 +1,6 @@
 import { ClassName, ElementId } from "../../constants/ClassNames";
 import { BaseComponent } from "./BaseComponent";
-import { Illustration } from "../../../../logic/illustration";
+import { Illustration } from '../../../../src/logic/illustration';
 
 /**
  * Image element component for displaying images.

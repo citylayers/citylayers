@@ -5,12 +5,12 @@ import { BaseComponent } from "./BaseComponent";
  * Extends BaseComponent with proper OOP principles.
  */
 class PinButton extends BaseComponent {
-    private content: string;
+    private buttonContent: string;
     private onClickHandler: () => void;
 
     constructor(parentId: string, getCoordinates: () => { lat: number; lon: number }) {
         super(parentId, "pinButton primary-button");
-        this.content = "Add a pin";
+        this.buttonContent = "Add a pin";
         this.onClickHandler = () => {
             const coords = getCoordinates();
             window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lon}`;
@@ -23,7 +23,7 @@ class PinButton extends BaseComponent {
 
     protected createElement(): HTMLElement {
         const element = super.createElement();
-        element.innerHTML = this.content;
+        element.innerHTML = this.buttonContent;
         return element;
     }
 

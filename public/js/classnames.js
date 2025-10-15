@@ -1,27 +1,19 @@
-const CLASSNAMES = {
-    LOGO : "logo",
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RANGE_LABELS = exports.DISPLAY = exports.SLIDER_IDS = exports.PANEL_IDS = exports.IDS = exports.SECTIONMAP = exports.LEGAL_LINKS = exports.LEGAL = exports.LEGAL_CLASSNAMES = exports.CLASSNAMES = void 0;
+var CLASSNAMES = {
+    LOGO: "logo",
     CLOSE: "closebutton",
     SWITCH: "switch",
-
     MAIN_PANEL: "panel citylayers",
-    DASHBOARD: "dashboard",
     HOME_PANEL: "home",
-    LANDING_PANEL : "landing",
+    LANDING_PANEL: "landing",
     CATEGORY_PANEL: "panel category",
-    CONTROLLER_CONTAINER: "controller container",
-    // PROJECT_PANEL: "panel project",
     CATEGORY_CONTAINER: "categorycontainer",
     TITLE: "title",
     HEADER: "header",
     MAIN_CONTAINER: "main",
-
     CONFIG: "config",
-    CONFIG_HEADER: "configheader",
-
-    CONTROLLER_BODY: "controllerbody",
-    CONTROLLER_Q: "controllerq",
-    CONTROLLER: "controller",
-    
     CATEGORY_SLIDER_CONTAINER: "categoryslider",
     CATEGORY_HEADER: "categoryheader",
     CATEGORY_HEADER_TITLE: "categoryheadertitle",
@@ -32,11 +24,9 @@ const CLASSNAMES = {
     TAG_CONTAINER: "tagcontainer",
     SUBCATEGORY_TAG: "tag",
     TAG_LABEL: "tag-element",
-
     CATEGORYPANEL_HEADER: "categorypanelheader",
     CATEGORYPANEL_LABEL: "categorypanellabel",
     CATEGORYPANEL_DESCR: "categorypaneldescr",
-
     CATEGORY_DESCRIPTION: "categorydescription",
     CATEGORY_SIDE_PANEL: "categorysidepanel",
     CATEGORY_SIDE_TAG_CONTAINER: "categorysidetagcontainer",
@@ -46,10 +36,8 @@ const CLASSNAMES = {
     GEOCODONG_PANEL: "geopanel",
     ABOUT_LABEL: "aboutlabel",
     ABOUT_PANEL: "aboutpanel",
-    
     ABOUT_DESCRIPTION: "aboutdescription",
     ABOUT_TEXT: "abouttext",
-
     COMMENTPANEL: "commentpanel",
     COMMENTCONTAINER: "commentcontainer",
     COMMENTPANE: "commentpane",
@@ -58,40 +46,29 @@ const CLASSNAMES = {
     COMMENTPANEL_CLOSE: "commentpanelclose",
     COMMENTSEARCH: "commentsearch",
     SELECTCOMMENT: "selected",
-
-    COLORPICKER: "color picker", 
-
     CLICK: "click",
     GRAD: "grad",
-    GRADPICKER: "gradient picker", 
-
     PROJECT_PANEL: "projectpanel",
-    CARD : "card",
-    CARD_INFO : "card_info",
+    CARD: "card",
+    CARD_INFO: "card_info",
     PROJECT_DESCRIPTION: "projectdescription",
     COVER: "cover",
     SLOGAN: "slogan",
-    DESCRIPTION: "description",
     PROJECT_IMAGE_CONTAINER: "imagecontainer",
-
     LANDING_ILLUSTRATION: "landing_illustration",
     LANDING_GENERAL: "landing_general",
-    PARTNER: "partner", 
+    PARTNER: "partner",
     TEAM: "team",
     TEAM_MEMBER: "teammember",
     RECOGNITION: "recognition",
     PERIOD: "period",
-    
-    TEAM_MEMBER_CONTAINER : "teammembercontainer",
-    TEAM_MEMBER_CARD : "teammembercard",
+    TEAM_MEMBER_CONTAINER: "teammembercontainer",
+    TEAM_MEMBER_CARD: "teammembercard",
     ROLE_CONTAINER: "rolecontainer",
     ROLE_ELEMENT: "roleelement",
-
     SOCIAL: "social",
-
     Q_PANEL: "qpanel",
     Q_PAGE: "question-page",
-
     RANGE_SLIDER: "range-slider",
     RANGE_CONTAINER: "ranges-container",
     IMGINPUT_CONTAINER: "img-container",
@@ -99,76 +76,74 @@ const CLASSNAMES = {
     Q_CONTAINER: "question-container",
     QA_CONTAINER: "qa-container",
     QUESTION_CONTAINER: "question",
-
     Q_HEADER: "qheader",
     Q_FOOTER: "qfooter",
-
     NAV: "nav-buttons",
-    MAP: "map",
     BACK: "back-button",
     NEXT: "next-button",
     SUBMIT: "submit-button",
     TEXT: "text",
     TEXT_INPUT: "textinput",
     IMG_INPUT: "imageinput",
-}
-const DISPLAY= {
+};
+exports.CLASSNAMES = CLASSNAMES;
+var DISPLAY = {
     NONE: "none",
     FLEX: "flex",
     BLOCK: "block",
     BLOCKINLINE: "block-inline",
-    GRID: "grid",
-}
-const SLIDER_IDS = {
+};
+exports.DISPLAY = DISPLAY;
+var SLIDER_IDS = {
     LOW: "startSlider",
     HIGH: "endSlider"
-
 };
-
-const RANGE_LABELS = {
+exports.SLIDER_IDS = SLIDER_IDS;
+var RANGE_LABELS = {
     MIN: "min",
     MAX: "max"
 };
-
-const PANEL_IDS = {
+exports.RANGE_LABELS = RANGE_LABELS;
+var PANEL_IDS = {
     PROJECT: "project",
     CATEGORY: "category"
-
-}
-
-const IDS = {
+};
+exports.PANEL_IDS = PANEL_IDS;
+var IDS = {
     TEXT_INPUT: "comment-input",
-    IMG_INPUT : "img-uploader",
+    IMG_INPUT: "img-uploader",
     RANGE_INPUT: "slider",
     MULTICHOICE_INPUT: "tag",
     IMG_PREVIEW: "img-preview",
-}
-
-const LEGAL_CLASSNAMES = {
-    PANEL : "legalpanel",
-    HEADER : "legalheader",
-    BODY : "legalbody",
+};
+exports.IDS = IDS;
+var LEGAL_CLASSNAMES = {
+    PANEL: "legalpanel",
+    HEADER: "legalheader",
+    BODY: "legalbody",
     LEGALBODYCONTENT: "legalbodycontent",
-    CLOSE : "closebutton",
-    TITLE : "legaltitle",
-    TEXT : "legaltext",
-    TEXT_F : "legaltextframed",
+    CLOSE: "closebutton",
+    TITLE: "legaltitle",
+    TEXT: "legaltext",
+    TEXT_F: "legaltextframed",
     FOOTER: "legal_footer"
-}
-
-const LEGAL = {
+};
+exports.LEGAL_CLASSNAMES = LEGAL_CLASSNAMES;
+var LEGAL = {
     IMPRESSUM: "impressum",
     PRIVACY: "privacy policy",
     ACCESSIBILITY: "accessibility"
-}
-
-const LEGAL_LINKS = new Map([
+};
+exports.LEGAL = LEGAL;
+var LEGAL_LINKS = new Map([
     [LEGAL.IMPRESSUM, "/impressum"],
-   [LEGAL.PRIVACY, "/privacy"],
-   [LEGAL.ACCESSIBILITY, "/accessibility"],
+    [LEGAL.PRIVACY, "/privacy"],
+    [LEGAL.ACCESSIBILITY, "/accessibility"],
 ]);
-const SECTIONMAP = {
-    EXPLORE: ["explore", "map/Mobility Dashboard"],
+exports.LEGAL_LINKS = LEGAL_LINKS;
+var SECTIONMAP = {
+    EXPLORE: ["explore", "explore"],
     TEAM: ["team", "team"],
     ABOUT: ["about", "about"],
-}
+};
+exports.SECTIONMAP = SECTIONMAP;

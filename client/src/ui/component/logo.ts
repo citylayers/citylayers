@@ -1,5 +1,5 @@
 import { ClassName } from "../../constants/ClassNames";
-import { Illustration } from "../../../../logic/illustration";
+import { Illustration } from '../../../../src/logic/illustration';
 import { ImageElement } from "./imageElement";
 
 /**

@@ -86,8 +86,14 @@ class Application {
 
         // Ensure uploads directory exists
         const uploadsDir = paths.getUploadsPath();
+        console.log('🔍 Debug paths:');
+        console.log('  __dirname:', __dirname);
+        console.log('  uploadsDir:', uploadsDir);
+        console.log('  publicPath:', paths.getPublicPath());
+
         if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir);
+            console.log('  Creating uploads directory...');
+            fs.mkdirSync(uploadsDir, { recursive: true });
         }
 
         console.log('ENV:', this.env.getMode());

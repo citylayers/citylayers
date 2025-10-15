@@ -2,7 +2,7 @@ import { CLASSNAMES} from "../../constants/ClassNames";
 import {ContentPanel} from "./contentPanel";
 import {LandingIllustration, GeneralContent} from "../panelcomponent/landing";
 import { ProjectPanel } from "../component/projectComponent";
-import { Project } from "../../../../logic/project";
+import { Project } from '../../../../src/logic/project';
 
 
 class HomePanel extends ContentPanel{
@@ -15,7 +15,7 @@ class HomePanel extends ContentPanel{
 
     load(projects:Project[]) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            let element = new el(this.makeId(), "main");
             element.initiate();
             element.load(projects);
         });

@@ -9,10 +9,14 @@ import { BaseComponent } from "../component/BaseComponent";
  */
 class ContentPanel extends BaseComponent {
     protected elements: any[];
+    public name: string;
+    public parent: string;
 
     constructor(parentId: string, id: string, content?: any) {
         super(parentId || "body", ClassName.CATEGORY_PANEL, id, content);
         this.elements = [];
+        this.name = "";
+        this.parent = parentId;
     }
 
     /**

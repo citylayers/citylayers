@@ -17,48 +17,65 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImagePreviewElement = exports.ImageElement = void 0;
 var ClassNames_1 = require("../../constants/ClassNames");
-var celement_1 = require("./celement");
+var BaseComponent_1 = require("./BaseComponent");
 var illustration_1 = require("../../../../logic/illustration");
 var ImageElement = (function (_super) {
     __extends(ImageElement, _super);
-    function ImageElement(parent, id, image, name) {
-        var _this = _super.call(this, parent, id) || this;
-        _this.name = name ? name : ClassNames_1.CLASSNAMES.LOGO;
-        _this.content = image ? image : new illustration_1.Illustration("", "", "");
+    function ImageElement(parentId, id, image, className) {
+        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, id) || this;
+        _this.illustration = image || new illustration_1.Illustration("", "", "");
+        if (_this.illustration.link && _this.illustration.link !== "") {
+            _this.clickHandler = function () {
+                window.location.href = _this.illustration.link;
+            };
+        }
         return _this;
     }
-    ImageElement.prototype.initiate = function () {
-        var _this = this;
-        var element = document.createElement("img");
-        element.src = this.content.path;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        if (this.content.link != "" && this.content.link != undefined && this.content.link != null) {
-            element.addEventListener("click", function () {
-                window.location.href = _this.content.link;
-            });
+    ImageElement.prototype.getElementTag = function () {
+        return 'img';
+    };
+    ImageElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.src = this.illustration.path;
+        return element;
+    };
+    ImageElement.prototype.afterInit = function () {
+        if (this.clickHandler) {
+            this.addEventListener('click', this.clickHandler);
         }
-        this.getParent().appendChild(element);
+    };
+    ImageElement.prototype.setImage = function (illustration) {
+        this.illustration = illustration;
+        var element = this.getElement();
+        if (element) {
+            element.src = illustration.path;
+        }
     };
     return ImageElement;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 exports.ImageElement = ImageElement;
 var ImagePreviewElement = (function (_super) {
     __extends(ImagePreviewElement, _super);
-    function ImagePreviewElement(parent, id, name) {
-        var _this = _super.call(this, parent, id) || this;
-        _this.name = name ? name : ClassNames_1.CLASSNAMES.LOGO;
-        _this.id = ClassNames_1.IDS.IMG_PREVIEW;
-        _this.content = new illustration_1.Illustration("", "", "Upload");
+    function ImagePreviewElement(parentId, id, className) {
+        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, ClassNames_1.ElementId.IMG_PREVIEW) || this;
+        _this.illustration = new illustration_1.Illustration("", "", "Upload");
         return _this;
     }
-    ImagePreviewElement.prototype.initiate = function () {
-        var element = document.createElement("img");
-        element.src = this.content.path;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.id);
-        this.getParent().appendChild(element);
+    ImagePreviewElement.prototype.getElementTag = function () {
+        return 'img';
+    };
+    ImagePreviewElement.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.src = this.illustration.path;
+        return element;
+    };
+    ImagePreviewElement.prototype.setImage = function (illustration) {
+        this.illustration = illustration;
+        var element = this.getElement();
+        if (element) {
+            element.src = illustration.path;
+        }
     };
     return ImagePreviewElement;
-}(ImageElement));
+}(BaseComponent_1.BaseComponent));
 exports.ImagePreviewElement = ImagePreviewElement;

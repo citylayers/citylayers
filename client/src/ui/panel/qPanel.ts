@@ -1,15 +1,15 @@
-import { AnswerTree } from "../../../../logic/question/answerTree";
-import { QASet } from "../../../../logic/question/question";
-import { CElement } from "../component/celement";
+import { AnswerTree } from '../../../../src/logic/question/answerTree';
+import { QASet } from '../../../../src/logic/question/question';
 import { ContentPanel } from "./contentPanel";
-import { CLASSNAMES } from "../../constants/ClassNames";
-
+import { ClassName } from "../../constants/ClassNames";
 import { QHeader, QFooter, QAContainer, QContainer } from "../panelcomponent/question";
 
-class QPanel extends ContentPanel{
-    
+// Legacy imports
+import { CLASSNAMES } from "../../constants/ClassNames";
+
+class QPanel extends ContentPanel {
     name: string;
-    elements: typeof CElement[];
+    elements: any[];
 
     static controller = undefined;
     static currentStep = 1;
@@ -29,8 +29,8 @@ class QPanel extends ContentPanel{
         
         this.elements.forEach((el, i) => {
             
-            let element = el == QContainer ? new el(this.make_id(), "", [qasets, answerTree]) : 
-                                             new el(this.make_id(), "main");
+            let element = el == QContainer ? new el(this.makeId(), "", [qasets, answerTree]) : 
+                                             new el(this.makeId(), "main");
             element.initiate();
             
             if (element instanceof QContainer){

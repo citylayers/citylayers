@@ -17,24 +17,26 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloseButton = void 0;
 var ClassNames_1 = require("../../constants/ClassNames");
-var celement_1 = require("./celement");
+var BaseComponent_1 = require("./BaseComponent");
 var CloseButton = (function (_super) {
     __extends(CloseButton, _super);
-    function CloseButton(parent, category, onclick) {
-        var _this = _super.call(this, parent, category ? category : "id") || this;
-        _this.name = ClassNames_1.CLASSNAMES.CLOSE;
+    function CloseButton(parentId, id, onClick) {
+        var _this = _super.call(this, parentId, ClassNames_1.ClassName.CLOSE, id) || this;
         _this.content = "✕";
-        _this.onclick = onclick ? onclick : function () { };
+        _this.clickHandler = onClick || (function () { });
         return _this;
     }
-    CloseButton.prototype.initiate = function () {
-        var element = document.createElement("button");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
+    CloseButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    CloseButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
         element.innerHTML = this.content;
-        element.onclick = this.onclick;
-        this.getParent().appendChild(element);
+        return element;
+    };
+    CloseButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
     };
     return CloseButton;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 exports.CloseButton = CloseButton;

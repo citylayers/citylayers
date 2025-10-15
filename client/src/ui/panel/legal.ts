@@ -1,10 +1,12 @@
-import { CElement } from "../component/celement";
-import {ContentPanel} from "./contentPanel";
-
-import { LEGAL_CLASSNAMES, CLASSNAMES } from "../../constants/ClassNames";
+import { ContentPanel } from "./contentPanel";
+import { BaseComponent } from "../component/BaseComponent";
+import { LEGAL_CLASSNAMES, ClassName } from "../../constants/ClassNames";
 import { Logo } from "../component/logo";
 import { CloseButton } from "../component/closeButton";
 import { TextElement } from "../component/textElement";
+
+// Legacy imports
+import { CLASSNAMES } from "../../constants/ClassNames";
 
 class LegalPanel extends ContentPanel{
     constructor(parent:string, id:string, content?:any){
@@ -16,7 +18,7 @@ class LegalPanel extends ContentPanel{
 
     load(args?:any) {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.id, this.content);
+            let element = new this.elements[e](this.makeId(), this.id, this.content);
             element.initiate();
             element.load();
         }
@@ -37,13 +39,13 @@ class LegalHeader extends ContentPanel{
     initiate() {
         var element = document.createElement("div");
         element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
+        element.setAttribute("id", this.makeId());
         this.getParent().appendChild(element);
     }
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.id, this.args[e]);
+            let element = new this.elements[e](this.makeId(), this.id, this.args[e]);
             element.initiate();
         }
     }
@@ -65,7 +67,7 @@ class LegalBody extends ContentPanel{
         for (let e = 0; e < this.elements.length; e++) {
 
             
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                     this.classes[e], 
                                     e < this.args.length ? this.args[e] : undefined
                                 );
@@ -92,7 +94,7 @@ class LegalBodyContent extends ContentPanel{
         let suffix = location.href.endsWith("dataprivacyandprotection") || location.href.endsWith("accessibility") ? " onecol" : ""
         let element = document.createElement("div");
         element.setAttribute('class', this.name + suffix);
-        element.setAttribute("id", this.make_id());
+        element.setAttribute("id", this.makeId());
         this.getParent().appendChild(element);
     }
 
@@ -100,13 +102,13 @@ class LegalBodyContent extends ContentPanel{
         for (let e = 0; e < this.elements.length; e++) {
             let element = undefined;
             if (this.elements[e]==TextElement){
-                element = new this.elements[e](this.make_id(), this.id,
+                element = new this.elements[e](this.makeId(), this.id,
                                         e < this.args.length ? this.args[e] : undefined
                                         // this.content[e]!=undefined ? this.content[e].link : undefined
                                     );
                                 }
             else{
-                element = new this.elements[e](this.make_id(), this.id,
+                element = new this.elements[e](this.makeId(), this.id,
                 [e < this.args.length ? this.args[e] : undefined,
                 this.content[e]!=undefined ? this.content[e].link : undefined]
             );
@@ -119,28 +121,40 @@ class LegalBodyContent extends ContentPanel{
 
 
 
-class LegalLinkText extends CElement {
-    link: string;
-    constructor(parent:string, id:string, content?:any) {
-        super(parent, id, content);
-        
-        this.name = LEGAL_CLASSNAMES.TEXT;
-        this.content = content ? content[0].replaceAll("\\n", "<br>") : "";
+/**
+ * Legal link text component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class LegalLinkText extends BaseComponent {
+    private link: string;
+    private textContent: string;
+
+    constructor(parentId: string, id: string, content?: any) {
+        super(parentId, LEGAL_CLASSNAMES.TEXT, id);
+        this.textContent = content ? content[0].replaceAll("\\n", "<br>") : "";
         this.link = content ? content[1] : "/";
     }
-    load() { }
 
-    initiate() {
-        let el = document.createElement("a");
-        el.href = this.link;
-        this.getParent().appendChild(el);
-        
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        el.appendChild(element);
-        
+    protected createElement(): HTMLElement {
+        // Create anchor element
+        const anchor = document.createElement("a");
+        anchor.href = this.link;
+
+        // Create div with content inside anchor
+        const div = document.createElement("div");
+        div.setAttribute('class', this.className);
+        div.setAttribute('id', this.makeId());
+        div.innerHTML = this.textContent;
+
+        anchor.appendChild(div);
+
+        // Append anchor to parent instead of div
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(anchor);
+        }
+
+        return div; // Return div as the tracked element
     }
 }
 

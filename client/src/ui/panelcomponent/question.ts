@@ -1,12 +1,14 @@
 import { ContentPanel } from "../panel/contentPanel";
 import { LineLogo } from "../component/logo";
-import { CLASSNAMES, DISPLAY } from "../../constants/ClassNames";
-import { CButton } from "../component/cbutton";
+import { ClassName, DisplayStyle } from "../../constants/ClassNames";
+import { BaseComponent } from "../component/BaseComponent";
 import { HrElement } from "../component/hrElement";
-import { CElement } from "../component/celement";
-import { AnswerTree } from "../../../../logic/question/answerTree";
-import { QAPair, QASet } from "../../../../logic/question/question";
+import { AnswerTree } from '../../../../src/logic/question/answerTree';
+import { QAPair, QASet } from '../../../../src/logic/question/question';
 import { TextElement } from "../component/textElement";
+
+// Legacy imports for compatibility
+import { CLASSNAMES, DISPLAY } from "../../constants/ClassNames";
 
 class QHeader extends ContentPanel{
     constructor(parent:string){
@@ -17,20 +19,38 @@ class QHeader extends ContentPanel{
 
     load() {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), this.parent);
+            let element = new el(this.makeId(), this.parent);
             element.initiate();
             element.load();
         });
     }
 }
 
-class ExitButton extends CButton{
-    
-    constructor(parent:string) {
-        let onclick = ()=>{};
-        super(parent, onclick);
-        this.name = "exit-button";
-        this.content = "Save and Exit"; // U+02715
+/**
+ * Exit button for questionnaire.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ExitButton extends BaseComponent {
+    private buttonContent: string;
+
+    constructor(parentId: string, onClick?: () => void) {
+        super(parentId, "exit-button");
+        this.buttonContent = "Save and Exit";
+    }
+
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
+    }
+
+    // Legacy compatibility
+    static getElements(): HTMLCollectionOf<Element> {
+        return document.getElementsByClassName("exit-button");
     }
 }
 
@@ -47,7 +67,7 @@ class QFooter extends ContentPanel{
     load(onclicks:string[]) {
         this.elements.forEach(el => {
            
-            let element = new el(this.make_id(), "", el==NavButtons ? onclicks : this.steps);
+            let element = new el(this.makeId(), "", el==NavButtons ? onclicks : this.steps);
             element.initiate();
             element.load();
         });
@@ -62,33 +82,108 @@ class QFooter extends ContentPanel{
 
 
 
-class BackButton extends CButton{
-    
-    constructor(parent:string, id: string, onclick:()=>{}) {
-        // let onclick = ()=>{};
-        super(parent, onclick);
-        this.name = CLASSNAMES.BACK;
-        this.content = "Back"; // U+02715
+/**
+ * Back button for questionnaire navigation.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class BackButton extends BaseComponent {
+    private buttonContent: string;
+    private clickHandler: () => void;
+    static readonly componentName: string = ClassName.BACK;
+
+    constructor(parentId: string, id: string, onClick: () => void) {
+        super(parentId, ClassName.BACK);
+        this.buttonContent = "Back";
+        this.clickHandler = onClick || (() => {});
+    }
+
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
+    }
+
+    // Legacy compatibility
+    static getElements(): HTMLCollectionOf<Element> {
+        return document.getElementsByClassName(ClassName.BACK);
     }
 }
 
-class NextButton extends CButton{
-    
-    constructor(parent:string, id:string, onclick:()=>{}) {
-        // let onclick = ()=>{};
-        super(parent, onclick);
-        this.name = CLASSNAMES.NEXT;
-        this.content = "Next"; // U+02715
+/**
+ * Next button for questionnaire navigation.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class NextButton extends BaseComponent {
+    private buttonContent: string;
+    private clickHandler: () => void;
+    static readonly componentName: string = ClassName.NEXT;
+
+    constructor(parentId: string, id: string, onClick: () => void) {
+        super(parentId, ClassName.NEXT);
+        this.buttonContent = "Next";
+        this.clickHandler = onClick || (() => {});
+    }
+
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
+    }
+
+    // Legacy compatibility
+    static getElements(): HTMLCollectionOf<Element> {
+        return document.getElementsByClassName(ClassName.NEXT);
     }
 }
 
-class SubmitButton extends CButton{
-    
-    constructor(parent:string, id:string, onclick:()=>{}) {
-        // let onclick = ()=>{};
-        super(parent, onclick);
-        this.name = CLASSNAMES.SUBMIT;
-        this.content = "Submit"; // U+02715
+/**
+ * Submit button for questionnaire.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class SubmitButton extends BaseComponent {
+    private buttonContent: string;
+    private clickHandler: () => void;
+    static readonly componentName: string = ClassName.SUBMIT;
+
+    constructor(parentId: string, id: string, onClick: () => void) {
+        super(parentId, ClassName.SUBMIT);
+        this.buttonContent = "Submit";
+        this.clickHandler = onClick || (() => {});
+    }
+
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
+    }
+
+    // Legacy compatibility
+    static getElements(): HTMLCollectionOf<Element> {
+        return document.getElementsByClassName(ClassName.SUBMIT);
     }
 }
 
@@ -104,7 +199,7 @@ class NavButtons extends ContentPanel{
 
     load() {
         this.elements.forEach((el, i) => {
-            let element = new el(this.make_id(), "", this.args[i]);
+            let element = new el(this.makeId(), "", this.args[i]);
             element.initiate();
             element.load();
         });
@@ -152,14 +247,14 @@ class NavButtons extends ContentPanel{
     }
 }
 
-class Steps extends CElement{
-    constructor(parent:string) {
-        super(parent);
-        this.name = "steps";
-        this.content = "";
+/**
+ * Steps indicator component for questionnaire.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class Steps extends BaseComponent {
+    constructor(parentId: string) {
+        super(parentId, "steps");
     }
-    load() { }
-    
 }
 
 class QContainer extends ContentPanel{
@@ -182,7 +277,7 @@ class QContainer extends ContentPanel{
         
         this.content.forEach((qs:QASet, i:number)=>{
             qs.content.forEach(
-            (qa, j)=>qa.make(this.make_id(), (i==step-1 && (j==0 || this.tree.get(qa.prev_id)!=undefined)
+            (qa, j)=>qa.make(this.makeId(), (i==step-1 && (j==0 || this.tree.get(qa.prev_id)!=undefined)
 
             ), this.tree))
         }
@@ -214,8 +309,8 @@ class QuestionContainer extends ContentPanel{
     }
 
     load() {        
-        this.makeQuestion(this.make_id());
-        this.makeHelp(this.make_id());
+        this.makeQuestion(this.makeId());
+        this.makeHelp(this.makeId());
     }
 
     show(display){
@@ -232,8 +327,8 @@ class QAContainer extends ContentPanel{
     }
 
     load_(tree:AnswerTree, next_ids:Map<string, string>, display:boolean) {    
-        this.content.question.make(this.make_id());
-        this.content.answer.make(this.make_id(), tree, next_ids);
+        this.content.question.make(this.makeId());
+        this.content.answer.make(this.makeId(), tree, next_ids);
         this.show(display);
     }
 
@@ -251,7 +346,7 @@ class QContainer_ extends ContentPanel{
     }
 
     load_(step:number) {        
-        this.content.forEach((qa, i)=>qa.make(this.make_id(), i==step-1));
+        this.content.forEach((qa, i)=>qa.make(this.makeId(), i==step-1));
     }
 }
 
@@ -269,7 +364,7 @@ class QContainer_ extends ContentPanel{
 //                                         .filter(q=>q.aspect_id==aspect)
 //                                         .map(q=>q.question_id)
 //                                         .includes(q.id))
-//                                   .forEach((question, i)=>question.make(this.make_id(), 
+//                                   .forEach((question, i)=>question.make(this.makeId(), 
 //                                                                         this.answerTree, 
 //                                                                         this.content.questions[i+1].id, 
 //                                                                         i==0)

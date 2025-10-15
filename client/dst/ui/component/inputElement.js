@@ -16,9 +16,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CheckboxContainerElement = exports.RangeContainerElement = exports.ImageInputContainer = exports.ImageInputContainerElement = exports.TextInputContainer = exports.InputContainer = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var contentPanel_1 = require("../panel/contentPanel");
-var celement_1 = require("./celement");
+var BaseComponent_1 = require("./BaseComponent");
 var imageElement_1 = require("./imageElement");
 var spanElement_1 = require("./spanElement");
 var textElement_1 = require("./textElement");
@@ -31,24 +31,61 @@ var INPUT_TYPES = {
 var InputElement = (function (_super) {
     __extends(InputElement, _super);
     function InputElement(parent, id, content) {
-        var _this = _super.call(this, parent, id, content) || this;
-        _this.id = id;
-        _this.name = "input";
-        _this.content = content;
-        _this.t = "input";
-        _this.input_type = INPUT_TYPES.TEXT;
+        var _this = _super.call(this, parent, "input", id, content) || this;
+        _this.answerTree = null;
+        _this.nextIds = null;
+        _this.elementTag = "input";
+        _this.inputType = INPUT_TYPES.TEXT;
+        _this.changeHandler = function (ev) {
+            if (_this.answerTree && _this.nextIds) {
+                _this.action(ev, _this.answerTree, _this.nextIds);
+            }
+        };
         return _this;
     }
-    InputElement.prototype.load = function () { };
+    InputElement.prototype.initiate = function (answerTree, nextid) {
+        if (answerTree && nextid) {
+            this.answerTree = answerTree;
+            this.nextIds = nextid;
+        }
+        _super.prototype.initiate.call(this);
+    };
+    InputElement.prototype.getElementTag = function () {
+        return this.elementTag;
+    };
+    InputElement.prototype.createElement = function () {
+        var element = document.createElement(this.elementTag);
+        element.setAttribute('type', this.inputType);
+        element.setAttribute('name', this.className);
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+        var parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
+    };
+    InputElement.prototype.afterInit = function () {
+        this.addEventListener('change', this.changeHandler);
+        var element = this.getElement();
+        if (element) {
+            this.initExtra(element);
+        }
+    };
+    InputElement.prototype.initExtra = function (element) {
+    };
     InputElement.prototype.activateNext = function (tree, nextids) {
-        if (nextids == undefined) {
+        if (nextids === undefined) {
             return;
         }
-        if (tree.get(this.id) != undefined) {
+        if (tree.get(this.id) !== undefined) {
             var nextid = nextids.get(this.id);
-            if (nextid != undefined) {
+            if (nextid !== undefined) {
                 nextid = "qa-container_".concat(nextid);
-                document.getElementById(nextid).style.display = classnames_1.DISPLAY.FLEX;
+                var nextElement = document.getElementById(nextid);
+                if (nextElement) {
+                    nextElement.style.display = ClassNames_1.DISPLAY.FLEX;
+                }
             }
         }
     };
@@ -56,36 +93,18 @@ var InputElement = (function (_super) {
         tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
     };
-    InputElement.prototype.initiate = function (answerTree, nextid) {
-        var element = this.init_input(answerTree, nextid);
-        this.init_extra(element);
-    };
-    InputElement.prototype.init_input = function (answerTree, nextid) {
-        var _this = this;
-        var element = document.createElement(this.t);
-        element.setAttribute('type', this.input_type);
-        element.setAttribute('name', this.name);
-        element.setAttribute("class", this.name);
-        element.setAttribute("id", this.make_id());
-        element.onchange = function (ev) {
-            _this.action(ev, answerTree, nextid);
-        };
-        this.getParent().appendChild(element);
-        return element;
-    };
-    InputElement.prototype.init_extra = function (element) { };
     return InputElement;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 var TextInputElement = (function (_super) {
     __extends(TextInputElement, _super);
     function TextInputElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.TEXT_INPUT;
-        _this.t = "textarea";
-        _this.input_type = INPUT_TYPES.TEXT;
+        _this.className = ClassNames_1.CLASSNAMES.TEXT_INPUT;
+        _this.elementTag = "textarea";
+        _this.inputType = INPUT_TYPES.TEXT;
         return _this;
     }
-    TextInputElement.prototype.init_extra = function (element) {
+    TextInputElement.prototype.initExtra = function (element) {
         element.setAttribute("placeholder", "Type your comment here");
     };
     return TextInputElement;
@@ -94,15 +113,15 @@ var ImageInputElement = (function (_super) {
     __extends(ImageInputElement, _super);
     function ImageInputElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.IMG_INPUT;
-        _this.input_type = INPUT_TYPES.FILE;
+        _this.className = ClassNames_1.CLASSNAMES.IMG_INPUT;
+        _this.inputType = INPUT_TYPES.FILE;
         return _this;
     }
     ImageInputElement.prototype.action = function (ev, tree, next) {
         this.activateNext(tree, next);
         tree.add(this.id, ev.target.files[0]);
     };
-    ImageInputElement.prototype.init_extra = function (element) {
+    ImageInputElement.prototype.initExtra = function (element) {
         element.setAttribute('accept', ".jpg, .png, .jpeg");
     };
     return ImageInputElement;
@@ -111,7 +130,7 @@ var InputContainer = (function (_super) {
     __extends(InputContainer, _super);
     function InputContainer(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
         _this.content = content ? content : ["", "or skip"];
         _this.elements = [];
         return _this;
@@ -135,7 +154,7 @@ var ImageInputContainer = (function (_super) {
     function ImageInputContainer(parent, id) {
         var _this = _super.call(this, parent, id) || this;
         _this.content = ["", "or skip"];
-        _this.name = classnames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
         _this.elements = [ImageInputContainerElement, spanElement_1.SpanElement];
         return _this;
     }
@@ -146,7 +165,7 @@ var TextInputContainer = (function (_super) {
     __extends(TextInputContainer, _super);
     function TextInputContainer(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = classnames_1.CLASSNAMES.TEXTINPUT_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.TEXTINPUT_CONTAINER;
         _this.content = content;
         _this.elements = [TextInputElement];
         return _this;
@@ -158,7 +177,7 @@ var ImageInputContainerElement = (function (_super) {
     __extends(ImageInputContainerElement, _super);
     function ImageInputContainerElement(parent, id) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = classnames_1.CLASSNAMES.IMGINPUT_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.IMGINPUT_CONTAINER;
         _this.elements = [ImageInputElement, imageElement_1.ImagePreviewElement, textElement_1.TextElement];
         _this.content = ["", "", "Upload an image"];
         return _this;
@@ -169,19 +188,20 @@ exports.ImageInputContainerElement = ImageInputContainerElement;
 var RangeInputElement = (function (_super) {
     __extends(RangeInputElement, _super);
     function RangeInputElement(parent, id, content) {
+        var _a, _b;
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.RANGE_SLIDER;
-        _this.content = content;
+        _this.className = ClassNames_1.CLASSNAMES.RANGE_SLIDER;
         _this.values = new Map([
-            [classnames_1.RANGE_LABELS.MIN, _this.content.value ? _this.content.value["min"] : 0],
-            [classnames_1.RANGE_LABELS.MAX, _this.content.value ? _this.content.value["max"] : 100],
+            [ClassNames_1.RANGE_LABELS.MIN, ((_a = _this.content) === null || _a === void 0 ? void 0 : _a.value) ? _this.content.value["min"] : 0],
+            [ClassNames_1.RANGE_LABELS.MAX, ((_b = _this.content) === null || _b === void 0 ? void 0 : _b.value) ? _this.content.value["max"] : 100],
         ]);
-        _this.input_type = INPUT_TYPES.RANGE;
+        _this.inputType = INPUT_TYPES.RANGE;
         return _this;
     }
-    RangeInputElement.prototype.init_extra = function (element) {
-        element.setAttribute('min', this.values.get(classnames_1.RANGE_LABELS.MIN).toString());
-        element.setAttribute('max', this.values.get(classnames_1.RANGE_LABELS.MAX).toString());
+    RangeInputElement.prototype.initExtra = function (element) {
+        var _a, _b;
+        element.setAttribute('min', ((_a = this.values.get(ClassNames_1.RANGE_LABELS.MIN)) === null || _a === void 0 ? void 0 : _a.toString()) || '0');
+        element.setAttribute('max', ((_b = this.values.get(ClassNames_1.RANGE_LABELS.MAX)) === null || _b === void 0 ? void 0 : _b.toString()) || '100');
     };
     return RangeInputElement;
 }(InputElement));
@@ -189,9 +209,9 @@ var RangeLabelElement = (function (_super) {
     __extends(RangeLabelElement, _super);
     function RangeLabelElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.RANGE_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.RANGE_CONTAINER;
         _this.elements = [spanElement_1.SpanElement, spanElement_1.SpanElement];
-        _this.content = content.label ? [content.label[classnames_1.RANGE_LABELS.MIN], content.label[classnames_1.RANGE_LABELS.MAX]] : ["Less", "More"];
+        _this.content = content.label ? [content.label[ClassNames_1.RANGE_LABELS.MIN], content.label[ClassNames_1.RANGE_LABELS.MAX]] : ["Less", "More"];
         return _this;
     }
     return RangeLabelElement;
@@ -200,7 +220,7 @@ var RangeContainerElement = (function (_super) {
     __extends(RangeContainerElement, _super);
     function RangeContainerElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.TAG_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.TAG_CONTAINER;
         _this.elements = [RangeInputElement, RangeLabelElement];
         return _this;
     }
@@ -211,7 +231,7 @@ var CheckboxContainerElement = (function (_super) {
     __extends(CheckboxContainerElement, _super);
     function CheckboxContainerElement(parent, id, checks) {
         var _this = _super.call(this, parent, id, checks) || this;
-        _this.name = classnames_1.CLASSNAMES.TAG_CONTAINER;
+        _this.name = ClassNames_1.CLASSNAMES.TAG_CONTAINER;
         _this.content = checks;
         _this.elements = checks.map(function (c) { return CheckboxElement; });
         return _this;
@@ -237,32 +257,41 @@ var CheckboxInputElement = (function (_super) {
     __extends(CheckboxInputElement, _super);
     function CheckboxInputElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.TAG_LABEL;
-        _this.input_type = INPUT_TYPES.CHECKBOX;
+        _this.className = ClassNames_1.CLASSNAMES.TAG_LABEL;
+        _this.inputType = INPUT_TYPES.CHECKBOX;
         return _this;
     }
-    CheckboxInputElement.prototype.init_extra = function (element) {
+    CheckboxInputElement.prototype.initExtra = function (element) {
     };
-    ;
     return CheckboxInputElement;
 }(InputElement));
 var CheckboxLabelElement = (function (_super) {
     __extends(CheckboxLabelElement, _super);
     function CheckboxLabelElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.TAG_LABEL;
-        _this.content = content.name ? content.name : content;
-        _this.t = "div";
+        _this.className = ClassNames_1.CLASSNAMES.TAG_LABEL;
+        _this.content = (content === null || content === void 0 ? void 0 : content.name) ? content.name : content;
+        _this.elementTag = "div";
         return _this;
     }
-    CheckboxLabelElement.prototype.initiate = function () {
-        var element = document.createElement(this.t);
-        element.setAttribute("class", this.name);
-        this.getParent().appendChild(element);
-        var element1 = document.createElement("label");
-        element1.setAttribute("class", this.name);
-        element1.innerHTML = this.content;
-        element.appendChild(element1);
+    CheckboxLabelElement.prototype.createElement = function () {
+        var element = document.createElement(this.elementTag);
+        element.setAttribute("class", this.className);
+        element.setAttribute("id", this.makeId());
+        var parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
+    };
+    CheckboxLabelElement.prototype.afterInit = function () {
+        var element = this.getElement();
+        if (element) {
+            var label = document.createElement("label");
+            label.setAttribute("class", this.className);
+            label.innerHTML = this.content;
+            element.appendChild(label);
+        }
     };
     return CheckboxLabelElement;
 }(InputElement));

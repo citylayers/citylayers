@@ -25,18 +25,19 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeneralContent = exports.LandingIllustration = void 0;
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var contentPanel_1 = require("../panel/contentPanel");
-var celement_1 = require("../component/celement");
+var BaseComponent_1 = require("../component/BaseComponent");
 var logo_1 = require("../component/logo");
 var illustration_1 = require("../../../../logic/illustration");
 var imageElement_1 = require("../component/imageElement");
 var textElement_1 = require("../component/textElement");
+var ClassNames_2 = require("../../constants/ClassNames");
 var LandingIllustration = (function (_super) {
     __extends(LandingIllustration, _super);
     function LandingIllustration(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = classnames_1.CLASSNAMES.LANDING_ILLUSTRATION;
+        _this.name = ClassNames_2.CLASSNAMES.LANDING_ILLUSTRATION;
         _this.elements = [logo_1.ColorLogo, GradElement];
         _this.images = __spreadArray([], Array(15).keys(), true).filter(function (e) { return e > 1; }).map(function (e) { return "images/landing/v0.2.11/".concat(e, ".png"); });
         return _this;
@@ -62,7 +63,7 @@ var GeneralContent = (function (_super) {
     __extends(GeneralContent, _super);
     function GeneralContent(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = classnames_1.CLASSNAMES.LANDING_GENERAL;
+        _this.name = ClassNames_2.CLASSNAMES.LANDING_GENERAL;
         _this.elements = [LandingSlogan, LandingBrief];
         return _this;
     }
@@ -106,11 +107,8 @@ var LandingBrief = (function (_super) {
 }(textElement_1.TextElement));
 var GradElement = (function (_super) {
     __extends(GradElement, _super);
-    function GradElement(parent, id) {
-        var _this = _super.call(this, parent, id) || this;
-        _this.content = "";
-        _this.name = classnames_1.CLASSNAMES.GRAD;
-        return _this;
+    function GradElement(parentId, id) {
+        return _super.call(this, parentId, ClassNames_1.ClassName.GRAD, id) || this;
     }
     return GradElement;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));

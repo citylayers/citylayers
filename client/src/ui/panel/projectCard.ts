@@ -1,16 +1,17 @@
-import { CLASSNAMES, LEGAL_CLASSNAMES } from "../../constants/ClassNames";
-import {CElement} from "../component/celement";
-import {LegalPanel} from "./legal";
+import { ClassName, LEGAL_CLASSNAMES } from "../../constants/ClassNames";
+import { BaseComponent } from "../component/BaseComponent";
+import { LegalPanel } from "./legal";
 import { Logo } from "../component/logo";
 import { CloseButton } from "../component/closeButton";
 import { ImageElement } from "../component/imageElement";
-import { Illustration } from "../../../../logic/illustration";
-// import { ProjectRecognition } from "../../../../logic/projectInfo";
+import { Illustration } from '../../../../src/logic/illustration';
 import { ImageContainerElement } from "../component/imageContainerElement";
 import { TextElement } from "../component/textElement";
-// import { Partner } from "../../../../logic/partner";
-import { Project } from "../../../../logic/project";
+import { Project } from '../../../../src/logic/project';
 import { ProjectPeriodInfo, ProjectTeam, Recognition } from "../component/projectComponent";
+
+// Legacy imports
+import { CLASSNAMES } from "../../constants/ClassNames";
 
 class ProjectCardPanel extends LegalPanel{
 
@@ -28,20 +29,23 @@ class ProjectCardPanel extends LegalPanel{
     // }
 }
 
-class ProjectCardHeader extends CElement{
-    args: any[];
-    elements: any[];
-    constructor(parent:string, id:string, content?:any){
-        super(parent, id, content);
-        this.name =  LEGAL_CLASSNAMES.HEADER;
-        this.content = content; 
+/**
+ * Project card header component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectCardHeader extends BaseComponent {
+    private elements: any[];
+    private args: any[];
+
+    constructor(parentId: string, id: string, content?: any) {
+        super(parentId, LEGAL_CLASSNAMES.HEADER, id, content);
         this.elements = [Logo, CloseButton];
-        this.args = [undefined, ()=>{location.href = "/"}]
+        this.args = [undefined, () => { location.href = "/"; }];
     }
 
-    load() {
+    public load(): void {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.args[e]);
+            let element = new this.elements[e](this.makeId(), this.args[e]);
             element.initiate();
         }
     }
@@ -49,67 +53,66 @@ class ProjectCardHeader extends CElement{
 
 
 
-class ProjectCardBody extends CElement{
-    elements: typeof CElement[];
-    classes: string[];
-    args: any[];
-    constructor(parent:string, id:string, content?:any){
-        super(parent, id, content);
-        this.name = LEGAL_CLASSNAMES.BODY;
-        this.content = content;  // Project
-        this.elements = [ImageElement, 
-                        TextElement, 
-                        Recognition,
-                        ProjectPeriodInfo,
-                        ProjectTeam,
-                        ExploreButton,
-                        ProjectSlogan,
-                        TextElement,
-                        ImageContainerElement,
-                        ImageContainerElement
-                        ]; 
+/**
+ * Project card body component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectCardBody extends BaseComponent {
+    private elements: any[];
+    private classes: string[];
+    private args: any[];
 
-        this.classes = [CLASSNAMES.COVER, 
-                        LEGAL_CLASSNAMES.TITLE, 
-                        CLASSNAMES.RECOGNITION,
-                        CLASSNAMES.PERIOD,
-                        CLASSNAMES.TEAM,
-                        ExploreButton.name,
-                        CLASSNAMES.PROJECT_DESCRIPTION,
-                        CLASSNAMES.PROJECT_DESCRIPTION,
-                        CLASSNAMES.PROJECT_IMAGE_CONTAINER,
-                        CLASSNAMES.PARTNER
-                    
-                    ];
+    constructor(parentId: string, id: string, content?: any) {
+        super(parentId, LEGAL_CLASSNAMES.BODY, id, content);
+
+        this.elements = [
+            ImageElement,
+            TextElement,
+            Recognition,
+            ProjectPeriodInfo,
+            ProjectTeam,
+            ExploreButton,
+            ProjectSlogan,
+            TextElement,
+            ImageContainerElement,
+            ImageContainerElement
+        ];
+
+        this.classes = [
+            CLASSNAMES.COVER,
+            LEGAL_CLASSNAMES.TITLE,
+            CLASSNAMES.RECOGNITION,
+            CLASSNAMES.PERIOD,
+            CLASSNAMES.TEAM,
+            "projectButton",
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_IMAGE_CONTAINER,
+            CLASSNAMES.PARTNER
+        ];
+
         let cover = new Illustration(`/images/projects/${content.name}/cover.svg`, '');
-        this.args = [cover, 
-                     content.name, 
-                     content.info.recognition,
-                     content.info,
-                     content.info.team,
-                     content,
-                     content.info.subtitle,
-                     content.info.description,
-                     content.info.images,
-                     content.info.partners.map( e=>e.image)
-                    
-                    ];
+        this.args = [
+            cover,
+            content.name,
+            content.info.recognition,
+            content.info,
+            content.info.team,
+            content,
+            content.info.subtitle,
+            content.info.description,
+            content.info.images,
+            content.info.partners.map((e: any) => e.image)
+        ];
     }
 
-    initiate() {
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        
-    }
-
-    load() {
+    public load(): void {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), 
-                                    this.classes[e], 
-                                    e < this.args.length ? this.args[e] : undefined
-                                );
+            let element = new this.elements[e](
+                this.makeId(),
+                this.classes[e],
+                e < this.args.length ? this.args[e] : undefined
+            );
             element.initiate();
             element.load();
         }
@@ -152,7 +155,7 @@ class ProjectSlogan extends TextElement {
 //             else if (this.elements[e]==ImageContainerElement){
 //                 args = this.content.info.images;
 //             }
-//             let element = new this.elements[e](this.make_id(), 
+//             let element = new this.elements[e](this.makeId(), 
 //             CLASSNAMES.PROJECT_DESCRIPTION,  args);
 //             element.initiate();
 //             element.load();
@@ -160,25 +163,36 @@ class ProjectSlogan extends TextElement {
 //     }
 // }
 
-class ExploreButton extends CElement {
+/**
+ * Explore button for project card.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ExploreButton extends BaseComponent {
+    private static readonly BUTTON_TEXT = "Explore";
+    private project: Project;
+    private clickHandler: () => void;
 
-    static _text = "Explore";
-    content: Project;
-    constructor(parent:string, id:string, project:Project) {
-        super(parent, id, project);
-        this.name = "projectButton";
-        this.content = project;
+    static readonly componentName: string = "projectButton";
+
+    constructor(parentId: string, id: string, project: Project) {
+        super(parentId, "projectButton", id, project);
+        this.project = project;
+        this.clickHandler = () => {
+            window.location.href = `/explore/${this.project.name}`;
+        };
     }
 
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = ExploreButton._text;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            
-            window.location.href = `/explore/${this.content.name}`;
-        });
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = ExploreButton.BUTTON_TEXT;
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
     }
 }

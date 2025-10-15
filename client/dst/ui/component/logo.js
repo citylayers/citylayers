@@ -21,37 +21,28 @@ var illustration_1 = require("../../../../logic/illustration");
 var imageElement_1 = require("./imageElement");
 var Logo = (function (_super) {
     __extends(Logo, _super);
-    function Logo(parent, illustration) {
-        var _this = this;
-        var content = illustration ? illustration : new illustration_1.Illustration("/images/logo_2.svg", "/");
-        _this = _super.call(this, parent, ClassNames_1.CLASSNAMES.LOGO, content) || this;
-        _this.name = ClassNames_1.CLASSNAMES.LOGO;
-        return _this;
+    function Logo(parentId, illustration) {
+        var content = illustration || new illustration_1.Illustration("/images/logo_2.svg", "/");
+        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
     }
     return Logo;
 }(imageElement_1.ImageElement));
 exports.Logo = Logo;
 var ColorLogo = (function (_super) {
     __extends(ColorLogo, _super);
-    function ColorLogo(parent) {
-        var _this = this;
+    function ColorLogo(parentId) {
         var content = new illustration_1.Illustration("/images/logo_full.svg", "/");
-        _this = _super.call(this, parent, content) || this;
-        _this.name = ClassNames_1.CLASSNAMES.LOGO;
-        return _this;
+        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
     }
     return ColorLogo;
-}(Logo));
+}(imageElement_1.ImageElement));
 exports.ColorLogo = ColorLogo;
 var LineLogo = (function (_super) {
     __extends(LineLogo, _super);
-    function LineLogo(parent) {
-        var _this = this;
+    function LineLogo(parentId) {
         var content = new illustration_1.Illustration("/images/logo_2.svg", "/");
-        _this = _super.call(this, parent, content) || this;
-        _this.name = ClassNames_1.CLASSNAMES.LOGO;
-        return _this;
+        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
     }
     return LineLogo;
-}(Logo));
+}(imageElement_1.ImageElement));
 exports.LineLogo = LineLogo;

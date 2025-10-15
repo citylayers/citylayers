@@ -260,3 +260,22 @@ export const RANGE_LABELS = {
     MIN: RangeLabel.MIN,
     MAX: RangeLabel.MAX,
 };
+
+export const SECTIONMAP = {
+    TEAM: ["Team", "/team"],
+    ABOUT: ["About", "/about"]
+};
+
+export const LEGAL_CLASSNAMES = {
+    PANEL: "legalpanel",
+    HEADER: "legalheader",
+    BODY: "legalbody",
+    TITLE: "legaltitle",
+    TEXT: "legaltext",
+    TEXT_F: "legaltextfull",
+    LEGALBODYCONTENT: "legalbodycontent",
+    LEGAL_PANEL: "legalpanel",
+    LEGAL_HEADER: "legalheader",
+    LEGAL_BODY: "legalbody",
+    LEGAL_BODY_CONTENT: "legalbodycontent"
+};

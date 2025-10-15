@@ -1,6 +1,6 @@
 import { ContentPanel } from "../panel/contentPanel";
 import { CLASSNAMES } from "../../constants/ClassNames";
-import { TeamMember } from "../../../../logic/teammember";
+import { TeamMember } from '../../../../src/logic/teammember';
 import { TextElement } from "../component/textElement";
 import { LinkElement } from "../component/linkElement";
 
@@ -15,7 +15,7 @@ class TeamMemberContainer extends ContentPanel{
 
     load(team:TeamMember[]) {
         team.forEach((el, i) => {
-            let element = new TeamPersonCard(this.make_id(), this.parent, team[i]);
+            let element = new TeamPersonCard(this.makeId(), this.parent, team[i]);
             element.initiate();
             element.load();
         });
@@ -41,7 +41,7 @@ class TeamPersonCard extends ContentPanel{
     load() {
         this.elements.forEach((el, i) => {
             
-            let element = new el(this.make_id(), 
+            let element = new el(this.makeId(), 
                                  `${this.id}`, 
                                  this.args[i]);
             element.initiate();
@@ -64,7 +64,7 @@ class RoleContainer extends ContentPanel{
     load() {
         this.content.forEach((el, i) => {
             
-            let element = new RoleElement(this.make_id(), 
+            let element = new RoleElement(this.makeId(), 
                                           `${this.id}_${i}`, 
                                           el
                                         );
@@ -91,14 +91,14 @@ class RoleElement extends ContentPanel{
 
     load() {
         
-        let element = new LinkElement(this.make_id(), 
+        let element = new LinkElement(this.makeId(), 
                                   this.id, 
                                   [this.content.project_name, 
                                   `/project/${this.content.project_id}`]);
         element.initiate();
         element.load();
 
-        let element1 = new TextElement(this.make_id(), 
+        let element1 = new TextElement(this.makeId(), 
                                       this.id, 
                                       this.content.role);
         element1.initiate();

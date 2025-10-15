@@ -1,315 +1,263 @@
-
-
-/*
-    ------------------------------------------------------
-
-    Project Container and its elements
-
-    ------------------------------------------------------
-
-*/
-
-
-class ProjectPanel extends ContentPanel{
-    static name = CLASSNAMES.PROJECT_PANEL;
-    constructor(parent){
-        super(parent, "id");
-        this.name = ProjectPanel.name;
-        //this.sections = ["Team", "About"];
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Recognition = exports.ProjectTeam = exports.ProjectPeriodInfo = exports.ProjectPanel = void 0;
+var ClassNames_1 = require("../../constants/ClassNames");
+var BaseComponent_1 = require("./BaseComponent");
+var contentPanel_1 = require("../panel/contentPanel");
+var linkElement_1 = require("./linkElement");
+var textElement_1 = require("./textElement");
+var ClassNames_2 = require("../../constants/ClassNames");
+var ProjectPanel = (function (_super) {
+    __extends(ProjectPanel, _super);
+    function ProjectPanel(parent) {
+        var _this = _super.call(this, parent, "id") || this;
+        _this.name = ClassNames_2.CLASSNAMES.PROJECT_PANEL;
+        return _this;
     }
-
-    load(projects) {
-        this.elements.forEach(el => {
-            let element = new el(this.make_id(), "");
+    ProjectPanel.prototype.load = function (projects) {
+        var _this = this;
+        this.elements.forEach(function (el) {
+            var element = new el(_this.make_id(), "main");
             element.initiate();
             element.load();
         });
-        projects.forEach((project) => {
-            this.add(ProjectCard, project);
+        projects.forEach(function (project) {
+            _this.add(ProjectCard, project);
         });
-        for (const [key, value] of Object.entries(SECTIONMAP)) {
+        for (var _i = 0, _a = Object.entries(ClassNames_1.SECTIONMAP); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], value = _b[1];
             this.add(SectionCard, value);
-          }
-        // this.sections.forEach(s => this.add(SectionCard, s));
-    }
-
-    add(element, args) {
-        let div = new element(this.make_id(), args);
+        }
+    };
+    ProjectPanel.prototype.add = function (element, args) {
+        var div = new element(this.make_id(), args);
         div.initiate();
         div.load();
+    };
+    return ProjectPanel;
+}(contentPanel_1.ContentPanel));
+exports.ProjectPanel = ProjectPanel;
+var Card = (function (_super) {
+    __extends(Card, _super);
+    function Card(parentId, id, content) {
+        var _a;
+        var _this = _super.call(this, parentId || ClassNames_1.ClassName.CARD, ClassNames_1.ClassName.CARD, id, content) || this;
+        _this.cardContent = content;
+        _this.link = "/project/".concat((_a = _this.cardContent) === null || _a === void 0 ? void 0 : _a.name);
+        _this.elements = [ProjectTitle, ProjectCardInfo, ProjectCardButton];
+        _this.clickHandler = function () {
+            window.location.href = _this.link;
+        };
+        return _this;
     }
-}
-
-
-class ProjectCard extends CElement{
-    constructor(parent, project){
-        let _p = project ? project : undefined;
-        let id = _p ? _p.id : "";
-        super(parent, id);
-        
-
-        this.content = _p;
-        this.link = `/project/${project.name}`;
-        this.name = CLASSNAMES.CARD;
-        this.parent = parent ? parent : CLASSNAMES.CARD;
-        this.elements = [
+    Card.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    Card.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.makeId(), this.id, this.cardContent);
+            element.initiate();
+            element.load();
+        }
+    };
+    return Card;
+}(BaseComponent_1.BaseComponent));
+var ProjectCard = (function (_super) {
+    __extends(ProjectCard, _super);
+    function ProjectCard(parent, project) {
+        var _this = _super.call(this, parent, project === null || project === void 0 ? void 0 : project.name, project) || this;
+        _this.link = "/project/".concat(_this.content.name);
+        _this.name = ClassNames_2.CLASSNAMES.CARD;
+        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.CARD;
+        _this.elements = [
             ProjectTitle,
             ProjectCardInfo,
             ProjectCardButton
-        ]
+        ];
+        return _this;
     }
-
-    getParent() {
-        let element = document.getElementById(this.parent);
-        return element;
+    return ProjectCard;
+}(Card));
+var ProjectCardInfo = (function (_super) {
+    __extends(ProjectCardInfo, _super);
+    function ProjectCardInfo(parent, id, project) {
+        var _this = _super.call(this, parent, id, project) || this;
+        _this.name = "projectstatus";
+        _this.content = project;
+        _this.elements = [
+            ProjectCardText
+        ];
+        return _this;
     }
-
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            
-            let element = new this.elements[e](this.make_id(), 
-                                    this.id, this.content);
+    ProjectCardInfo.prototype._makeText = function (project) {
+        return "\uD83D\uDCCD ".concat(project.getPlace(), "\n\uD83D\uDD59 ").concat(project.getPeriod(), "\n\uD83E\uDD42 ").concat(project.getStatus(), "\n");
+    };
+    ProjectCardInfo.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.make_id(), this.id, this._makeText(this.content));
+            element.initiate();
+        }
+    };
+    return ProjectCardInfo;
+}(contentPanel_1.ContentPanel));
+var ProjectTeam = (function (_super) {
+    __extends(ProjectTeam, _super);
+    function ProjectTeam(parent, id, team) {
+        var _this = _super.call(this, parent, id, team) || this;
+        _this.name = ClassNames_2.CLASSNAMES.TEAM;
+        _this.content = team;
+        _this.elements = team.map(function (t) { return TeamPersonInfo; });
+        return _this;
+    }
+    ProjectTeam.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.make_id(), this.content[e].id, this.content[e]);
             element.initiate();
             element.load();
         }
+    };
+    return ProjectTeam;
+}(contentPanel_1.ContentPanel));
+exports.ProjectTeam = ProjectTeam;
+var TeamPersonInfo = (function (_super) {
+    __extends(TeamPersonInfo, _super);
+    function TeamPersonInfo(parent, id, teamMember) {
+        var _this = _super.call(this, parent, id, teamMember) || this;
+        _this.name = ClassNames_2.CLASSNAMES.TEAM_MEMBER;
+        _this.content = teamMember;
+        _this.elements = [linkElement_1.LinkElement, textElement_1.TextElement];
+        return _this;
     }
-
-    initiate() {
-        let panel = document.createElement("div");
-        panel.setAttribute('class', this.name);
-        panel.setAttribute("id", this.make_id());
-        
-        this.getParent().appendChild(panel);
-        panel.addEventListener("click", () => {
-            window.location.href = `${this.link}`; // `/explore`;
-        });
-    }
-}
-
-
-class ProjectCardInfo extends ContentPanel{
-
-    
-
-    constructor(parent, id, project){
-
-        super(parent, id, project);
-        this.name = "projectstatus";
-        this.content = project;
-        this.elements = [
-            ProjectCardText];
-    }
-
-    _makeText(project){
-        //📍 ${project.getPlace()}\n
-        return `🕙 ${project.getPeriod()}\n🥂 ${project.getStatus()}\n`
-    }
-
-    load(){
-        for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), CLASSNAMES.PROJECT_DESCRIPTION, this._makeText(this.content));
-
-            element.initiate();
-        }
-    }
-}
-
-class ProjectTeam extends ContentPanel{
-
-    
-
-    constructor(parent, id, team){
-
-        super(parent, id, team);
-        this.name = CLASSNAMES.TEAM;
-        this.content = team;
-        this.elements = team.map(t=>TeamPersonInfo);
-    }
-
-    load(){
-        for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               this.content[e].id, 
-                                               this.content[e]);
-
-            element.initiate();
-            element.load();
-        }
-    }
-}
-
-class TeamPersonInfo extends ContentPanel{
-
-    constructor(parent, id, teamMember){
-        super(parent, id, teamMember);
-        this.name = CLASSNAMES.TEAM_MEMBER;
-        this.content = teamMember;
-        this.elements = [LinkElement, TextElement];
-        
-    }
-
-    load(){
-        
-        let element = new LinkElement(this.make_id(), this.id, this.content.name, this.content.link);
+    TeamPersonInfo.prototype.load = function () {
+        var element = new linkElement_1.LinkElement(this.make_id(), this.id, [this.content.name, this.content.link]);
         element.initiate();
-        let element1 = new TextElement(this.make_id(), this.id, this.content.role);
+        var element1 = new textElement_1.TextElement(this.make_id(), this.id, this.content.role);
         element1.initiate();
-    }
-}
-
-
-
-class ProjectPeriodInfo extends ContentPanel{
-    constructor(parent, id, content){
-        super(parent, id, content);
-        this.name = id;
-        this.content = content;
-        this.elements = [TextElement, TextElement, TextElement, TextElement];
-        this.args = [
+    };
+    return TeamPersonInfo;
+}(contentPanel_1.ContentPanel));
+var ProjectPeriodInfo = (function (_super) {
+    __extends(ProjectPeriodInfo, _super);
+    function ProjectPeriodInfo(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = id;
+        _this.content = content;
+        _this.elements = [textElement_1.TextElement, textElement_1.TextElement, textElement_1.TextElement, textElement_1.TextElement];
+        _this.args = [
             "Start: ",
-            this.content.period.start,
+            _this.content.period.start,
             "End: ",
-            this.content.period.end
-        ]
+            _this.content.period.end
+        ];
+        return _this;
     }
-
-    load(){
-        for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               `${e}`, 
-                                               this.args[e]);
-
+    ProjectPeriodInfo.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.make_id(), "".concat(e), this.args[e]);
             element.initiate();
             element.load();
         }
+    };
+    return ProjectPeriodInfo;
+}(contentPanel_1.ContentPanel));
+exports.ProjectPeriodInfo = ProjectPeriodInfo;
+var Recognition = (function (_super) {
+    __extends(Recognition, _super);
+    function Recognition(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = id;
+        _this.content = content;
+        _this.elements = content.map(function (e) { return textElement_1.TextElement; });
+        return _this;
     }
-}
-
-class Recognition extends ContentPanel{
-    constructor(parent, id, content){
-        super(parent, id, content);
-        this.name = id;
-        this.content = content;
-        this.elements = content.map(e=>TextElement);
-    }
-
-    load(){
-        for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               `${e}`, 
-                                               this.content[e].value);
-
+    Recognition.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.make_id(), "".concat(e), this.content[e].value);
             element.initiate();
             element.load();
         }
+    };
+    return Recognition;
+}(contentPanel_1.ContentPanel));
+exports.Recognition = Recognition;
+var ProjectCardButton = (function (_super) {
+    __extends(ProjectCardButton, _super);
+    function ProjectCardButton(parentId, id, project) {
+        var _this = _super.call(this, parentId, "projectButton", id, project) || this;
+        _this.project = project;
+        _this.clickHandler = function () {
+            window.location.href = "/project/".concat(_this.project);
+        };
+        return _this;
     }
-}
-
-
-class ProjectCardButton extends CElement {
-
-    static _text = "Add a pin asd";
-    
-    constructor(parent, project) {
-        super(parent, project);
-        this.name = "projectButton";
-        this.content = project;
+    ProjectCardButton.prototype.getElementTag = function () {
+        return 'button';
+    };
+    ProjectCardButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = ProjectCardButton.BUTTON_TEXT;
+        return element;
+    };
+    ProjectCardButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    ProjectCardButton.BUTTON_TEXT = "To project";
+    return ProjectCardButton;
+}(BaseComponent_1.BaseComponent));
+var ProjectCardText = (function (_super) {
+    __extends(ProjectCardText, _super);
+    function ProjectCardText(parent, id, content) {
+        var _this = _super.call(this, parent, id, content) || this;
+        _this.name = ClassNames_2.CLASSNAMES.PROJECT_DESCRIPTION;
+        _this.content = content;
+        return _this;
     }
-
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = ProjectCardButton._text;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            window.location.href = `/project/${this.content}`;
-        });
+    return ProjectCardText;
+}(textElement_1.TextElement));
+var ProjectTitle = (function (_super) {
+    __extends(ProjectTitle, _super);
+    function ProjectTitle(parent, id, project) {
+        var _this = _super.call(this, parent, id, project.name) || this;
+        _this.name = ClassNames_2.CLASSNAMES.TITLE;
+        return _this;
     }
-}
-
-class AddPinButton extends CButton {
-
-    constructor(parent, id, project) {
-        super(parent, project);
-        this.name = "projectButton";
-        this.content = "Add a pin";
-        this.project = project;
-        this.onclick = () => {
-            window.location.href = `/pin/${this.project}`;
-        }
+    return ProjectTitle;
+}(textElement_1.TextElement));
+var SectionCard = (function (_super) {
+    __extends(SectionCard, _super);
+    function SectionCard(parent, section) {
+        var _this = _super.call(this, parent, section[0], section) || this;
+        _this.id = section[0];
+        _this.content = section[0];
+        _this.name = "".concat(ClassNames_2.CLASSNAMES.CARD, " section");
+        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.PROJECT_PANEL;
+        _this.link = section[1];
+        _this.elements = [ProjectCardText];
+        return _this;
     }
-}
-
-class DashboardButton extends CButton {
-
-    constructor(parent, id, project) {
-        super(parent, project);
-        this.name = "projectButton";
-        this.content = "Explore";
-        this.project = project;
-        this.onclick = () => {
-            window.location.href = `/map/${this.project}`;
-        }
-    }
-}
-
-class ProjectCardText extends TextElement {
-    constructor(parent, name, content) {
-        super(parent, name, content);
-        this.name = CLASSNAMES.PROJECT_DESCRIPTION;
-        this.content = content;
-    }
-}
-
-class ProjectTitle extends TextElement {
-    constructor(parent, name, project) {
-        project = project.name;
-        super(parent, name, project);
-        this.name = CLASSNAMES.TITLE;
-    }
-}
-
-class SectionCard extends ProjectCard{
-    // static _text = "Explore projects"
-    constructor(parent, section){
-        super(parent, section[0]);
-        this.id = section[0]
-        this.content = section[0]; //ExploreCard._text;
-        this.name = `${CLASSNAMES.CARD} section`;
-        this.parent = parent ? parent : CLASSNAMES.PROJECT_PANEL;
-        this.link = section[1];
-        this.elements = [ProjectCardText];
-    }
-
-    _makeText(content){
-        return `${content}`
-    }
-
-    load(){
-        for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), 
-                                    CLASSNAMES.PROJECT_DESCRIPTION, 
-                                    this._makeText(this.content));
+    SectionCard.prototype._makeText = function (content) {
+        return "".concat(content);
+    };
+    SectionCard.prototype.load = function () {
+        for (var e = 0; e < this.elements.length; e++) {
+            var element = new this.elements[e](this.make_id(), this.id, this._makeText(this.content));
             element.initiate();
         }
-    }
-
-    initiate() {
-        var element = document.createElement("div");
-        // element.innerHTML = ExploreCard._text;
-        element.setAttribute('class', this.name );
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            window.location.href = `${this.link}`; // `/explore`;
-        });
-    }
-}
-
-
-
-
+    };
+    return SectionCard;
+}(Card));

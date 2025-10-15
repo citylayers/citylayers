@@ -16,7 +16,7 @@ class ProjectPeriod{
             return start==true ? "Not started" : "Ongoing";
         }
         if (d instanceof String){
-            return d.substr(0, 10).replaceAll(":", "/")
+            return d.substr(0, 10).replace(/:/g, "/")
         }
         if (d instanceof DateTime){
             return `${d.year}/${d.month}/${d.day}`;

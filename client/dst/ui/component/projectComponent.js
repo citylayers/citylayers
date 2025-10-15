@@ -16,16 +16,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recognition = exports.ProjectTeam = exports.ProjectPeriodInfo = exports.ProjectPanel = void 0;
-var classnames_1 = require("../../../classnames");
-var celement_1 = require("./celement");
+var ClassNames_1 = require("../../constants/ClassNames");
+var BaseComponent_1 = require("./BaseComponent");
 var contentPanel_1 = require("../panel/contentPanel");
 var linkElement_1 = require("./linkElement");
 var textElement_1 = require("./textElement");
+var ClassNames_2 = require("../../constants/ClassNames");
 var ProjectPanel = (function (_super) {
     __extends(ProjectPanel, _super);
     function ProjectPanel(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = classnames_1.CLASSNAMES.PROJECT_PANEL;
+        _this.name = ClassNames_2.CLASSNAMES.PROJECT_PANEL;
         return _this;
     }
     ProjectPanel.prototype.load = function (projects) {
@@ -38,7 +39,7 @@ var ProjectPanel = (function (_super) {
         projects.forEach(function (project) {
             _this.add(ProjectCard, project);
         });
-        for (var _i = 0, _a = Object.entries(classnames_1.SECTIONMAP); _i < _a.length; _i++) {
+        for (var _i = 0, _a = Object.entries(ClassNames_1.SECTIONMAP); _i < _a.length; _i++) {
             var _b = _a[_i], key = _b[0], value = _b[1];
             this.add(SectionCard, value);
         }
@@ -53,44 +54,36 @@ var ProjectPanel = (function (_super) {
 exports.ProjectPanel = ProjectPanel;
 var Card = (function (_super) {
     __extends(Card, _super);
-    function Card(parent, id, content) {
-        var _this = _super.call(this, parent, id, content) || this;
-        _this.link = "/project/".concat(_this.content.name);
-        _this.name = classnames_1.CLASSNAMES.CARD;
-        _this.parent = parent ? parent : classnames_1.CLASSNAMES.CARD;
-        _this.elements = [
-            ProjectTitle,
-            ProjectCardInfo,
-            ProjectCardButton
-        ];
+    function Card(parentId, id, content) {
+        var _a;
+        var _this = _super.call(this, parentId || ClassNames_1.ClassName.CARD, ClassNames_1.ClassName.CARD, id, content) || this;
+        _this.cardContent = content;
+        _this.link = "/project/".concat((_a = _this.cardContent) === null || _a === void 0 ? void 0 : _a.name);
+        _this.elements = [ProjectTitle, ProjectCardInfo, ProjectCardButton];
+        _this.clickHandler = function () {
+            window.location.href = _this.link;
+        };
         return _this;
     }
-    Card.prototype.initiate = function () {
-        var _this = this;
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", function () {
-            window.location.href = "".concat(_this.link);
-        });
+    Card.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
     };
     Card.prototype.load = function () {
         for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.make_id(), this.id, this.content);
+            var element = new this.elements[e](this.makeId(), this.id, this.cardContent);
             element.initiate();
             element.load();
         }
     };
     return Card;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 var ProjectCard = (function (_super) {
     __extends(ProjectCard, _super);
     function ProjectCard(parent, project) {
         var _this = _super.call(this, parent, project === null || project === void 0 ? void 0 : project.name, project) || this;
         _this.link = "/project/".concat(_this.content.name);
-        _this.name = classnames_1.CLASSNAMES.CARD;
-        _this.parent = parent ? parent : classnames_1.CLASSNAMES.CARD;
+        _this.name = ClassNames_2.CLASSNAMES.CARD;
+        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.CARD;
         _this.elements = [
             ProjectTitle,
             ProjectCardInfo,
@@ -126,7 +119,7 @@ var ProjectTeam = (function (_super) {
     __extends(ProjectTeam, _super);
     function ProjectTeam(parent, id, team) {
         var _this = _super.call(this, parent, id, team) || this;
-        _this.name = classnames_1.CLASSNAMES.TEAM;
+        _this.name = ClassNames_2.CLASSNAMES.TEAM;
         _this.content = team;
         _this.elements = team.map(function (t) { return TeamPersonInfo; });
         return _this;
@@ -145,7 +138,7 @@ var TeamPersonInfo = (function (_super) {
     __extends(TeamPersonInfo, _super);
     function TeamPersonInfo(parent, id, teamMember) {
         var _this = _super.call(this, parent, id, teamMember) || this;
-        _this.name = classnames_1.CLASSNAMES.TEAM_MEMBER;
+        _this.name = ClassNames_2.CLASSNAMES.TEAM_MEMBER;
         _this.content = teamMember;
         _this.elements = [linkElement_1.LinkElement, textElement_1.TextElement];
         return _this;
@@ -204,31 +197,33 @@ var Recognition = (function (_super) {
 exports.Recognition = Recognition;
 var ProjectCardButton = (function (_super) {
     __extends(ProjectCardButton, _super);
-    function ProjectCardButton(parent, id, project) {
-        var _this = _super.call(this, parent, id, project) || this;
-        _this.name = "projectButton";
-        _this.content = project;
+    function ProjectCardButton(parentId, id, project) {
+        var _this = _super.call(this, parentId, "projectButton", id, project) || this;
+        _this.project = project;
+        _this.clickHandler = function () {
+            window.location.href = "/project/".concat(_this.project);
+        };
         return _this;
     }
-    ProjectCardButton.prototype.initiate = function () {
-        var _this = this;
-        var element = document.createElement("button");
-        element.innerHTML = ProjectCardButton._text;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", function () {
-            window.location.href = "/project/".concat(_this.content);
-        });
+    ProjectCardButton.prototype.getElementTag = function () {
+        return 'button';
     };
-    ProjectCardButton._text = "To project";
+    ProjectCardButton.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = ProjectCardButton.BUTTON_TEXT;
+        return element;
+    };
+    ProjectCardButton.prototype.afterInit = function () {
+        this.addEventListener('click', this.clickHandler);
+    };
+    ProjectCardButton.BUTTON_TEXT = "To project";
     return ProjectCardButton;
-}(celement_1.CElement));
+}(BaseComponent_1.BaseComponent));
 var ProjectCardText = (function (_super) {
     __extends(ProjectCardText, _super);
     function ProjectCardText(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = classnames_1.CLASSNAMES.PROJECT_DESCRIPTION;
+        _this.name = ClassNames_2.CLASSNAMES.PROJECT_DESCRIPTION;
         _this.content = content;
         return _this;
     }
@@ -238,7 +233,7 @@ var ProjectTitle = (function (_super) {
     __extends(ProjectTitle, _super);
     function ProjectTitle(parent, id, project) {
         var _this = _super.call(this, parent, id, project.name) || this;
-        _this.name = classnames_1.CLASSNAMES.TITLE;
+        _this.name = ClassNames_2.CLASSNAMES.TITLE;
         return _this;
     }
     return ProjectTitle;
@@ -249,8 +244,8 @@ var SectionCard = (function (_super) {
         var _this = _super.call(this, parent, section[0], section) || this;
         _this.id = section[0];
         _this.content = section[0];
-        _this.name = "".concat(classnames_1.CLASSNAMES.CARD, " section");
-        _this.parent = parent ? parent : classnames_1.CLASSNAMES.PROJECT_PANEL;
+        _this.name = "".concat(ClassNames_2.CLASSNAMES.CARD, " section");
+        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.PROJECT_PANEL;
         _this.link = section[1];
         _this.elements = [ProjectCardText];
         return _this;
