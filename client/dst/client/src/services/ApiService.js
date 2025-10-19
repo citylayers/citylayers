@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -61,15 +60,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.observationApi = exports.projectApi = exports.ObservationApiService = exports.ProjectApiService = exports.ApiService = exports.HttpMethod = void 0;
 var HttpMethod;
 (function (HttpMethod) {
     HttpMethod["GET"] = "GET";
     HttpMethod["POST"] = "POST";
     HttpMethod["PUT"] = "PUT";
     HttpMethod["DELETE"] = "DELETE";
-})(HttpMethod || (exports.HttpMethod = HttpMethod = {}));
+})(HttpMethod || (HttpMethod = {}));
 var ApiService = (function () {
     function ApiService(config) {
         if (config === void 0) { config = {}; }
@@ -189,7 +186,6 @@ var ApiService = (function () {
     };
     return ApiService;
 }());
-exports.ApiService = ApiService;
 var ProjectApiService = (function (_super) {
     __extends(ProjectApiService, _super);
     function ProjectApiService() {
@@ -239,7 +235,6 @@ var ProjectApiService = (function (_super) {
     };
     return ProjectApiService;
 }(ApiService));
-exports.ProjectApiService = ProjectApiService;
 var ObservationApiService = (function (_super) {
     __extends(ObservationApiService, _super);
     function ObservationApiService() {
@@ -261,6 +256,5 @@ var ObservationApiService = (function (_super) {
     };
     return ObservationApiService;
 }(ApiService));
-exports.ObservationApiService = ObservationApiService;
-exports.projectApi = new ProjectApiService();
-exports.observationApi = new ObservationApiService();
+var projectApi = new ProjectApiService();
+var observationApi = new ObservationApiService();

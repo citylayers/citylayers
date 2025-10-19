@@ -1,12 +1,10 @@
-import { ClassName } from "../../constants/ClassNames";
-import { Project } from '../../../../src/logic/project';
-import { BaseComponent } from "../component/BaseComponent";
-import { CloseButton } from "../component/closeButton";
-import { TextElement, HeaderElement } from "../component/textElement";
-import { ContentPanel } from "./contentPanel";
+
+
+
+
+
 
 // Legacy imports
-import { CLASSNAMES } from "../../constants/ClassNames";
 
 /*
     ------------------------------------------------------
@@ -25,7 +23,7 @@ class ProjectContentPanel extends ContentPanel{
         this.name = CLASSNAMES.PROJECT_PANEL;
     }
 
-    load(projects:Project[]) {
+    load(projects:any[]) {
         this.elements.forEach(el => {
             let element = new el(this.makeId(), "main");
             element.initiate();
@@ -36,7 +34,7 @@ class ProjectContentPanel extends ContentPanel{
         });
     }
 
-    add(project:Project) {
+    add(project:any) {
         let div = new ProjectElement(this.makeId(), project);
         div.initiate();
         div.load();
@@ -50,10 +48,10 @@ class ProjectContentPanel extends ContentPanel{
  * Extends BaseComponent with proper OOP principles.
  */
 class ProjectElement extends BaseComponent {
-    private project: Project;
+    private project:any;
     private elements: any[];
 
-    constructor(parentId: string, project: Project) {
+    constructor(parentId: string, project:any) {
         super(parentId || ClassName.CATEGORY_PANEL, ClassName.CATEGORY_CONTAINER, project.name);
         this.project = project;
         this.elements = [ProjectHeader, ProjectDescription];
@@ -70,7 +68,7 @@ class ProjectElement extends BaseComponent {
 
 
 class ProjectHeader extends ContentPanel{
-    constructor(parent:string, id:string, project:Project){
+    constructor(parent:string, id:string, project:any){
 
         super(parent, id, project);
         this.elements = [
@@ -82,7 +80,7 @@ class ProjectHeader extends ContentPanel{
 }
 
 class ProjectDescription extends TextElement {
-    constructor(parent:string, id:string, project:Project) {
+    constructor(parent:string, id:string, project:any) {
         super(parent, id);
         this.name = CLASSNAMES.CATEGORY_DESCRIPTION;
         this.content = project.info.description;
@@ -94,10 +92,10 @@ class ProjectDescription extends TextElement {
  * Extends BaseComponent with proper OOP principles.
  */
 class ProjectSwitch extends BaseComponent {
-    private project: Project;
+    private project:any;
     static readonly componentName: string = ClassName.CATEGORY_SWITCH;
 
-    constructor(parentId: string, id: string, project: Project) {
+    constructor(parentId: string, id: string, project:any) {
         super(parentId, ClassName.CATEGORY_SWITCH, id, project);
         this.project = project;
     }
@@ -137,10 +135,10 @@ class ProjectSwitch extends BaseComponent {
  * Extends BaseComponent with proper OOP principles.
  */
 class ProjectConfig extends BaseComponent {
-    private project: Project;
+    private project:any;
     private clickHandler: () => void;
 
-    constructor(parentId: string, id: string, project: Project) {
+    constructor(parentId: string, id: string, project:any) {
         super(parentId, ClassName.CONFIG, id);
         this.project = project;
         this.clickHandler = () => {
@@ -173,11 +171,11 @@ class ProjectConfig extends BaseComponent {
  * Extends BaseComponent with proper OOP principles.
  */
 class ProjectSidePanel extends BaseComponent {
-    private project: Project;
+    private project:any;
     private elements: any[];
     private args: any[];
 
-    constructor(parentId: string, project: Project) {
+    constructor(parentId: string, project:any) {
         super(parentId || "body", ClassName.CATEGORY_SIDE_PANEL, project.name);
         this.project = project;
         this.elements = [CloseButton, TextElement];
@@ -225,6 +223,3 @@ class ProjectSidePanel extends BaseComponent {
         }
     }
 }
-export {ProjectContentPanel}
-
-

@@ -1,4 +1,3 @@
-import { BaseComponent } from "./BaseComponent";
 
 /**
  * Content element component for generic content containers.
@@ -19,4 +18,3 @@ class ContentElement extends BaseComponent {
     }
 }
 
-export { ContentElement };

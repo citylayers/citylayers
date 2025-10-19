@@ -1,5 +1,4 @@
-import { ClassName } from "../../constants/ClassNames";
-import { BaseComponent } from "./BaseComponent";
+
 
 /**
  * Text element component for displaying formatted text.
@@ -52,4 +51,3 @@ class HeaderElement extends BaseComponent {
     }
 }
 
-export { TextElement, HeaderElement };

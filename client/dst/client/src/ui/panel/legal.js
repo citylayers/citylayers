@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23,20 +22,11 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LegalPanel = void 0;
-var contentPanel_1 = require("./contentPanel");
-var BaseComponent_1 = require("../component/BaseComponent");
-var ClassNames_1 = require("../../constants/ClassNames");
-var logo_1 = require("../component/logo");
-var closeButton_1 = require("../component/closeButton");
-var textElement_1 = require("../component/textElement");
-var ClassNames_2 = require("../../constants/ClassNames");
 var LegalPanel = (function (_super) {
     __extends(LegalPanel, _super);
     function LegalPanel(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.PANEL;
+        _this.name = LEGAL_CLASSNAMES.PANEL;
         _this.elements = [LegalHeader, LegalBody];
         _this.content = content;
         return _this;
@@ -49,16 +39,15 @@ var LegalPanel = (function (_super) {
         }
     };
     return LegalPanel;
-}(contentPanel_1.ContentPanel));
-exports.LegalPanel = LegalPanel;
+}(ContentPanel));
 var LegalHeader = (function (_super) {
     __extends(LegalHeader, _super);
     function LegalHeader(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.HEADER;
+        _this.name = LEGAL_CLASSNAMES.HEADER;
         _this.content = content;
-        _this.elements = [logo_1.Logo, closeButton_1.CloseButton];
-        _this.args = [ClassNames_2.CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
+        _this.elements = [Logo, CloseButton];
+        _this.args = [CLASSNAMES.LOGO, function () { location.href = "/"; }, content[0].name];
         return _this;
     }
     LegalHeader.prototype.initiate = function () {
@@ -74,15 +63,15 @@ var LegalHeader = (function (_super) {
         }
     };
     return LegalHeader;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var LegalBody = (function (_super) {
     __extends(LegalBody, _super);
     function LegalBody(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.BODY;
+        _this.name = LEGAL_CLASSNAMES.BODY;
         _this.content = content;
-        _this.elements = [textElement_1.TextElement, LegalBodyContent];
-        _this.classes = [ClassNames_1.LEGAL_CLASSNAMES.TITLE, ClassNames_1.LEGAL_CLASSNAMES.LEGALBODYCONTENT];
+        _this.elements = [TextElement, LegalBodyContent];
+        _this.classes = [LEGAL_CLASSNAMES.TITLE, LEGAL_CLASSNAMES.LEGALBODYCONTENT];
         _this.args = [content[0].title, content];
         return _this;
     }
@@ -94,15 +83,15 @@ var LegalBody = (function (_super) {
         }
     };
     return LegalBody;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var LegalBodyContent = (function (_super) {
     __extends(LegalBodyContent, _super);
     function LegalBodyContent(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.BODY;
+        _this.name = LEGAL_CLASSNAMES.BODY;
         _this.content = content;
-        _this.elements = __spreadArray([], content.map(function (e) { return (e.link != undefined && e.link != null && e.link != "") ? LegalLinkText : textElement_1.TextElement; }), true);
-        _this.classes = __spreadArray([], content.map(function (e) { return e.formatting == 1 ? ClassNames_1.LEGAL_CLASSNAMES.TEXT_F : ClassNames_1.LEGAL_CLASSNAMES.TEXT; }), true);
+        _this.elements = __spreadArray([], content.map(function (e) { return (e.link != undefined && e.link != null && e.link != "") ? LegalLinkText : TextElement; }), true);
+        _this.classes = __spreadArray([], content.map(function (e) { return e.formatting == 1 ? LEGAL_CLASSNAMES.TEXT_F : LEGAL_CLASSNAMES.TEXT; }), true);
         _this.args = __spreadArray([], content.map(function (e) { return e.content; }), true);
         return _this;
     }
@@ -116,7 +105,7 @@ var LegalBodyContent = (function (_super) {
     LegalBodyContent.prototype.load = function () {
         for (var e = 0; e < this.elements.length; e++) {
             var element = undefined;
-            if (this.elements[e] == textElement_1.TextElement) {
+            if (this.elements[e] == TextElement) {
                 element = new this.elements[e](this.makeId(), this.id, e < this.args.length ? this.args[e] : undefined);
             }
             else {
@@ -127,11 +116,11 @@ var LegalBodyContent = (function (_super) {
         }
     };
     return LegalBodyContent;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var LegalLinkText = (function (_super) {
     __extends(LegalLinkText, _super);
     function LegalLinkText(parentId, id, content) {
-        var _this = _super.call(this, parentId, ClassNames_1.LEGAL_CLASSNAMES.TEXT, id) || this;
+        var _this = _super.call(this, parentId, LEGAL_CLASSNAMES.TEXT, id) || this;
         _this.textContent = content ? content[0].replaceAll("\\n", "<br>") : "";
         _this.link = content ? content[1] : "/";
         return _this;
@@ -151,4 +140,4 @@ var LegalLinkText = (function (_super) {
         return div;
     };
     return LegalLinkText;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));

@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,21 +13,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QuestionContainer = exports.QHeader = exports.QFooter = exports.QAContainer = exports.QContainer = void 0;
-var contentPanel_1 = require("../panel/contentPanel");
-var logo_1 = require("../component/logo");
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("../component/BaseComponent");
-var hrElement_1 = require("../component/hrElement");
-var textElement_1 = require("../component/textElement");
-var ClassNames_2 = require("../../constants/ClassNames");
 var QHeader = (function (_super) {
     __extends(QHeader, _super);
     function QHeader(parent) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = ClassNames_2.CLASSNAMES.Q_HEADER;
-        _this.elements = [logo_1.LineLogo, ExitButton];
+        _this.name = CLASSNAMES.Q_HEADER;
+        _this.elements = [LineLogo, ExitButton];
         return _this;
     }
     QHeader.prototype.load = function () {
@@ -40,8 +30,7 @@ var QHeader = (function (_super) {
         });
     };
     return QHeader;
-}(contentPanel_1.ContentPanel));
-exports.QHeader = QHeader;
+}(ContentPanel));
 var ExitButton = (function (_super) {
     __extends(ExitButton, _super);
     function ExitButton(parentId, onClick) {
@@ -61,13 +50,13 @@ var ExitButton = (function (_super) {
         return document.getElementsByClassName("exit-button");
     };
     return ExitButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var QFooter = (function (_super) {
     __extends(QFooter, _super);
     function QFooter(parent, id, steps) {
         var _this = _super.call(this, parent, "qfooter") || this;
-        _this.name = ClassNames_2.CLASSNAMES.Q_FOOTER;
-        _this.elements = [Steps, hrElement_1.HrElement, NavButtons];
+        _this.name = CLASSNAMES.Q_FOOTER;
+        _this.elements = [Steps, HrElement, NavButtons];
         _this.steps = steps;
         return _this;
     }
@@ -84,12 +73,11 @@ var QFooter = (function (_super) {
         NavButtons.reload(step, totalSteps);
     };
     return QFooter;
-}(contentPanel_1.ContentPanel));
-exports.QFooter = QFooter;
+}(ContentPanel));
 var BackButton = (function (_super) {
     __extends(BackButton, _super);
     function BackButton(parentId, id, onClick) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.BACK) || this;
+        var _this = _super.call(this, parentId, ClassName.BACK) || this;
         _this.buttonContent = "Back";
         _this.clickHandler = onClick || (function () { });
         return _this;
@@ -106,15 +94,15 @@ var BackButton = (function (_super) {
         this.addEventListener('click', this.clickHandler);
     };
     BackButton.getElements = function () {
-        return document.getElementsByClassName(ClassNames_1.ClassName.BACK);
+        return document.getElementsByClassName(ClassName.BACK);
     };
-    BackButton.componentName = ClassNames_1.ClassName.BACK;
+    BackButton.componentName = ClassName.BACK;
     return BackButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var NextButton = (function (_super) {
     __extends(NextButton, _super);
     function NextButton(parentId, id, onClick) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.NEXT) || this;
+        var _this = _super.call(this, parentId, ClassName.NEXT) || this;
         _this.buttonContent = "Next";
         _this.clickHandler = onClick || (function () { });
         return _this;
@@ -131,15 +119,15 @@ var NextButton = (function (_super) {
         this.addEventListener('click', this.clickHandler);
     };
     NextButton.getElements = function () {
-        return document.getElementsByClassName(ClassNames_1.ClassName.NEXT);
+        return document.getElementsByClassName(ClassName.NEXT);
     };
-    NextButton.componentName = ClassNames_1.ClassName.NEXT;
+    NextButton.componentName = ClassName.NEXT;
     return NextButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var SubmitButton = (function (_super) {
     __extends(SubmitButton, _super);
     function SubmitButton(parentId, id, onClick) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.SUBMIT) || this;
+        var _this = _super.call(this, parentId, ClassName.SUBMIT) || this;
         _this.buttonContent = "Submit";
         _this.clickHandler = onClick || (function () { });
         return _this;
@@ -156,11 +144,11 @@ var SubmitButton = (function (_super) {
         this.addEventListener('click', this.clickHandler);
     };
     SubmitButton.getElements = function () {
-        return document.getElementsByClassName(ClassNames_1.ClassName.SUBMIT);
+        return document.getElementsByClassName(ClassName.SUBMIT);
     };
-    SubmitButton.componentName = ClassNames_1.ClassName.SUBMIT;
+    SubmitButton.componentName = ClassName.SUBMIT;
     return SubmitButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var NavButtons = (function (_super) {
     __extends(NavButtons, _super);
     function NavButtons(parent, id, onclicks) {
@@ -168,7 +156,7 @@ var NavButtons = (function (_super) {
         if (onclicks === void 0) { onclicks = []; }
         var _this = _super.call(this, parent, id) || this;
         _this.elements = [BackButton, NextButton, SubmitButton];
-        _this.name = ClassNames_2.CLASSNAMES.NAV;
+        _this.name = CLASSNAMES.NAV;
         _this.args = onclicks;
         return _this;
     }
@@ -193,29 +181,29 @@ var NavButtons = (function (_super) {
             if (bb.length > 0) {
                 var cond = _this.buttonConditions.get(b.name);
                 var ba = bb[0];
-                ba.style.display = cond(step, steps) ? ClassNames_2.DISPLAY.NONE : ClassNames_2.DISPLAY.BLOCKINLINE;
+                ba.style.display = cond(step, steps) ? DISPLAY.NONE : "inline-block";
             }
         });
     };
     NavButtons.buttonConditions = new Map([
         [BackButton.name, function (step, steps) { return step == 0; }],
-        [NextButton.name, function (step, steps) { return step == steps; }],
-        [SubmitButton.name, function (step, steps) { return step != steps; }]
+        [NextButton.name, function (step, steps) { return step == steps - 1; }],
+        [SubmitButton.name, function (step, steps) { return step != steps - 1; }]
     ]);
     return NavButtons;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var Steps = (function (_super) {
     __extends(Steps, _super);
     function Steps(parentId) {
         return _super.call(this, parentId, "steps") || this;
     }
     return Steps;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var QContainer = (function (_super) {
     __extends(QContainer, _super);
     function QContainer(parent, id, content) {
-        var _this = _super.call(this, parent, ClassNames_2.CLASSNAMES.Q_CONTAINER) || this;
-        _this.name = ClassNames_2.CLASSNAMES.Q_CONTAINER;
+        var _this = _super.call(this, parent, CLASSNAMES.Q_CONTAINER) || this;
+        _this.name = CLASSNAMES.Q_CONTAINER;
         _this.content = content[0];
         _this.elements = [QContainer];
         _this.tree = content[1];
@@ -226,30 +214,42 @@ var QContainer = (function (_super) {
     };
     QContainer.prototype.load_ = function (step, display) {
         var _this = this;
+        console.log("QContainer.load_ called, step:", step, "content:", this.content);
         this.content.forEach(function (qs, i) {
-            qs.content.forEach(function (qa, j) { return qa.make(_this.makeId(), (i == step - 1 && (j == 0 || _this.tree.get(qa.prev_id) != undefined)), _this.tree); });
+            qs.content.forEach(function (qa, j) {
+                if (!qa.e) {
+                    qa.initiate(_this.makeId());
+                }
+            });
+        });
+        this.content.forEach(function (qs, i) {
+            qs.content.forEach(function (qa, j) {
+                var prevValue = qa.prev_id ? _this.tree.get(qa.prev_id) : undefined;
+                var shouldDisplay = (i == step && (j == 0 || !!prevValue));
+                console.log("Step ".concat(i, ", QA ").concat(j, ": shouldDisplay=").concat(shouldDisplay, ", step=").concat(step, ", i==step=").concat(i == step, ", j==0=").concat(j == 0, ", prev_id=").concat(qa.prev_id, ", prevValue=").concat(prevValue));
+                qa.make(_this.makeId(), shouldDisplay, _this.tree);
+            });
         });
     };
     return QContainer;
-}(contentPanel_1.ContentPanel));
-exports.QContainer = QContainer;
+}(ContentPanel));
 var QuestionContainer = (function (_super) {
     __extends(QuestionContainer, _super);
     function QuestionContainer(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = ClassNames_2.CLASSNAMES.QUESTION_CONTAINER;
+        _this.name = CLASSNAMES.QUESTION_CONTAINER;
         _this.content = content;
-        _this.elements = [textElement_1.TextElement, textElement_1.TextElement];
+        _this.elements = [TextElement, TextElement];
         return _this;
     }
     QuestionContainer.prototype.makeHelp = function (parent_id) {
-        var el = new textElement_1.TextElement(parent_id, this.id, this.content[1]);
+        var el = new TextElement(parent_id, this.id, this.content[1]);
         el.initiate();
         el.load();
         return el;
     };
     QuestionContainer.prototype.makeQuestion = function (parent_id) {
-        var el = new textElement_1.TextElement(parent_id, this.id, this.content[0]);
+        var el = new TextElement(parent_id, this.id, this.content[0]);
         el.initiate();
         el.load();
         return el;
@@ -262,32 +262,33 @@ var QuestionContainer = (function (_super) {
         this.getElement().style.display = display == false ? "none" : "flex";
     };
     return QuestionContainer;
-}(contentPanel_1.ContentPanel));
-exports.QuestionContainer = QuestionContainer;
+}(ContentPanel));
 var QAContainer = (function (_super) {
     __extends(QAContainer, _super);
     function QAContainer(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_2.CLASSNAMES.QA_CONTAINER;
+        _this.name = CLASSNAMES.QA_CONTAINER;
         _this.elements = [];
         return _this;
     }
+    QAContainer.prototype.load = function (tree, next_ids, display) {
+        this.load_(tree, next_ids, display);
+    };
     QAContainer.prototype.load_ = function (tree, next_ids, display) {
         this.content.question.make(this.makeId());
         this.content.answer.make(this.makeId(), tree, next_ids);
         this.show(display);
     };
     QAContainer.prototype.show = function (display) {
-        this.getElement().style.display = display == false ? ClassNames_2.DISPLAY.NONE : ClassNames_2.DISPLAY.FLEX;
+        this.getElement().style.display = display == false ? DISPLAY.NONE : DISPLAY.FLEX;
     };
     return QAContainer;
-}(contentPanel_1.ContentPanel));
-exports.QAContainer = QAContainer;
+}(ContentPanel));
 var QContainer_ = (function (_super) {
     __extends(QContainer_, _super);
     function QContainer_(parent, content) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = ClassNames_2.CLASSNAMES.Q_PAGE;
+        _this.name = CLASSNAMES.Q_PAGE;
         _this.content = content;
         return _this;
     }
@@ -296,4 +297,4 @@ var QContainer_ = (function (_super) {
         this.content.forEach(function (qa, i) { return qa.make(_this.makeId(), i == step - 1); });
     };
     return QContainer_;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));

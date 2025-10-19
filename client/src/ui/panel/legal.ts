@@ -1,12 +1,10 @@
-import { ContentPanel } from "./contentPanel";
-import { BaseComponent } from "../component/BaseComponent";
-import { LEGAL_CLASSNAMES, ClassName } from "../../constants/ClassNames";
-import { Logo } from "../component/logo";
-import { CloseButton } from "../component/closeButton";
-import { TextElement } from "../component/textElement";
+
+
+
+
+
 
 // Legacy imports
-import { CLASSNAMES } from "../../constants/ClassNames";
 
 class LegalPanel extends ContentPanel{
     constructor(parent:string, id:string, content?:any){
@@ -158,4 +156,3 @@ class LegalLinkText extends BaseComponent {
     }
 }
 
-export {LegalPanel}

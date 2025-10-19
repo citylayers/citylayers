@@ -1,33 +1,15 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContentElement = void 0;
-var BaseComponent_1 = require("./BaseComponent");
-var ContentElement = (function (_super) {
-    __extends(ContentElement, _super);
-    function ContentElement(parentId, id, content) {
-        var _this = _super.call(this, parentId || "main", "contentelement", id) || this;
-        _this.htmlContent = content;
-        return _this;
+/**
+ * Content element component for generic content containers.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ContentElement extends BaseComponent {
+    constructor(parentId, id, content) {
+        super(parentId || "main", "contentelement", id);
+        this.htmlContent = content;
     }
-    ContentElement.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    createElement() {
+        const element = super.createElement();
+        // Content is set via children, not innerHTML
         return element;
-    };
-    return ContentElement;
-}(BaseComponent_1.BaseComponent));
-exports.ContentElement = ContentElement;
+    }
+}

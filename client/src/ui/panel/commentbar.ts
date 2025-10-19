@@ -1,5 +1,4 @@
-import { BaseComponent } from '../component/BaseComponent';
-import { ClassName, CLASSNAMES } from '../../constants/ClassNames';
+
 
 /**
  * Comment Bar Components
@@ -9,7 +8,7 @@ import { ClassName, CLASSNAMES } from '../../constants/ClassNames';
 /**
  * Main comment panel containing search and comment container
  */
-export class CommentPanel extends BaseComponent {
+class CommentPanel extends BaseComponent {
     static _name = ClassName.COMMENTPANEL;
     static toggleMarker = (value: string, active?: boolean) => { console.log(value, active); };
 
@@ -119,7 +118,7 @@ export class CommentPanel extends BaseComponent {
 /**
  * Container for all comment panes
  */
-export class CommentContainer extends BaseComponent {
+class CommentContainer extends BaseComponent {
     static _name = ClassName.COMMENTCONTAINER;
     protected elements: any[];
 
@@ -158,7 +157,7 @@ export class CommentContainer extends BaseComponent {
 /**
  * Individual comment pane with text content
  */
-export class CommentPane extends BaseComponent {
+class CommentPane extends BaseComponent {
     static _name = ClassName.COMMENTPANE;
     protected elements: any[];
     private comment: string;
@@ -197,7 +196,7 @@ export class CommentPane extends BaseComponent {
 /**
  * Text content of a comment
  */
-export class CommentText extends BaseComponent {
+class CommentText extends BaseComponent {
     static _name = ClassName.COMMENTTEXT;
 
     constructor(parent: string, id: string, content: string) {
@@ -215,7 +214,7 @@ export class CommentText extends BaseComponent {
 /**
  * Close/toggle button for comment panel
  */
-export class CommentCloseButton extends BaseComponent {
+class CommentCloseButton extends BaseComponent {
     static _name = ClassName.COMMENTPANEL_CLOSE;
     private clickHandler: (e: Event) => void;
 
@@ -249,7 +248,7 @@ export class CommentCloseButton extends BaseComponent {
 /**
  * Search input for filtering comments
  */
-export class CommentSearch extends BaseComponent {
+class CommentSearch extends BaseComponent {
     static _name = ClassName.COMMENTSEARCH;
     private inputHandler: (e: Event) => void;
 

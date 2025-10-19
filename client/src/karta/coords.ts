@@ -5,4 +5,3 @@ interface Coords{
     lon: number;
 }
 
-export {Coords};

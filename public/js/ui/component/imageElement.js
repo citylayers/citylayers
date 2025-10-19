@@ -1,81 +1,67 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImagePreviewElement = exports.ImageElement = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("./BaseComponent");
-var illustration_1 = require("../../../../logic/illustration");
-var ImageElement = (function (_super) {
-    __extends(ImageElement, _super);
-    function ImageElement(parentId, id, image, className) {
-        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, id) || this;
-        _this.illustration = image || new illustration_1.Illustration("", "", "");
-        if (_this.illustration.link && _this.illustration.link !== "") {
-            _this.clickHandler = function () {
-                window.location.href = _this.illustration.link;
+/**
+ * Image element component for displaying images.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ImageElement extends BaseComponent {
+    constructor(parentId, id, image, className) {
+        super(parentId, className || ClassName.LOGO, id);
+        this.illustration = image || new Illustration("", "", "");
+        // Setup click handler if link exists
+        if (this.illustration.link && this.illustration.link !== "") {
+            this.clickHandler = () => {
+                window.location.href = this.illustration.link;
             };
         }
-        return _this;
     }
-    ImageElement.prototype.getElementTag = function () {
+    getElementTag() {
         return 'img';
-    };
-    ImageElement.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    }
+    createElement() {
+        const element = super.createElement();
         element.src = this.illustration.path;
         return element;
-    };
-    ImageElement.prototype.afterInit = function () {
+    }
+    afterInit() {
         if (this.clickHandler) {
             this.addEventListener('click', this.clickHandler);
         }
-    };
-    ImageElement.prototype.setImage = function (illustration) {
+    }
+    /**
+     * Update image source
+     */
+    setImage(illustration) {
         this.illustration = illustration;
-        var element = this.getElement();
+        const element = this.getElement();
         if (element) {
             element.src = illustration.path;
         }
-    };
-    return ImageElement;
-}(BaseComponent_1.BaseComponent));
-exports.ImageElement = ImageElement;
-var ImagePreviewElement = (function (_super) {
-    __extends(ImagePreviewElement, _super);
-    function ImagePreviewElement(parentId, id, className) {
-        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, ClassNames_1.ElementId.IMG_PREVIEW) || this;
-        _this.illustration = new illustration_1.Illustration("", "", "Upload");
-        return _this;
     }
-    ImagePreviewElement.prototype.getElementTag = function () {
+}
+/**
+ * Image preview element component.
+ * Specialized ImageElement for image upload previews.
+ */
+class ImagePreviewElement extends BaseComponent {
+    constructor(parentId, id, className) {
+        super(parentId, className || ClassName.LOGO, ElementId.IMG_PREVIEW);
+        this.illustration = new Illustration("", "", "Upload");
+    }
+    getElementTag() {
         return 'img';
-    };
-    ImagePreviewElement.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    }
+    createElement() {
+        const element = super.createElement();
         element.src = this.illustration.path;
         return element;
-    };
-    ImagePreviewElement.prototype.setImage = function (illustration) {
+    }
+    /**
+     * Update preview image
+     */
+    setImage(illustration) {
         this.illustration = illustration;
-        var element = this.getElement();
+        const element = this.getElement();
         if (element) {
             element.src = illustration.path;
         }
-    };
-    return ImagePreviewElement;
-}(BaseComponent_1.BaseComponent));
-exports.ImagePreviewElement = ImagePreviewElement;
+    }
+}

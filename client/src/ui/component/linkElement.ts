@@ -1,5 +1,4 @@
-import { ClassName } from "../../constants/ClassNames";
-import { BaseComponent } from "./BaseComponent";
+
 
 /**
  * Link element component for clickable links.
@@ -38,4 +37,3 @@ class LinkElement extends BaseComponent {
     }
 }
 
-export { LinkElement };

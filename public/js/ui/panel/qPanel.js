@@ -1,41 +1,21 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QPanel = void 0;
-var contentPanel_1 = require("./contentPanel");
-var question_1 = require("../panelcomponent/question");
-var ClassNames_1 = require("../../constants/ClassNames");
-var QPanel = (function (_super) {
-    __extends(QPanel, _super);
-    function QPanel(parent) {
-        var _this = _super.call(this, parent, "id") || this;
-        _this.name = ClassNames_1.CLASSNAMES.Q_PANEL;
-        _this.elements = [question_1.QHeader, question_1.QContainer, question_1.QFooter];
-        return _this;
+/// <reference path="../../karta/positioning.ts" />
+// Position class is loaded globally via script tag
+// positioning.ts is compiled to public/js/karta/positioning.js
+// Legacy imports
+class QPanel extends ContentPanel {
+    constructor(parent) {
+        super(parent, "id");
+        this.name = CLASSNAMES.Q_PANEL;
+        this.elements = [QHeader, QContainer, QFooter];
     }
-    QPanel.prototype.load = function (qasets, answerTree) {
-        var _this = this;
+    load(qasets, answerTree) {
         QPanel.totalSteps = qasets.length;
         QPanel.tree = answerTree;
-        this.elements.forEach(function (el, i) {
-            var element = el == question_1.QContainer ? new el(_this.make_id(), "", [qasets, answerTree]) :
-                new el(_this.make_id(), "main");
+        this.elements.forEach((el, i) => {
+            let element = el == QContainer ? new el(this.makeId(), "", [qasets, answerTree]) :
+                new el(this.makeId(), "main");
             element.initiate();
-            if (element instanceof question_1.QContainer) {
+            if (element instanceof QContainer) {
                 element.load(QPanel.currentStep, i == QPanel.currentStep);
                 QPanel.controller = element;
             }
@@ -43,24 +23,83 @@ var QPanel = (function (_super) {
                 element.load([QPanel.back, QPanel.next, QPanel.submit]);
             }
         });
-    };
-    QPanel.back = function () {
+    }
+    static back() {
         QPanel.controller.load(QPanel.currentStep - 1);
         QPanel.currentStep -= 1;
-        question_1.QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
-    };
-    QPanel.next = function () {
+        QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
+    }
+    static next() {
         QPanel.controller.load(QPanel.currentStep + 1);
         QPanel.currentStep += 1;
-        question_1.QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
-    };
-    QPanel.submit = function () {
-        QPanel.currentStep = 1;
-    };
-    QPanel.controller = undefined;
-    QPanel.currentStep = 1;
-    QPanel.totalSteps = 0;
-    QPanel.tree = undefined;
-    return QPanel;
-}(contentPanel_1.ContentPanel));
-exports.QPanel = QPanel;
+        QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
+    }
+    static make_form() {
+        // Create FormData from image input if present
+        const d = new FormData();
+        if (QPanel.tree.get("image") != undefined &&
+            QPanel.tree.get("image") != null &&
+            QPanel.tree.get("image") != "") {
+            d.set("image", QPanel.tree.get("image"));
+        }
+        return d;
+        // const imageInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        // const formData = new FormData();
+        // if (imageInput && imageInput.files && imageInput.files[0]) {
+        //     formData.append('image', imageInput.files[0]);
+        // }
+        // return formData;
+    }
+    static submit_image(dd, indata) {
+        fetch('/upload', {
+            method: 'POST',
+            body: dd
+        })
+            .then(response => {
+            response.json().then(response => {
+                indata.image = response.content;
+                QPanel.submit_form(dd, indata);
+            });
+        })
+            .catch(error => {
+            console.log(error);
+        });
+    }
+    static submit_form(dd, indata) {
+        fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(indata)
+        })
+            .then(response => {
+            window.location.href = "/success";
+        })
+            .catch(error => {
+            console.log(error);
+        });
+    }
+    static submit() {
+        let indata = {
+            coords: {
+                lat: Position.lat,
+                lon: Position.lon
+            },
+            data: QPanel.tree.out()
+        };
+        QPanel.currentStep = QPanel.initialStep;
+        let d = QPanel.make_form();
+        if (d.get("image") != undefined && d.get("image") != null && d.get("image") != "") {
+            QPanel.submit_image(d, indata);
+        }
+        else {
+            QPanel.submit_form(d, indata);
+        }
+    }
+}
+QPanel.controller = undefined;
+QPanel.currentStep = 0;
+QPanel.initialStep = 0;
+QPanel.totalSteps = 0;
+QPanel.tree = undefined;

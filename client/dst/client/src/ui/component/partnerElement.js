@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,21 +13,15 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartnerElement = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var contentElement_1 = require("./contentElement");
-var logo_1 = require("./logo");
 var PartnerElement = (function (_super) {
     __extends(PartnerElement, _super);
     function PartnerElement(parentId, id, content) {
         var _this = _super.call(this, parentId, id, content) || this;
-        _this.className = ClassNames_1.ClassName.PARTNER;
+        _this.className = ClassName.PARTNER;
         for (var i = 0; i < 3; i++) {
-            _this.addChild(new logo_1.Logo(_this.makeId()));
+            _this.addChild(new Logo(_this.makeId()));
         }
         return _this;
     }
     return PartnerElement;
-}(contentElement_1.ContentElement));
-exports.PartnerElement = PartnerElement;
+}(ContentElement));

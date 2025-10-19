@@ -1,5 +1,4 @@
-import { ClassName } from "../../constants/ClassNames";
-import { BaseComponent } from "./BaseComponent";
+
 
 /**
  * Close button component.
@@ -30,4 +29,3 @@ class CloseButton extends BaseComponent {
     }
 }
 
-export { CloseButton };

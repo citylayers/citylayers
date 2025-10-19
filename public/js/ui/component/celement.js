@@ -1,45 +1,59 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CElement = void 0;
-var uuid_1 = require("uuid");
-var ClassNames_1 = require("../../constants/ClassNames");
-var CElement = (function () {
-    function CElement(parent, id, content) {
-        this.id = id ? id : (0, uuid_1.v4)();
-        this.name = ClassNames_1.CLASSNAMES.CATEGORY_CONTAINER;
-        this.content = content;
+
+
+class CElement {
+    static name = CLASSNAMES.CATEGORY_CONTAINER;
+    constructor(parent, id) {
+        this.id = id ? id : uuidv4();
+        this.name = this.constructor.name;
         this.parent = parent;
-        this.elements = [];
+        this.elements = []
     }
-    CElement.prototype.getElement = function () {
-        return document.getElementById("".concat(this.name, "_").concat(this.id));
-    };
-    CElement.getElements = function () {
+
+    getElement() {
+        // let elements = document.getElementsByClassName(this.name);
+        // if (elements.length > 0){
+        //     return elements[0];
+        // }
+        return document.getElementById(`${this.name}_${this.id}`);
+        // return this.initiate();
+    }
+
+    static getElements(){
         return document.getElementsByClassName(this.name);
-    };
-    CElement.prototype.getParent = function () {
-        var element = document.getElementById(this.parent);
+    }
+
+    getParent() {
+        let element = document.getElementById(this.parent);
         return element;
-    };
-    CElement.prototype.initiate = function (a, n) {
-        var panel = document.createElement("div");
+    }
+
+
+
+    initiate() {
+        let panel = document.createElement("div");
         panel.setAttribute('class', this.name);
         panel.setAttribute("id", this.make_id());
         this.getParent().appendChild(panel);
-    };
-    CElement.prototype.load = function (elements, args) {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.make_id(), this.id, this.content);
+    }
+
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.make_id(), this.id);
             element.initiate();
             element.load();
         }
-    };
-    CElement.prototype.make_id = function () {
-        return "".concat(this.name, "_").concat(this.id);
-    };
-    CElement.prototype.show = function (display) {
-        this.getElement().style.display = display == false ? "none" : "flex";
-    };
-    return CElement;
-}());
-exports.CElement = CElement;
+    }
+    
+    make_id() {
+        return `${this.name}_${this.id}`
+    }
+
+    // Alias for compatibility with BaseComponent naming convention
+    makeId() {
+        return this.make_id();
+    }
+
+    show(display){
+        this.getElement().style.display = display==false ? "none" : "flex";
+    }
+}

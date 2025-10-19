@@ -1,8 +1,7 @@
-import { BaseComponent } from '../component/BaseComponent';
-import { TextElement } from '../component/textElement';
-import { CloseButton } from '../component/closeButton';
-import { SubcategoryTag } from '../container';
-import { ClassName, CLASSNAMES, DisplayStyle } from '../../constants/ClassNames';
+
+
+
+
 
 /**
  * Category Side Panel Components
@@ -12,7 +11,7 @@ import { ClassName, CLASSNAMES, DisplayStyle } from '../../constants/ClassNames'
 /**
  * Side panel for displaying category details and filtering options
  */
-export class CategorySidePanel extends BaseComponent {
+class CategorySidePanel extends BaseComponent {
     protected elements: any[];
     protected args: any[];
     private category: any;
@@ -102,7 +101,7 @@ export class CategorySidePanel extends BaseComponent {
 /**
  * Container for category side panel tags and filters
  */
-export class CategorySidePanelTagContainer extends BaseComponent {
+class CategorySidePanelTagContainer extends BaseComponent {
     protected elements: any[];
     private category: any;
 
@@ -129,7 +128,7 @@ export class CategorySidePanelTagContainer extends BaseComponent {
 /**
  * Description text for category in side panel
  */
-export class CategoryDescription extends TextElement {
+class CategoryDescription extends TextElement {
     constructor(parent: string, category: any) {
         super(parent, category.id);
         this.className = ClassName.CATEGORY_DESCRIPTION;
@@ -140,7 +139,7 @@ export class CategoryDescription extends TextElement {
 /**
  * Title button for tag filtering section
  */
-export class CategorySidePanelTagTitle extends BaseComponent {
+class CategorySidePanelTagTitle extends BaseComponent {
     private category: any;
     private clickHandler: () => void;
 
@@ -171,7 +170,7 @@ export class CategorySidePanelTagTitle extends BaseComponent {
 /**
  * Horizontal divider line
  */
-export class HorizontalDivider extends BaseComponent {
+class HorizontalDivider extends BaseComponent {
     constructor(parent: string, category: any) {
         super(parent, '', category.id);
     }
@@ -188,7 +187,7 @@ export class HorizontalDivider extends BaseComponent {
 /**
  * Small container for subcategory tags
  */
-export class CategorySidePanelTagContainerS extends BaseComponent {
+class CategorySidePanelTagContainerS extends BaseComponent {
     private category: any;
 
     constructor(parent: string, category: any) {

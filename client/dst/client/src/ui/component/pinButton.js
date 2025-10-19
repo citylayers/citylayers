@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,9 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PinButton = void 0;
-var BaseComponent_1 = require("./BaseComponent");
 var PinButton = (function (_super) {
     __extends(PinButton, _super);
     function PinButton(parentId, getCoordinates) {
@@ -40,5 +36,4 @@ var PinButton = (function (_super) {
         this.addEventListener('click', this.onClickHandler);
     };
     return PinButton;
-}(BaseComponent_1.BaseComponent));
-exports.PinButton = PinButton;
+}(BaseComponent));

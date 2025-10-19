@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LEGAL_LINKS = exports.LEGAL = exports.LEGAL_CLASSNAMES = exports.LegalHelper = exports.LegalRoute = exports.LegalPage = exports.LegalClassName = void 0;
 var LegalClassName;
 (function (LegalClassName) {
     LegalClassName["PANEL"] = "legalpanel";
@@ -12,19 +9,19 @@ var LegalClassName;
     LegalClassName["TEXT"] = "legaltext";
     LegalClassName["TEXT_FRAMED"] = "legaltextframed";
     LegalClassName["FOOTER"] = "legal_footer";
-})(LegalClassName || (exports.LegalClassName = LegalClassName = {}));
+})(LegalClassName || (LegalClassName = {}));
 var LegalPage;
 (function (LegalPage) {
     LegalPage["IMPRESSUM"] = "impressum";
     LegalPage["PRIVACY"] = "privacy policy";
     LegalPage["ACCESSIBILITY"] = "accessibility";
-})(LegalPage || (exports.LegalPage = LegalPage = {}));
+})(LegalPage || (LegalPage = {}));
 var LegalRoute;
 (function (LegalRoute) {
     LegalRoute["IMPRESSUM"] = "/impressum";
     LegalRoute["PRIVACY"] = "/privacy";
     LegalRoute["ACCESSIBILITY"] = "/accessibility";
-})(LegalRoute || (exports.LegalRoute = LegalRoute = {}));
+})(LegalRoute || (LegalRoute = {}));
 var LegalHelper = (function () {
     function LegalHelper() {
     }
@@ -41,8 +38,7 @@ var LegalHelper = (function () {
     ]);
     return LegalHelper;
 }());
-exports.LegalHelper = LegalHelper;
-exports.LEGAL_CLASSNAMES = {
+var LEGAL_CLASSNAMES = {
     PANEL: LegalClassName.PANEL,
     HEADER: LegalClassName.HEADER,
     BODY: LegalClassName.BODY,
@@ -53,13 +49,13 @@ exports.LEGAL_CLASSNAMES = {
     TEXT_F: LegalClassName.TEXT_FRAMED,
     FOOTER: LegalClassName.FOOTER,
 };
-exports.LEGAL = {
+var LEGAL = {
     IMPRESSUM: LegalPage.IMPRESSUM,
     PRIVACY: LegalPage.PRIVACY,
     ACCESSIBILITY: LegalPage.ACCESSIBILITY,
 };
-exports.LEGAL_LINKS = new Map([
-    [exports.LEGAL.IMPRESSUM, LegalRoute.IMPRESSUM],
-    [exports.LEGAL.PRIVACY, LegalRoute.PRIVACY],
-    [exports.LEGAL.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
+var LEGAL_LINKS = new Map([
+    [LEGAL.IMPRESSUM, LegalRoute.IMPRESSUM],
+    [LEGAL.PRIVACY, LegalRoute.PRIVACY],
+    [LEGAL.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
 ]);

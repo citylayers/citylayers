@@ -18,11 +18,14 @@ class ProjectPeriod{
         if (d==null || d==undefined){
             return start==true ? "Not started" : "Ongoing";
         }
-        if (d instanceof String){
+        if (typeof d === 'string'){
             return d.substr(0, 10).replaceAll(":", "/")
         }
-        else{
+        else if (d.year !== undefined){
             return `${d.year}/${d.month}/${d.day}`;
+        }
+        else {
+            return start==true ? "Not started" : "Ongoing";
         }
     }
 }

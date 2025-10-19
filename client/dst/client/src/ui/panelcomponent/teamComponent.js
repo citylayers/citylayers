@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,17 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeamMemberContainer = void 0;
-var contentPanel_1 = require("../panel/contentPanel");
-var ClassNames_1 = require("../../constants/ClassNames");
-var textElement_1 = require("../component/textElement");
-var linkElement_1 = require("../component/linkElement");
 var TeamMemberContainer = (function (_super) {
     __extends(TeamMemberContainer, _super);
     function TeamMemberContainer(parent, id, team) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = ClassNames_1.CLASSNAMES.TEAM_MEMBER_CONTAINER;
+        _this.name = CLASSNAMES.TEAM_MEMBER_CONTAINER;
         _this.elements = [TeamPersonCard];
         _this.content = team;
         return _this;
@@ -38,15 +31,14 @@ var TeamMemberContainer = (function (_super) {
         });
     };
     return TeamMemberContainer;
-}(contentPanel_1.ContentPanel));
-exports.TeamMemberContainer = TeamMemberContainer;
+}(ContentPanel));
 var TeamPersonCard = (function (_super) {
     __extends(TeamPersonCard, _super);
     function TeamPersonCard(parent, id, content) {
         var _this = _super.call(this, parent, id, content.id) || this;
         _this.id = content.id;
-        _this.name = ClassNames_1.CLASSNAMES.TEAM_MEMBER_CARD;
-        _this.elements = [textElement_1.TextElement,
+        _this.name = CLASSNAMES.TEAM_MEMBER_CARD;
+        _this.elements = [TextElement,
             RoleContainer];
         _this.content = content;
         _this.args = [
@@ -64,13 +56,13 @@ var TeamPersonCard = (function (_super) {
         });
     };
     return TeamPersonCard;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var RoleContainer = (function (_super) {
     __extends(RoleContainer, _super);
     function RoleContainer(parent, id, content) {
         var _this = _super.call(this, parent, id) || this;
         _this.id = id;
-        _this.name = ClassNames_1.CLASSNAMES.ROLE_CONTAINER;
+        _this.name = CLASSNAMES.ROLE_CONTAINER;
         ;
         _this.elements = [RoleElement];
         _this.content = content;
@@ -85,27 +77,27 @@ var RoleContainer = (function (_super) {
         });
     };
     return RoleContainer;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var RoleElement = (function (_super) {
     __extends(RoleElement, _super);
     function RoleElement(parent, id, content) {
         var _this = _super.call(this, parent, id, content.id) || this;
         _this.id = "".concat(parent, "_").concat(id);
-        _this.name = ClassNames_1.CLASSNAMES.ROLE_ELEMENT;
+        _this.name = CLASSNAMES.ROLE_ELEMENT;
         _this.elements = [
-            linkElement_1.LinkElement,
-            textElement_1.TextElement
+            LinkElement,
+            TextElement
         ];
         _this.content = content;
         return _this;
     }
     RoleElement.prototype.load = function () {
-        var element = new linkElement_1.LinkElement(this.makeId(), this.id, [this.content.project_name, "/project/".concat(this.content.project_id)]);
+        var element = new LinkElement(this.makeId(), this.id, [this.content.project_name, "/project/".concat(this.content.project_id)]);
         element.initiate();
         element.load();
-        var element1 = new textElement_1.TextElement(this.makeId(), this.id, this.content.role);
+        var element1 = new TextElement(this.makeId(), this.id, this.content.role);
         element1.initiate();
         element1.load();
     };
     return RoleElement;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));

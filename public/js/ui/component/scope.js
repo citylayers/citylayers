@@ -1,37 +1,18 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Scope = void 0;
-var BaseComponent_1 = require("./BaseComponent");
-var Scope = (function (_super) {
-    __extends(Scope, _super);
-    function Scope(parentId) {
-        var _this = _super.call(this, parentId, "scope") || this;
-        _this.imageSrc = "/images/scope.svg";
-        return _this;
+/**
+ * Scope image component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class Scope extends BaseComponent {
+    constructor(parentId) {
+        super(parentId, "scope");
+        this.imageSrc = "/images/scope.svg";
     }
-    Scope.prototype.getElementTag = function () {
+    getElementTag() {
         return 'img';
-    };
-    Scope.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    }
+    createElement() {
+        const element = super.createElement();
         element.src = this.imageSrc;
         return element;
-    };
-    return Scope;
-}(BaseComponent_1.BaseComponent));
-exports.Scope = Scope;
+    }
+}

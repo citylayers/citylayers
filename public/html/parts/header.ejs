@@ -69,6 +69,7 @@
         integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
     <!-- <script src="https://kit.fontawesome.com/59ecaaffaa.js" crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
 
 
     <link rel="stylesheet"
@@ -102,21 +103,32 @@
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/legal.css">
 
-    <script type="text/javascript" src="/js/ui/utils.js"></script>
-    <script type="text/javascript" src="/js/classnames.js"></script>
-    <script type="text/javascript" src="/js/ui/component/celement.js"></script>
-    <script type="text/javascript" src="/js/ui/component/cbutton.js"></script>
-
-    
+    <!-- Logic Classes -->
     <script type="text/javascript" src="/js/logic/illustration.js"></script>
+
+    <!-- Constants -->
+    <script type="text/javascript" src="/js/constants/ClassNames.js"></script>
+    <script type="text/javascript" src="/js/constants/LegalConstants.js"></script>
+
+    <!-- Base Components -->
+    <script type="text/javascript" src="/js/ui/component/BaseComponent.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/contentPanel.js"></script>
+
+    <!-- UI Components -->
+    <script type="text/javascript" src="/js/ui/component/closeButton.js"></script>
+    <script type="text/javascript" src="/js/ui/component/contentElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/hrElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/imageElement.js"></script>
-
-    <script type="text/javascript" src="/js/ui/component/logo.js"></script>
-    
-    <script type="text/javascript" src="/js/ui/component/textElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
     <script type="text/javascript" src="/js/ui/component/linkElement.js"></script>
-    <script type="text/javascript" src="/js/ui/panel/content.js"></script>
+    <script type="text/javascript" src="/js/ui/component/logo.js"></script>
+    <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/textElement.js"></script>
 
+    <!-- Panel Components -->
     <script type="text/javascript" src="/js/ui/panelcomponent/social.js"></script>
-    <script type="text/javascript" src="/js/ui/panelcomponent/legal.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/legalFooter.js"></script>
+
+    <!-- Panels -->
+    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
     

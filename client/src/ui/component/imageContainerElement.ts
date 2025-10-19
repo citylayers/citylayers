@@ -1,15 +1,14 @@
-import { ContentElement } from "./contentElement";
-import { Illustration } from '../../../../src/logic/illustration';
-import { ImageElement } from "./imageElement";
+
+
 
 /**
  * Image container element for displaying multiple images.
  * Extends ContentElement with proper OOP principles.
  */
 class ImageContainerElement extends ContentElement {
-    private images: Illustration[];
+    private images:any[];
 
-    constructor(parentId: string, className: string, illustrations: Illustration[]) {
+    constructor(parentId: string, className: string, illustrations:any[]) {
         super(parentId || "main", undefined, className);
         this.className = className;
         this.images = illustrations;
@@ -21,4 +20,3 @@ class ImageContainerElement extends ContentElement {
     }
 }
 
-export { ImageContainerElement };

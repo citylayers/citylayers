@@ -3,7 +3,7 @@
  * Refactored to use TypeScript enums.
  */
 
-export enum LegalClassName {
+enum LegalClassName {
     PANEL = 'legalpanel',
     HEADER = 'legalheader',
     BODY = 'legalbody',
@@ -15,13 +15,13 @@ export enum LegalClassName {
     FOOTER = 'legal_footer',
 }
 
-export enum LegalPage {
+enum LegalPage {
     IMPRESSUM = 'impressum',
     PRIVACY = 'privacy policy',
     ACCESSIBILITY = 'accessibility',
 }
 
-export enum LegalRoute {
+enum LegalRoute {
     IMPRESSUM = '/impressum',
     PRIVACY = '/privacy',
     ACCESSIBILITY = '/accessibility',
@@ -30,7 +30,7 @@ export enum LegalRoute {
 /**
  * Utility class for legal page operations
  */
-export class LegalHelper {
+class LegalHelper {
     private static linkMap = new Map<LegalPage, LegalRoute>([
         [LegalPage.IMPRESSUM, LegalRoute.IMPRESSUM],
         [LegalPage.PRIVACY, LegalRoute.PRIVACY],
@@ -53,7 +53,7 @@ export class LegalHelper {
 }
 
 // Legacy exports for backward compatibility
-export const LEGAL_CLASSNAMES = {
+const LEGAL_CLASSNAMES = {
     PANEL: LegalClassName.PANEL,
     HEADER: LegalClassName.HEADER,
     BODY: LegalClassName.BODY,
@@ -65,13 +65,13 @@ export const LEGAL_CLASSNAMES = {
     FOOTER: LegalClassName.FOOTER,
 };
 
-export const LEGAL = {
+const LEGAL = {
     IMPRESSUM: LegalPage.IMPRESSUM,
     PRIVACY: LegalPage.PRIVACY,
     ACCESSIBILITY: LegalPage.ACCESSIBILITY,
 };
 
-export const LEGAL_LINKS = new Map([
+const LEGAL_LINKS = new Map([
     [LEGAL.IMPRESSUM, LegalRoute.IMPRESSUM],
     [LEGAL.PRIVACY, LegalRoute.PRIVACY],
     [LEGAL.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],

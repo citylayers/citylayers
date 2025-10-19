@@ -1,6 +1,5 @@
-import { BaseComponent } from '../component/BaseComponent';
-import { CloseButton } from '../component/closeButton';
-import { ClassName, CLASSNAMES, DisplayStyle } from '../../constants/ClassNames';
+
+
 
 /**
  * About Panel Components
@@ -10,7 +9,7 @@ import { ClassName, CLASSNAMES, DisplayStyle } from '../../constants/ClassNames'
 /**
  * Label/button to open the about panel
  */
-export class AboutLabel extends BaseComponent {
+class AboutLabel extends BaseComponent {
     protected elements: any[];
     private clickHandler: (e: Event) => void;
 
@@ -93,7 +92,7 @@ export class AboutLabel extends BaseComponent {
 /**
  * About panel showing project information
  */
-export class AboutPanel extends BaseComponent {
+class AboutPanel extends BaseComponent {
     protected elements: any[];
     protected args: any[];
 
@@ -155,7 +154,7 @@ export class AboutPanel extends BaseComponent {
 /**
  * Description text for about panel
  */
-export class AboutDescription extends BaseComponent {
+class AboutDescription extends BaseComponent {
     constructor(parent: string) {
         super(parent, ClassName.ABOUT_DESCRIPTION);
         this.content = `City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!`;
@@ -175,7 +174,7 @@ export class AboutDescription extends BaseComponent {
 /**
  * Detailed text content for about panel
  */
-export class AboutText extends BaseComponent {
+class AboutText extends BaseComponent {
     static _name = ClassName.ABOUT_TEXT;
 
     constructor(parent: string) {
@@ -205,7 +204,7 @@ export class AboutText extends BaseComponent {
 /**
  * Logo image for about panel
  */
-export class AboutLogo extends BaseComponent {
+class AboutLogo extends BaseComponent {
     constructor(parent: string, category?: any) {
         super(parent, "aboutlogo", category);
         this.content = "/images/about.svg";

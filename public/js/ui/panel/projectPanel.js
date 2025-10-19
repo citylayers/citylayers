@@ -1,183 +1,172 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProjectContentPanel = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("../component/BaseComponent");
-var closeButton_1 = require("../component/closeButton");
-var textElement_1 = require("../component/textElement");
-var contentPanel_1 = require("./contentPanel");
-var ClassNames_2 = require("../../constants/ClassNames");
-var ProjectContentPanel = (function (_super) {
-    __extends(ProjectContentPanel, _super);
-    function ProjectContentPanel(parent) {
-        var _this = _super.call(this, parent, "") || this;
-        _this.name = ClassNames_2.CLASSNAMES.PROJECT_PANEL;
-        return _this;
+// Legacy imports
+/*
+    ------------------------------------------------------
+
+    Project Container and its elements
+
+    ------------------------------------------------------
+
+*/
+class ProjectContentPanel extends ContentPanel {
+    constructor(parent) {
+        super(parent, "");
+        this.name = CLASSNAMES.PROJECT_PANEL;
     }
-    ProjectContentPanel.prototype.load = function (projects) {
-        var _this = this;
-        this.elements.forEach(function (el) {
-            var element = new el(_this.make_id(), "main");
+    load(projects) {
+        this.elements.forEach(el => {
+            let element = new el(this.makeId(), "main");
             element.initiate();
             element.load();
         });
-        projects.forEach(function (project, c) {
-            _this.add(project);
+        projects.forEach((project, c) => {
+            this.add(project);
         });
-    };
-    ProjectContentPanel.prototype.add = function (project) {
-        var div = new ProjectElement(this.make_id(), project);
+    }
+    add(project) {
+        let div = new ProjectElement(this.makeId(), project);
         div.initiate();
         div.load();
-    };
-    return ProjectContentPanel;
-}(contentPanel_1.ContentPanel));
-exports.ProjectContentPanel = ProjectContentPanel;
-var ProjectElement = (function (_super) {
-    __extends(ProjectElement, _super);
-    function ProjectElement(parentId, project) {
-        var _this = _super.call(this, parentId || ClassNames_1.ClassName.CATEGORY_PANEL, ClassNames_1.ClassName.CATEGORY_CONTAINER, project.name) || this;
-        _this.project = project;
-        _this.elements = [ProjectHeader, ProjectDescription];
-        return _this;
     }
-    ProjectElement.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.id, this.project);
+}
+/**
+ * Project element component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectElement extends BaseComponent {
+    constructor(parentId, project) {
+        super(parentId || ClassName.CATEGORY_PANEL, ClassName.CATEGORY_CONTAINER, project.name);
+        this.project = project;
+        this.elements = [ProjectHeader, ProjectDescription];
+    }
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.id, this.project);
             element.initiate();
             element.load();
         }
-    };
-    return ProjectElement;
-}(BaseComponent_1.BaseComponent));
-var ProjectHeader = (function (_super) {
-    __extends(ProjectHeader, _super);
-    function ProjectHeader(parent, id, project) {
-        var _this = _super.call(this, parent, id, project) || this;
-        _this.elements = [
-            textElement_1.HeaderElement, ProjectConfig,
+    }
+}
+class ProjectHeader extends ContentPanel {
+    constructor(parent, id, project) {
+        super(parent, id, project);
+        this.elements = [
+            //ProjectInfo, 
+            HeaderElement, ProjectConfig,
             ProjectSwitch
         ];
-        return _this;
     }
-    return ProjectHeader;
-}(contentPanel_1.ContentPanel));
-var ProjectDescription = (function (_super) {
-    __extends(ProjectDescription, _super);
-    function ProjectDescription(parent, id, project) {
-        var _this = _super.call(this, parent, id) || this;
-        _this.name = ClassNames_2.CLASSNAMES.CATEGORY_DESCRIPTION;
-        _this.content = project.info.description;
-        return _this;
+}
+class ProjectDescription extends TextElement {
+    constructor(parent, id, project) {
+        super(parent, id);
+        this.name = CLASSNAMES.CATEGORY_DESCRIPTION;
+        this.content = project.info.description;
     }
-    return ProjectDescription;
-}(textElement_1.TextElement));
-var ProjectSwitch = (function (_super) {
-    __extends(ProjectSwitch, _super);
-    function ProjectSwitch(parentId, id, project) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.CATEGORY_SWITCH, id, project) || this;
-        _this.project = project;
-        return _this;
+}
+/**
+ * Project switch component (checkbox).
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectSwitch extends BaseComponent {
+    constructor(parentId, id, project) {
+        super(parentId, ClassName.CATEGORY_SWITCH, id, project);
+        this.project = project;
     }
-    ProjectSwitch.isActive = function (project) {
-        var element = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SWITCH, "_").concat(project));
+    static isActive(project) {
+        const element = document.getElementById(`${ClassName.CATEGORY_SWITCH}_${project}`);
         if (element) {
-            var child = element.children[0];
+            const child = element.children[0];
             return child.checked;
         }
         return false;
-    };
-    ProjectSwitch.prototype.getElementTag = function () {
+    }
+    getElementTag() {
         return 'label';
-    };
-    ProjectSwitch.prototype.afterInit = function () {
-        var element = this.getElement();
+    }
+    afterInit() {
+        const element = this.getElement();
         if (element) {
-            var checkbox = document.createElement("input");
+            const checkbox = document.createElement("input");
             checkbox.setAttribute("type", "checkbox");
-            checkbox.onchange = function () {
+            checkbox.onchange = () => {
+                // CityLayersPanel.activateProject(this.project, ProjectSwitch.isActive(this.id));
             };
-            var span = document.createElement("span");
+            const span = document.createElement("span");
             element.appendChild(checkbox);
             element.appendChild(span);
         }
-    };
-    ProjectSwitch.name = ClassNames_1.ClassName.CATEGORY_SWITCH;
-    return ProjectSwitch;
-}(BaseComponent_1.BaseComponent));
-var ProjectConfig = (function (_super) {
-    __extends(ProjectConfig, _super);
-    function ProjectConfig(parentId, id, project) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.CONFIG, id) || this;
-        _this.project = project;
-        _this.clickHandler = function () {
-        };
-        return _this;
     }
-    ProjectConfig.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+}
+ProjectSwitch.componentName = ClassName.CATEGORY_SWITCH;
+/**
+ * Project config button component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectConfig extends BaseComponent {
+    constructor(parentId, id, project) {
+        super(parentId, ClassName.CONFIG, id);
+        this.project = project;
+        this.clickHandler = () => {
+            // CityLayersPanel.switch(this.project.config);
+        };
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = "Configure >";
         return element;
-    };
-    ProjectConfig.prototype.afterInit = function () {
-        this.addEventListener('click', this.clickHandler);
-    };
-    return ProjectConfig;
-}(BaseComponent_1.BaseComponent));
-var ProjectSidePanel = (function (_super) {
-    __extends(ProjectSidePanel, _super);
-    function ProjectSidePanel(parentId, project) {
-        var _this = _super.call(this, parentId || "body", ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, project.name) || this;
-        _this.project = project;
-        _this.elements = [closeButton_1.CloseButton, textElement_1.TextElement];
-        _this.args = [function () { ProjectSidePanel.toggle(project); }];
-        return _this;
     }
-    ProjectSidePanel.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.project, e < this.args.length ? this.args[e] : undefined);
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
+    }
+}
+/*
+    ------------------------------------------------------
+
+    Category Side Panel and its elements
+
+    ------------------------------------------------------
+
+*/
+/**
+ * Project side panel component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectSidePanel extends BaseComponent {
+    constructor(parentId, project) {
+        super(parentId || "body", ClassName.CATEGORY_SIDE_PANEL, project.name);
+        this.project = project;
+        this.elements = [CloseButton, TextElement];
+        this.args = [() => { ProjectSidePanel.toggle(project); }];
+    }
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.project, e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
-        var el = this.getElement();
+        const el = this.getElement();
         if (el) {
             el.style.display = "none";
         }
-    };
-    ProjectSidePanel.toggle = function (category) {
-        var sidePanel = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
-        var container = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
+    }
+    static toggle(category) {
+        const sidePanel = document.getElementById(`${ClassName.CATEGORY_SIDE_PANEL}_${category.name}`);
+        const container = document.getElementById(`${ClassName.CATEGORY_CONTAINER}_${category.name}`);
         if (sidePanel && container) {
             if (sidePanel.style.display === "none") {
                 this.hideAll();
             }
             container.classList.toggle("simple-drop-shadow");
             sidePanel.style.display = sidePanel.style.display === "none" ? "flex" : "none";
-            document.body.style.setProperty("--side-panel-color", "#".concat(category.color));
+            document.body.style.setProperty(`--side-panel-color`, `#${category.color}`);
         }
-    };
-    ProjectSidePanel.hideAll = function () {
-        var panels = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL);
-        var containers = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_CONTAINER);
-        for (var i = 0; i < panels.length; i++) {
+    }
+    static hideAll() {
+        const panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        const containers = document.getElementsByClassName(ClassName.CATEGORY_CONTAINER);
+        for (let i = 0; i < panels.length; i++) {
             panels[i].style.display = "none";
             containers[i].classList.remove("simple-drop-shadow");
         }
-    };
-    return ProjectSidePanel;
-}(BaseComponent_1.BaseComponent));
+    }
+}

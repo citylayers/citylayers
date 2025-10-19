@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,12 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DoubleRangeContainerElement = exports.Slider = exports.DoubleSlider = void 0;
-var inputElement_1 = require("./inputElement");
-var inputElement_2 = require("./inputElement");
-var ClassNames_1 = require("../../constants/ClassNames");
-var ClassNames_2 = require("../../constants/ClassNames");
 var DoubleRangeContainerElement = (function (_super) {
     __extends(DoubleRangeContainerElement, _super);
     function DoubleRangeContainerElement(parent, id, content) {
@@ -34,7 +27,7 @@ var DoubleRangeContainerElement = (function (_super) {
     };
     DoubleRangeContainerElement.prototype.load = function (controlTree) {
         var _this = this;
-        this.elements = [ClassNames_2.SLIDER_IDS.LOW, ClassNames_2.SLIDER_IDS.HIGH].map(function (s) {
+        this.elements = [SLIDER_IDS.LOW, SLIDER_IDS.HIGH].map(function (s) {
             var slider = new Slider(_this.makeId(), s, _this.content);
             slider.initiate(controlTree);
             return slider;
@@ -52,8 +45,8 @@ var DoubleRangeContainerElement = (function (_super) {
     };
     DoubleRangeContainerElement.prototype.getCurrentValue = function () {
         return new Map([
-            [ClassNames_2.RANGE_LABELS.MIN, parseInt(this.elements[0].getValue())],
-            [ClassNames_2.RANGE_LABELS.MAX, parseInt(this.elements[1].getValue())]
+            [RANGE_LABELS.MIN, parseInt(this.elements[0].getValue())],
+            [RANGE_LABELS.MAX, parseInt(this.elements[1].getValue())]
         ]);
     };
     DoubleRangeContainerElement.prototype.updateDashboard = function () {
@@ -79,10 +72,9 @@ var DoubleRangeContainerElement = (function (_super) {
             }
         }
     };
-    DoubleRangeContainerElement.componentName = ClassNames_1.ClassName.CATEGORY_SLIDER_CONTAINER;
+    DoubleRangeContainerElement.componentName = ClassName.CATEGORY_SLIDER_CONTAINER;
     return DoubleRangeContainerElement;
-}(inputElement_1.InputContainer));
-exports.DoubleRangeContainerElement = DoubleRangeContainerElement;
+}(InputContainer));
 var Slider = (function (_super) {
     __extends(Slider, _super);
     function Slider(parent, border, content) {
@@ -96,9 +88,9 @@ var Slider = (function (_super) {
     Slider.prototype.initExtra = function (element) {
         _super.prototype.initExtra.call(this, element);
         var inputElement = element;
-        var isHigh = this.id.includes(ClassNames_2.SLIDER_IDS.HIGH);
+        var isHigh = this.id.includes(SLIDER_IDS.HIGH);
         inputElement.setAttribute("value", isHigh ? "100" : "0");
-        inputElement.setAttribute("class", isHigh ? ClassNames_2.SLIDER_IDS.HIGH : ClassNames_2.SLIDER_IDS.LOW);
+        inputElement.setAttribute("class", isHigh ? SLIDER_IDS.HIGH : SLIDER_IDS.LOW);
     };
     Slider.prototype.makeId = function () {
         return "".concat(this.className, "_").concat(this.parentId, "_").concat(this.id);
@@ -139,6 +131,5 @@ var Slider = (function (_super) {
         }
     };
     return Slider;
-}(inputElement_2.RangeInputElement));
-exports.Slider = Slider;
-exports.DoubleSlider = DoubleRangeContainerElement;
+}(RangeInputElement));
+var DoubleSlider = DoubleRangeContainerElement;

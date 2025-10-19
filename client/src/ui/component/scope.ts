@@ -1,4 +1,3 @@
-import { BaseComponent } from "./BaseComponent";
 
 /**
  * Scope image component.
@@ -23,4 +22,3 @@ class Scope extends BaseComponent {
     }
 }
 
-export { Scope };

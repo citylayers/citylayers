@@ -75,7 +75,9 @@ class KartaPair{
     }
 
     make(parent_id, display, tree){
-        this.e.show(display);
+        if (this.e) {
+            this.e.show(display);
+        }
     }
 
     setNext(prev, next){

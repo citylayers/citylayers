@@ -1,7 +1,6 @@
-import { BaseComponent } from './component/BaseComponent';
-import { ClassName, CLASSNAMES, DisplayStyle } from '../constants/ClassNames';
-import { DoubleSlider } from './component/slider';
-import { CategorySidePanel } from './panel/sidePanel';
+
+
+
 
 /**
  * Category Container Components
@@ -11,7 +10,7 @@ import { CategorySidePanel } from './panel/sidePanel';
 /**
  * Header for category panel with label and description
  */
-export class PanelHeader extends BaseComponent {
+class PanelHeader extends BaseComponent {
     protected elements: any[];
 
     constructor(parent: string, id: string) {
@@ -30,7 +29,7 @@ export class PanelHeader extends BaseComponent {
 /**
  * Navigation button to return to projects view
  */
-export class ToProjects extends BaseComponent {
+class ToProjects extends BaseComponent {
     static content = "< To projects";
     private clickHandler: () => void;
 
@@ -86,7 +85,7 @@ export class ToProjects extends BaseComponent {
 /**
  * Main label for category panel
  */
-export class CategoryPanelLabel extends BaseComponent {
+class CategoryPanelLabel extends BaseComponent {
     constructor(parent: string, id: string) {
         super(parent, ClassName.CATEGORYPANEL_LABEL, id);
         this.content = "Explore and compare layers";
@@ -102,7 +101,7 @@ export class CategoryPanelLabel extends BaseComponent {
 /**
  * Description text for category panel
  */
-export class CategoryPanelDescr extends BaseComponent {
+class CategoryPanelDescr extends BaseComponent {
     constructor(parent: string, id: string) {
         super(parent, ClassName.CATEGORYPANEL_DESCR, id);
         this.content = "Activate and adjust the ranges of \
@@ -120,7 +119,7 @@ export class CategoryPanelDescr extends BaseComponent {
 /**
  * Container for an entire category with header, slider, and tags
  */
-export class CategoryElement extends BaseComponent {
+class CategoryElement extends BaseComponent {
     protected elements: any[];
     private category: any;
 
@@ -176,7 +175,7 @@ export class CategoryElement extends BaseComponent {
 /**
  * Header for individual category with label, info, and switch
  */
-export class CategoryHeader extends BaseComponent {
+class CategoryHeader extends BaseComponent {
     protected elements: any[];
     private category: any;
 
@@ -197,7 +196,7 @@ export class CategoryHeader extends BaseComponent {
 /**
  * Label displaying category name
  */
-export class CategoryLabel extends BaseComponent {
+class CategoryLabel extends BaseComponent {
     constructor(parent: string, id: string) {
         super(parent, ClassName.CATEGORY_HEADER_TITLE, id);
     }
@@ -212,7 +211,7 @@ export class CategoryLabel extends BaseComponent {
 /**
  * Base class for switch/toggle components
  */
-export class Switch extends BaseComponent {
+class Switch extends BaseComponent {
     protected category: any;
 
     constructor(parent: string, id: string, category: any) {
@@ -224,7 +223,7 @@ export class Switch extends BaseComponent {
 /**
  * Toggle switch for activating/deactivating categories
  */
-export class CategorySwitch extends Switch {
+class CategorySwitch extends Switch {
     static _name = ClassName.CATEGORY_SWITCH;
     private changeHandler: () => void;
 
@@ -258,7 +257,7 @@ export class CategorySwitch extends Switch {
 /**
  * Info icon button to show category details
  */
-export class CategoryInfo extends BaseComponent {
+class CategoryInfo extends BaseComponent {
     private category: any;
     private clickHandler: () => void;
 
@@ -289,7 +288,7 @@ export class CategoryInfo extends BaseComponent {
 /**
  * Container for subcategory tags
  */
-export class SubcategoryTagContainer extends BaseComponent {
+class SubcategoryTagContainer extends BaseComponent {
     static cname = ClassName.TAG_CONTAINER;
 
     constructor(parent: string, id: string) {
@@ -326,7 +325,7 @@ export class SubcategoryTagContainer extends BaseComponent {
 /**
  * Individual subcategory tag with checkbox
  */
-export class SubcategoryTag extends BaseComponent {
+class SubcategoryTag extends BaseComponent {
     private subcat_id: string;
     private tag: any;
 

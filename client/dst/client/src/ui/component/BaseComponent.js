@@ -1,11 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseComponent = void 0;
-var uuid_1 = require("uuid");
-var ClassNames_1 = require("../../constants/ClassNames");
 var BaseComponent = (function () {
     function BaseComponent(parentId, className, id, content) {
-        this.id = id || (0, uuid_1.v4)();
+        this.id = id || window.uuidv4();
         this.className = className;
         this.parentId = parentId;
         this.content = content;
@@ -65,10 +60,10 @@ var BaseComponent = (function () {
         return "".concat(this.className, "_").concat(this.id);
     };
     BaseComponent.prototype.show = function (visible, displayStyle) {
-        if (displayStyle === void 0) { displayStyle = ClassNames_1.DisplayStyle.FLEX; }
+        if (displayStyle === void 0) { displayStyle = DisplayStyle.FLEX; }
         var element = this.getElement();
         if (element) {
-            element.style.display = visible ? displayStyle : ClassNames_1.DisplayStyle.NONE;
+            element.style.display = visible ? displayStyle : DisplayStyle.NONE;
         }
     };
     BaseComponent.prototype.setContent = function (content) {
@@ -130,4 +125,3 @@ var BaseComponent = (function () {
     };
     return BaseComponent;
 }());
-exports.BaseComponent = BaseComponent;

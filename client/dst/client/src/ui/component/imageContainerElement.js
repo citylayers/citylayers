@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,10 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImageContainerElement = void 0;
-var contentElement_1 = require("./contentElement");
-var imageElement_1 = require("./imageElement");
 var ImageContainerElement = (function (_super) {
     __extends(ImageContainerElement, _super);
     function ImageContainerElement(parentId, className, illustrations) {
@@ -25,10 +20,9 @@ var ImageContainerElement = (function (_super) {
         _this.className = className;
         _this.images = illustrations;
         illustrations.forEach(function (illustration, index) {
-            _this.addChild(new imageElement_1.ImageElement(_this.makeId(), "img_".concat(index), illustration));
+            _this.addChild(new ImageElement(_this.makeId(), "img_".concat(index), illustration));
         });
         return _this;
     }
     return ImageContainerElement;
-}(contentElement_1.ContentElement));
-exports.ImageContainerElement = ImageContainerElement;
+}(ContentElement));

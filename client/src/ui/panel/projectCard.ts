@@ -1,22 +1,20 @@
-import { ClassName, LEGAL_CLASSNAMES } from "../../constants/ClassNames";
-import { BaseComponent } from "../component/BaseComponent";
-import { LegalPanel } from "./legal";
-import { Logo } from "../component/logo";
-import { CloseButton } from "../component/closeButton";
-import { ImageElement } from "../component/imageElement";
-import { Illustration } from '../../../../src/logic/illustration';
-import { ImageContainerElement } from "../component/imageContainerElement";
-import { TextElement } from "../component/textElement";
-import { Project } from '../../../../src/logic/project';
-import { ProjectPeriodInfo, ProjectTeam, Recognition } from "../component/projectComponent";
+
+
+
+
+
+
+
+
+
+
 
 // Legacy imports
-import { CLASSNAMES } from "../../constants/ClassNames";
 
 class ProjectCardPanel extends LegalPanel{
 
-    constructor(parent:string, id:string, content?:any){
-        super(parent, id, content);
+    constructor(parent:string, content?:any){
+        super(parent, "project", content);
         this.content = content;
         this.name = LEGAL_CLASSNAMES.PANEL;
         this.elements = [ProjectCardHeader, ProjectCardBody];
@@ -169,12 +167,12 @@ class ProjectSlogan extends TextElement {
  */
 class ExploreButton extends BaseComponent {
     private static readonly BUTTON_TEXT = "Explore";
-    private project: Project;
+    private project:any;
     private clickHandler: () => void;
 
     static readonly componentName: string = "projectButton";
 
-    constructor(parentId: string, id: string, project: Project) {
+    constructor(parentId: string, id: string, project:any) {
         super(parentId, "projectButton", id, project);
         this.project = project;
         this.clickHandler = () => {

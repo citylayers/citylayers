@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,69 +13,62 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GeneralContent = exports.LandingIllustration = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var contentPanel_1 = require("../panel/contentPanel");
-var BaseComponent_1 = require("../component/BaseComponent");
-var logo_1 = require("../component/logo");
-var illustration_1 = require("../../../../src/logic/illustration");
-var imageElement_1 = require("../component/imageElement");
-var textElement_1 = require("../component/textElement");
-var ClassNames_2 = require("../../constants/ClassNames");
 var LandingIllustration = (function (_super) {
     __extends(LandingIllustration, _super);
     function LandingIllustration(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = ClassNames_2.CLASSNAMES.LANDING_ILLUSTRATION;
-        _this.elements = [logo_1.ColorLogo, GradElement];
+        _this.name = CLASSNAMES.LANDING_ILLUSTRATION;
+        _this.elements = [ColorLogo, GradElement];
         _this.images = Array.from(Array(15).keys()).filter(function (e) { return e > 1; }).map(function (e) { return "images/landing/v0.2.11/".concat(e, ".png"); });
         return _this;
     }
     LandingIllustration.prototype.load = function () {
         var _this = this;
         this.images.forEach(function (el) {
-            var illustration = new illustration_1.Illustration(el, "", "");
-            var element = new imageElement_1.ImageElement(_this.makeId(), "image", illustration);
+            var illustration = new Illustration(el, "", "");
+            var element = new ImageElement(_this.makeId(), "image", illustration, "landing_illustration");
             element.initiate();
             element.load();
         });
         this.elements.forEach(function (el) {
-            var element = new el(_this.makeId(), _this.parent);
+            var element = new el(_this.makeId(), _this.id);
             element.initiate();
             element.load();
         });
     };
     return LandingIllustration;
-}(contentPanel_1.ContentPanel));
-exports.LandingIllustration = LandingIllustration;
+}(ContentPanel));
 var GeneralContent = (function (_super) {
     __extends(GeneralContent, _super);
     function GeneralContent(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = ClassNames_2.CLASSNAMES.LANDING_GENERAL;
+        _this.name = CLASSNAMES.LANDING_GENERAL;
         _this.elements = [LandingSlogan, LandingBrief];
         return _this;
     }
     GeneralContent.prototype.load = function () {
         var _this = this;
         this.elements.forEach(function (el) {
-            var element = new el(_this.makeId(), _this.parent);
+            var element = new el(_this.makeId(), _this.id);
             element.initiate();
             element.load();
         });
     };
     return GeneralContent;
-}(contentPanel_1.ContentPanel));
-exports.GeneralContent = GeneralContent;
+}(ContentPanel));
 var LandingSlogan = (function (_super) {
     __extends(LandingSlogan, _super);
-    function LandingSlogan(parent) {
+    function LandingSlogan(parent, id) {
         var content = "Collaborative mapping as a practice of resilient city-making";
-        return _super.call(this, parent, "", content) || this;
+        return _super.call(this, parent, ClassName.SLOGAN, id, content) || this;
     }
+    LandingSlogan.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        return element;
+    };
     return LandingSlogan;
-}(textElement_1.TextElement));
+}(BaseComponent));
 var LandingBrief = (function (_super) {
     __extends(LandingBrief, _super);
     function LandingBrief(parent, id) {
@@ -84,22 +76,28 @@ var LandingBrief = (function (_super) {
                     subjective community knowledge with existing open datasets. Its \
                     purpose – to reveal, map and inform the key urban challenges, \
                     while simoultaneously offering a clear roadmap for overcoming \
-                    them.\
+                    them. \
                     Global challenges related to climate, mobility, and health are broken \
-                    down into a series of micro-scale “layers” — easily understandable urban \
+                    down into a series of micro-scale 'layers' — easily understandable urban \
                     phenomena that citizens can identify, record, and reflect upon through \
                     collaborative city-mapping. This participatory \
                     methodology elevates individual observations into collective \
                     knowledge, providing both citizens and city planners with actionable \
                     insights to improve decision-making.";
-        return _super.call(this, parent, id, content) || this;
+        return _super.call(this, parent, "description", id, content) || this;
     }
+    LandingBrief.prototype.createElement = function () {
+        var element = _super.prototype.createElement.call(this);
+        element.innerHTML = this.content;
+        element.classList.add("description");
+        return element;
+    };
     return LandingBrief;
-}(textElement_1.TextElement));
+}(BaseComponent));
 var GradElement = (function (_super) {
     __extends(GradElement, _super);
     function GradElement(parentId, id) {
-        return _super.call(this, parentId, ClassNames_1.ClassName.GRAD, id) || this;
+        return _super.call(this, parentId, ClassName.GRAD, id) || this;
     }
     return GradElement;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));

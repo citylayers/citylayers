@@ -1,19 +1,18 @@
-import { ContentPanel } from "../panel/contentPanel";
-import { CLASSNAMES } from "../../constants/ClassNames";
-import { TeamMember } from '../../../../src/logic/teammember';
-import { TextElement } from "../component/textElement";
-import { LinkElement } from "../component/linkElement";
+
+
+
+
 
 class TeamMemberContainer extends ContentPanel{
     
-    constructor(parent:string, id:string, team:TeamMember){
+    constructor(parent:string, id:string, team:any){
         super(parent, "id");
         this.name = CLASSNAMES.TEAM_MEMBER_CONTAINER;
         this.elements = [TeamPersonCard];
         this.content = team;
     }
 
-    load(team:TeamMember[]) {
+    load(team:any[]) {
         team.forEach((el, i) => {
             let element = new TeamPersonCard(this.makeId(), this.parent, team[i]);
             element.initiate();
@@ -107,4 +106,3 @@ class RoleElement extends ContentPanel{
     }
 }
 
-export {TeamMemberContainer}

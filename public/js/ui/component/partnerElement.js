@@ -1,34 +1,15 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartnerElement = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var contentElement_1 = require("./contentElement");
-var logo_1 = require("./logo");
-var PartnerElement = (function (_super) {
-    __extends(PartnerElement, _super);
-    function PartnerElement(parentId, id, content) {
-        var _this = _super.call(this, parentId, id, content) || this;
-        _this.className = ClassNames_1.ClassName.PARTNER;
-        for (var i = 0; i < 3; i++) {
-            _this.addChild(new logo_1.Logo(_this.makeId()));
+/**
+ * Partner element component for displaying partner logos.
+ * Extends ContentElement with proper OOP principles.
+ */
+class PartnerElement extends ContentElement {
+    constructor(parentId, id, content) {
+        super(parentId, id, content);
+        // Override className from ContentElement
+        this.className = ClassName.PARTNER;
+        // Add three logo children
+        for (let i = 0; i < 3; i++) {
+            this.addChild(new Logo(this.makeId()));
         }
-        return _this;
     }
-    return PartnerElement;
-}(contentElement_1.ContentElement));
-exports.PartnerElement = PartnerElement;
+}

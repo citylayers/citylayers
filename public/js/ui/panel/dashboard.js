@@ -8,18 +8,18 @@ class Dashboard extends ContentPanel{
     
     load(config) {
         // Positioner.make();
-        
+
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "");
+            let element = new el(this.makeId(), "");
             element.initiate();
-            
+
             if (el==ConfigPanel){
                 element.load(config.qas);
             }
             else{
                 element.load(config);
             }
-            
+
         });
 
     }

@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,21 +13,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategorySidePanelTagContainerS = exports.HorizontalDivider = exports.CategorySidePanelTagTitle = exports.CategoryDescription = exports.CategorySidePanelTagContainer = exports.CategorySidePanel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var textElement_1 = require("../component/textElement");
-var closeButton_1 = require("../component/closeButton");
-var container_1 = require("../container");
-var ClassNames_1 = require("../../constants/ClassNames");
 var CategorySidePanel = (function (_super) {
     __extends(CategorySidePanel, _super);
     function CategorySidePanel(parent, category) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, category.name) || this;
+        var _this = _super.call(this, parent || "body", ClassName.CATEGORY_SIDE_PANEL, category.name) || this;
         _this.category = category;
         _this.content = category;
         _this.elements = [
-            closeButton_1.CloseButton,
+            CloseButton,
             CategoryDescription,
             CategorySidePanelTagContainer
         ];
@@ -50,39 +42,38 @@ var CategorySidePanel = (function (_super) {
         }
         var el = this.getElement();
         if (el) {
-            el.style.display = ClassNames_1.DisplayStyle.NONE;
+            el.style.display = DisplayStyle.NONE;
         }
     };
     CategorySidePanel.toggle = function (category) {
-        var sidePanel = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
-        var container = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
+        var sidePanel = document.getElementById("".concat(ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
+        var container = document.getElementById("".concat(ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
         if (!sidePanel || !container)
             return;
-        if (sidePanel.style.display === ClassNames_1.DisplayStyle.NONE) {
+        if (sidePanel.style.display === DisplayStyle.NONE) {
             this.hideAll();
         }
         container.classList.toggle("simple-drop-shadow");
-        sidePanel.style.display = sidePanel.style.display === ClassNames_1.DisplayStyle.NONE
-            ? ClassNames_1.DisplayStyle.FLEX
-            : ClassNames_1.DisplayStyle.NONE;
+        sidePanel.style.display = sidePanel.style.display === DisplayStyle.NONE
+            ? DisplayStyle.FLEX
+            : DisplayStyle.NONE;
         document.body.style.setProperty("--side-panel-color", "#".concat(category.color));
     };
     CategorySidePanel.hideAll = function () {
         var _a;
-        var panels = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL);
-        var containers = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_CONTAINER);
+        var panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        var containers = document.getElementsByClassName(ClassName.CATEGORY_CONTAINER);
         for (var i = 0; i < panels.length; i++) {
-            panels[i].style.display = ClassNames_1.DisplayStyle.NONE;
+            panels[i].style.display = DisplayStyle.NONE;
             (_a = containers[i]) === null || _a === void 0 ? void 0 : _a.classList.remove("simple-drop-shadow");
         }
     };
     return CategorySidePanel;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanel = CategorySidePanel;
+}(BaseComponent));
 var CategorySidePanelTagContainer = (function (_super) {
     __extends(CategorySidePanelTagContainer, _super);
     function CategorySidePanelTagContainer(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER, category.id) || this;
+        var _this = _super.call(this, parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER, category.id) || this;
         _this.category = category;
         _this.content = category;
         _this.elements = [
@@ -100,23 +91,21 @@ var CategorySidePanelTagContainer = (function (_super) {
         }
     };
     return CategorySidePanelTagContainer;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagContainer = CategorySidePanelTagContainer;
+}(BaseComponent));
 var CategoryDescription = (function (_super) {
     __extends(CategoryDescription, _super);
     function CategoryDescription(parent, category) {
         var _this = _super.call(this, parent, category.id) || this;
-        _this.className = ClassNames_1.ClassName.CATEGORY_DESCRIPTION;
+        _this.className = ClassName.CATEGORY_DESCRIPTION;
         _this.content = category.description;
         return _this;
     }
     return CategoryDescription;
-}(textElement_1.TextElement));
-exports.CategoryDescription = CategoryDescription;
+}(TextElement));
 var CategorySidePanelTagTitle = (function (_super) {
     __extends(CategorySidePanelTagTitle, _super);
     function CategorySidePanelTagTitle(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER_TITLE, category.name) || this;
+        var _this = _super.call(this, parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_TITLE, category.name) || this;
         _this.category = category;
         _this.content = "Filter by tags";
         _this.clickHandler = function () {
@@ -136,8 +125,7 @@ var CategorySidePanelTagTitle = (function (_super) {
         this.addEventListener('click', this.clickHandler);
     };
     return CategorySidePanelTagTitle;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagTitle = CategorySidePanelTagTitle;
+}(BaseComponent));
 var HorizontalDivider = (function (_super) {
     __extends(HorizontalDivider, _super);
     function HorizontalDivider(parent, category) {
@@ -149,12 +137,11 @@ var HorizontalDivider = (function (_super) {
     HorizontalDivider.prototype.load = function () {
     };
     return HorizontalDivider;
-}(BaseComponent_1.BaseComponent));
-exports.HorizontalDivider = HorizontalDivider;
+}(BaseComponent));
 var CategorySidePanelTagContainerS = (function (_super) {
     __extends(CategorySidePanelTagContainerS, _super);
     function CategorySidePanelTagContainerS(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER_S, category.name) || this;
+        var _this = _super.call(this, parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_S, category.name) || this;
         _this.category = category;
         _this.content = category;
         return _this;
@@ -164,10 +151,9 @@ var CategorySidePanelTagContainerS = (function (_super) {
         if (!this.content.subcategories)
             return;
         this.content.subcategories.forEach(function (subcat) {
-            var element = new container_1.SubcategoryTag(_this.makeId(), subcat);
+            var element = new SubcategoryTag(_this.makeId(), subcat);
             element.initiate();
         });
     };
     return CategorySidePanelTagContainerS;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagContainerS = CategorySidePanelTagContainerS;
+}(BaseComponent));

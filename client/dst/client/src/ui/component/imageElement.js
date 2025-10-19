@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,16 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImagePreviewElement = exports.ImageElement = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("./BaseComponent");
-var illustration_1 = require("../../../../src/logic/illustration");
 var ImageElement = (function (_super) {
     __extends(ImageElement, _super);
     function ImageElement(parentId, id, image, className) {
-        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, id) || this;
-        _this.illustration = image || new illustration_1.Illustration("", "", "");
+        var _this = _super.call(this, parentId, className || ClassName.LOGO, id) || this;
+        _this.illustration = image || new Illustration("", "", "");
         if (_this.illustration.link && _this.illustration.link !== "") {
             _this.clickHandler = function () {
                 window.location.href = _this.illustration.link;
@@ -52,13 +46,12 @@ var ImageElement = (function (_super) {
         }
     };
     return ImageElement;
-}(BaseComponent_1.BaseComponent));
-exports.ImageElement = ImageElement;
+}(BaseComponent));
 var ImagePreviewElement = (function (_super) {
     __extends(ImagePreviewElement, _super);
     function ImagePreviewElement(parentId, id, className) {
-        var _this = _super.call(this, parentId, className || ClassNames_1.ClassName.LOGO, ClassNames_1.ElementId.IMG_PREVIEW) || this;
-        _this.illustration = new illustration_1.Illustration("", "", "Upload");
+        var _this = _super.call(this, parentId, className || ClassName.LOGO, ElementId.IMG_PREVIEW) || this;
+        _this.illustration = new Illustration("", "", "Upload");
         return _this;
     }
     ImagePreviewElement.prototype.getElementTag = function () {
@@ -77,5 +70,4 @@ var ImagePreviewElement = (function (_super) {
         }
     };
     return ImagePreviewElement;
-}(BaseComponent_1.BaseComponent));
-exports.ImagePreviewElement = ImagePreviewElement;
+}(BaseComponent));

@@ -1,8 +1,10 @@
+console.log("Loading InfoElement...");
+
 class InfoElement extends CElement{
-    
+
     constructor(parent, id, exec){
         super(parent, id);
-        this.content = "info"; 
+        this.content = "info";
         this.id = id;
         this.name = "material-symbols-outlined";
         this.exec = exec;  // ()=>{}
@@ -16,3 +18,5 @@ class InfoElement extends CElement{
         this.getParent().appendChild(element);
     }
 }
+
+console.log("InfoElement loaded:", typeof InfoElement);

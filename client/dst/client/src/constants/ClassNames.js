@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LEGAL_CLASSNAMES = exports.SECTIONMAP = exports.RANGE_LABELS = exports.PANEL_IDS = exports.SLIDER_IDS = exports.IDS = exports.DISPLAY = exports.CLASSNAMES = exports.RangeLabel = exports.PanelId = exports.ElementId = exports.DisplayStyle = exports.ClassName = void 0;
 var ClassName;
 (function (ClassName) {
     ClassName["LOGO"] = "logo";
@@ -49,6 +46,13 @@ var ClassName;
     ClassName["SELECTCOMMENT"] = "selected";
     ClassName["CLICK"] = "click";
     ClassName["GRAD"] = "grad";
+    ClassName["MAP"] = "karta";
+    ClassName["DASHBOARD"] = "dashboard";
+    ClassName["CONFIG_HEADER"] = "configheader";
+    ClassName["CONTROLLER_CONTAINER"] = "controllercontainer";
+    ClassName["CONTROLLER_BODY"] = "controllerbody";
+    ClassName["CONTROLLER_Q"] = "controllerq";
+    ClassName["GRADPICKER"] = "gradpicker";
     ClassName["PROJECT_PANEL"] = "projectpanel";
     ClassName["CARD"] = "card";
     ClassName["CARD_INFO"] = "card_info";
@@ -86,14 +90,14 @@ var ClassName;
     ClassName["TEXT"] = "text";
     ClassName["TEXT_INPUT"] = "textinput";
     ClassName["IMG_INPUT"] = "imageinput";
-})(ClassName || (exports.ClassName = ClassName = {}));
+})(ClassName || (ClassName = {}));
 var DisplayStyle;
 (function (DisplayStyle) {
     DisplayStyle["NONE"] = "none";
     DisplayStyle["FLEX"] = "flex";
     DisplayStyle["BLOCK"] = "block";
     DisplayStyle["BLOCK_INLINE"] = "block-inline";
-})(DisplayStyle || (exports.DisplayStyle = DisplayStyle = {}));
+})(DisplayStyle || (DisplayStyle = {}));
 var ElementId;
 (function (ElementId) {
     ElementId["TEXT_INPUT"] = "comment-input";
@@ -103,18 +107,18 @@ var ElementId;
     ElementId["IMG_PREVIEW"] = "img-preview";
     ElementId["LOW_SLIDER"] = "startSlider";
     ElementId["HIGH_SLIDER"] = "endSlider";
-})(ElementId || (exports.ElementId = ElementId = {}));
+})(ElementId || (ElementId = {}));
 var PanelId;
 (function (PanelId) {
     PanelId["PROJECT"] = "project";
     PanelId["CATEGORY"] = "category";
-})(PanelId || (exports.PanelId = PanelId = {}));
+})(PanelId || (PanelId = {}));
 var RangeLabel;
 (function (RangeLabel) {
     RangeLabel["MIN"] = "min";
     RangeLabel["MAX"] = "max";
-})(RangeLabel || (exports.RangeLabel = RangeLabel = {}));
-exports.CLASSNAMES = {
+})(RangeLabel || (RangeLabel = {}));
+var CLASSNAMES = {
     LOGO: ClassName.LOGO,
     CLOSE: ClassName.CLOSE,
     SWITCH: ClassName.SWITCH,
@@ -161,6 +165,13 @@ exports.CLASSNAMES = {
     SELECTCOMMENT: ClassName.SELECTCOMMENT,
     CLICK: ClassName.CLICK,
     GRAD: ClassName.GRAD,
+    MAP: ClassName.MAP,
+    DASHBOARD: ClassName.DASHBOARD,
+    CONFIG_HEADER: ClassName.CONFIG_HEADER,
+    CONTROLLER_CONTAINER: ClassName.CONTROLLER_CONTAINER,
+    CONTROLLER_BODY: ClassName.CONTROLLER_BODY,
+    CONTROLLER_Q: ClassName.CONTROLLER_Q,
+    GRADPICKER: ClassName.GRADPICKER,
     PROJECT_PANEL: ClassName.PROJECT_PANEL,
     CARD: ClassName.CARD,
     CARD_INFO: ClassName.CARD_INFO,
@@ -199,45 +210,28 @@ exports.CLASSNAMES = {
     TEXT_INPUT: ClassName.TEXT_INPUT,
     IMG_INPUT: ClassName.IMG_INPUT,
 };
-exports.DISPLAY = {
+var DISPLAY = {
     NONE: DisplayStyle.NONE,
     FLEX: DisplayStyle.FLEX,
     BLOCK: DisplayStyle.BLOCK,
     BLOCKINLINE: DisplayStyle.BLOCK_INLINE,
 };
-exports.IDS = {
+var IDS = {
     TEXT_INPUT: ElementId.TEXT_INPUT,
     IMG_INPUT: ElementId.IMG_INPUT,
     RANGE_INPUT: ElementId.RANGE_INPUT,
     MULTICHOICE_INPUT: ElementId.MULTICHOICE_INPUT,
     IMG_PREVIEW: ElementId.IMG_PREVIEW,
 };
-exports.SLIDER_IDS = {
+var SLIDER_IDS = {
     LOW: ElementId.LOW_SLIDER,
     HIGH: ElementId.HIGH_SLIDER,
 };
-exports.PANEL_IDS = {
+var PANEL_IDS = {
     PROJECT: PanelId.PROJECT,
     CATEGORY: PanelId.CATEGORY,
 };
-exports.RANGE_LABELS = {
+var RANGE_LABELS = {
     MIN: RangeLabel.MIN,
     MAX: RangeLabel.MAX,
-};
-exports.SECTIONMAP = {
-    TEAM: ["Team", "/team"],
-    ABOUT: ["About", "/about"]
-};
-exports.LEGAL_CLASSNAMES = {
-    PANEL: "legalpanel",
-    HEADER: "legalheader",
-    BODY: "legalbody",
-    TITLE: "legaltitle",
-    TEXT: "legaltext",
-    TEXT_F: "legaltextfull",
-    LEGALBODYCONTENT: "legalbodycontent",
-    LEGAL_PANEL: "legalpanel",
-    LEGAL_HEADER: "legalheader",
-    LEGAL_BODY: "legalbody",
-    LEGAL_BODY_CONTENT: "legalbodycontent"
 };

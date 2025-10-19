@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,35 +13,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LineLogo = exports.ColorLogo = exports.Logo = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var illustration_1 = require("../../../../src/logic/illustration");
-var imageElement_1 = require("./imageElement");
 var Logo = (function (_super) {
     __extends(Logo, _super);
     function Logo(parentId, illustration) {
-        var content = illustration || new illustration_1.Illustration("/images/logo_2.svg", "/");
-        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
+        var content = illustration || new Illustration("/images/logo_2.svg", "/");
+        return _super.call(this, parentId, ClassName.LOGO, content, ClassName.LOGO) || this;
     }
     return Logo;
-}(imageElement_1.ImageElement));
-exports.Logo = Logo;
+}(ImageElement));
 var ColorLogo = (function (_super) {
     __extends(ColorLogo, _super);
     function ColorLogo(parentId) {
-        var content = new illustration_1.Illustration("/images/logo_full.svg", "/");
-        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
+        var content = new Illustration("/images/logo_full.svg", "/");
+        return _super.call(this, parentId, ClassName.LOGO, content, ClassName.LOGO) || this;
     }
     return ColorLogo;
-}(imageElement_1.ImageElement));
-exports.ColorLogo = ColorLogo;
+}(ImageElement));
 var LineLogo = (function (_super) {
     __extends(LineLogo, _super);
     function LineLogo(parentId) {
-        var content = new illustration_1.Illustration("/images/logo_2.svg", "/");
-        return _super.call(this, parentId, ClassNames_1.ClassName.LOGO, content, ClassNames_1.ClassName.LOGO) || this;
+        var content = new Illustration("/images/logo_2.svg", "/");
+        return _super.call(this, parentId, ClassName.LOGO, content, ClassName.LOGO) || this;
     }
     return LineLogo;
-}(imageElement_1.ImageElement));
-exports.LineLogo = LineLogo;
+}(ImageElement));

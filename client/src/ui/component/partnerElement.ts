@@ -1,6 +1,5 @@
-import { ClassName } from "../../constants/ClassNames";
-import { ContentElement } from "./contentElement";
-import { Logo } from "./logo";
+
+
 
 /**
  * Partner element component for displaying partner logos.
@@ -19,4 +18,3 @@ class PartnerElement extends ContentElement {
     }
 }
 
-export { PartnerElement };

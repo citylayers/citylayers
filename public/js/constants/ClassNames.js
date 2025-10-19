@@ -1,20 +1,26 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RANGE_LABELS = exports.PANEL_IDS = exports.SLIDER_IDS = exports.IDS = exports.DISPLAY = exports.CLASSNAMES = exports.RangeLabel = exports.PanelId = exports.ElementId = exports.DisplayStyle = exports.ClassName = void 0;
+/**
+ * CSS class name constants for UI components.
+ * Refactored from classnames.ts to use TypeScript enums.
+ * Follows "no hardcoded strings" principle.
+ */
 var ClassName;
 (function (ClassName) {
+    // Logo and controls
     ClassName["LOGO"] = "logo";
     ClassName["CLOSE"] = "closebutton";
     ClassName["SWITCH"] = "switch";
+    // Main panels
     ClassName["MAIN_PANEL"] = "panel citylayers";
     ClassName["HOME_PANEL"] = "home";
     ClassName["LANDING_PANEL"] = "landing";
     ClassName["CATEGORY_PANEL"] = "panel category";
     ClassName["CATEGORY_CONTAINER"] = "categorycontainer";
+    // Headers and structure
     ClassName["TITLE"] = "title";
     ClassName["HEADER"] = "header";
     ClassName["MAIN_CONTAINER"] = "main";
     ClassName["CONFIG"] = "config";
+    // Category components
     ClassName["CATEGORY_SLIDER_CONTAINER"] = "categoryslider";
     ClassName["CATEGORY_HEADER"] = "categoryheader";
     ClassName["CATEGORY_HEADER_TITLE"] = "categoryheadertitle";
@@ -25,6 +31,7 @@ var ClassName;
     ClassName["TAG_CONTAINER"] = "tagcontainer";
     ClassName["SUBCATEGORY_TAG"] = "tag";
     ClassName["TAG_LABEL"] = "tag-element";
+    // Category panel
     ClassName["CATEGORYPANEL_HEADER"] = "categorypanelheader";
     ClassName["CATEGORYPANEL_LABEL"] = "categorypanellabel";
     ClassName["CATEGORYPANEL_DESCR"] = "categorypaneldescr";
@@ -34,11 +41,13 @@ var ClassName;
     ClassName["CATEGORY_SIDE_TAG_CONTAINER_TITLE"] = "categorysidetagcontainertitle";
     ClassName["CATEGORY_SIDE_TAG_CONTAINER_S"] = "categorysidetagcontainersmall";
     ClassName["CATEGORY_SIDE_TAG"] = "categorysidetag";
+    // Geo and about
     ClassName["GEOCODING_PANEL"] = "geopanel";
     ClassName["ABOUT_LABEL"] = "aboutlabel";
     ClassName["ABOUT_PANEL"] = "aboutpanel";
     ClassName["ABOUT_DESCRIPTION"] = "aboutdescription";
     ClassName["ABOUT_TEXT"] = "abouttext";
+    // Comments
     ClassName["COMMENTPANEL"] = "commentpanel";
     ClassName["COMMENTCONTAINER"] = "commentcontainer";
     ClassName["COMMENTPANE"] = "commentpane";
@@ -47,8 +56,18 @@ var ClassName;
     ClassName["COMMENTPANEL_CLOSE"] = "commentpanelclose";
     ClassName["COMMENTSEARCH"] = "commentsearch";
     ClassName["SELECTCOMMENT"] = "selected";
+    // Special states
     ClassName["CLICK"] = "click";
     ClassName["GRAD"] = "grad";
+    // Map page
+    ClassName["MAP"] = "karta";
+    ClassName["DASHBOARD"] = "dashboard";
+    ClassName["CONFIG_HEADER"] = "configheader";
+    ClassName["CONTROLLER_CONTAINER"] = "controllercontainer";
+    ClassName["CONTROLLER_BODY"] = "controllerbody";
+    ClassName["CONTROLLER_Q"] = "controllerq";
+    ClassName["GRADPICKER"] = "gradpicker";
+    // Project panel
     ClassName["PROJECT_PANEL"] = "projectpanel";
     ClassName["CARD"] = "card";
     ClassName["CARD_INFO"] = "card_info";
@@ -56,8 +75,10 @@ var ClassName;
     ClassName["COVER"] = "cover";
     ClassName["SLOGAN"] = "slogan";
     ClassName["PROJECT_IMAGE_CONTAINER"] = "imagecontainer";
+    // Landing page
     ClassName["LANDING_ILLUSTRATION"] = "landing_illustration";
     ClassName["LANDING_GENERAL"] = "landing_general";
+    // Partners and team
     ClassName["PARTNER"] = "partner";
     ClassName["TEAM"] = "team";
     ClassName["TEAM_MEMBER"] = "teammember";
@@ -68,6 +89,7 @@ var ClassName;
     ClassName["ROLE_CONTAINER"] = "rolecontainer";
     ClassName["ROLE_ELEMENT"] = "roleelement";
     ClassName["SOCIAL"] = "social";
+    // Question panel
     ClassName["Q_PANEL"] = "qpanel";
     ClassName["Q_PAGE"] = "question-page";
     ClassName["RANGE_SLIDER"] = "range-slider";
@@ -79,21 +101,23 @@ var ClassName;
     ClassName["QUESTION_CONTAINER"] = "question";
     ClassName["Q_HEADER"] = "qheader";
     ClassName["Q_FOOTER"] = "qfooter";
+    // Navigation
     ClassName["NAV"] = "nav-buttons";
     ClassName["BACK"] = "back-button";
     ClassName["NEXT"] = "next-button";
     ClassName["SUBMIT"] = "submit-button";
+    // Input elements
     ClassName["TEXT"] = "text";
     ClassName["TEXT_INPUT"] = "textinput";
     ClassName["IMG_INPUT"] = "imageinput";
-})(ClassName || (exports.ClassName = ClassName = {}));
+})(ClassName || (ClassName = {}));
 var DisplayStyle;
 (function (DisplayStyle) {
     DisplayStyle["NONE"] = "none";
     DisplayStyle["FLEX"] = "flex";
     DisplayStyle["BLOCK"] = "block";
     DisplayStyle["BLOCK_INLINE"] = "block-inline";
-})(DisplayStyle || (exports.DisplayStyle = DisplayStyle = {}));
+})(DisplayStyle || (DisplayStyle = {}));
 var ElementId;
 (function (ElementId) {
     ElementId["TEXT_INPUT"] = "comment-input";
@@ -103,18 +127,19 @@ var ElementId;
     ElementId["IMG_PREVIEW"] = "img-preview";
     ElementId["LOW_SLIDER"] = "startSlider";
     ElementId["HIGH_SLIDER"] = "endSlider";
-})(ElementId || (exports.ElementId = ElementId = {}));
+})(ElementId || (ElementId = {}));
 var PanelId;
 (function (PanelId) {
     PanelId["PROJECT"] = "project";
     PanelId["CATEGORY"] = "category";
-})(PanelId || (exports.PanelId = PanelId = {}));
+})(PanelId || (PanelId = {}));
 var RangeLabel;
 (function (RangeLabel) {
     RangeLabel["MIN"] = "min";
     RangeLabel["MAX"] = "max";
-})(RangeLabel || (exports.RangeLabel = RangeLabel = {}));
-exports.CLASSNAMES = {
+})(RangeLabel || (RangeLabel = {}));
+// Legacy export for backward compatibility
+const CLASSNAMES = {
     LOGO: ClassName.LOGO,
     CLOSE: ClassName.CLOSE,
     SWITCH: ClassName.SWITCH,
@@ -161,6 +186,13 @@ exports.CLASSNAMES = {
     SELECTCOMMENT: ClassName.SELECTCOMMENT,
     CLICK: ClassName.CLICK,
     GRAD: ClassName.GRAD,
+    MAP: ClassName.MAP,
+    DASHBOARD: ClassName.DASHBOARD,
+    CONFIG_HEADER: ClassName.CONFIG_HEADER,
+    CONTROLLER_CONTAINER: ClassName.CONTROLLER_CONTAINER,
+    CONTROLLER_BODY: ClassName.CONTROLLER_BODY,
+    CONTROLLER_Q: ClassName.CONTROLLER_Q,
+    GRADPICKER: ClassName.GRADPICKER,
     PROJECT_PANEL: ClassName.PROJECT_PANEL,
     CARD: ClassName.CARD,
     CARD_INFO: ClassName.CARD_INFO,
@@ -199,28 +231,28 @@ exports.CLASSNAMES = {
     TEXT_INPUT: ClassName.TEXT_INPUT,
     IMG_INPUT: ClassName.IMG_INPUT,
 };
-exports.DISPLAY = {
+const DISPLAY = {
     NONE: DisplayStyle.NONE,
     FLEX: DisplayStyle.FLEX,
     BLOCK: DisplayStyle.BLOCK,
     BLOCKINLINE: DisplayStyle.BLOCK_INLINE,
 };
-exports.IDS = {
+const IDS = {
     TEXT_INPUT: ElementId.TEXT_INPUT,
     IMG_INPUT: ElementId.IMG_INPUT,
     RANGE_INPUT: ElementId.RANGE_INPUT,
     MULTICHOICE_INPUT: ElementId.MULTICHOICE_INPUT,
     IMG_PREVIEW: ElementId.IMG_PREVIEW,
 };
-exports.SLIDER_IDS = {
+const SLIDER_IDS = {
     LOW: ElementId.LOW_SLIDER,
     HIGH: ElementId.HIGH_SLIDER,
 };
-exports.PANEL_IDS = {
+const PANEL_IDS = {
     PROJECT: PanelId.PROJECT,
     CATEGORY: PanelId.CATEGORY,
 };
-exports.RANGE_LABELS = {
+const RANGE_LABELS = {
     MIN: RangeLabel.MIN,
     MAX: RangeLabel.MAX,
 };

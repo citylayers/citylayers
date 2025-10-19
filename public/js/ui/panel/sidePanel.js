@@ -1,173 +1,160 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategorySidePanelTagContainerS = exports.HorizontalDivider = exports.CategorySidePanelTagTitle = exports.CategoryDescription = exports.CategorySidePanelTagContainer = exports.CategorySidePanel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var contentElement_1 = require("../component/contentElement");
-var logo_1 = require("../component/logo");
-var container_1 = require("../container");
-var ClassNames_1 = require("../../constants/ClassNames");
-var CategorySidePanel = (function (_super) {
-    __extends(CategorySidePanel, _super);
-    function CategorySidePanel(parent, category) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, category.name) || this;
-        _this.category = category;
-        _this.content = category;
-        _this.elements = [
-            logo_1.CloseButton,
+/**
+ * Category Side Panel Components
+ * Migrated from sidePanel.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Side panel for displaying category details and filtering options
+ */
+class CategorySidePanel extends BaseComponent {
+    constructor(parent, category) {
+        super(parent || "body", ClassName.CATEGORY_SIDE_PANEL, category.name);
+        this.category = category;
+        this.content = category;
+        this.elements = [
+            CloseButton,
             CategoryDescription,
             CategorySidePanelTagContainer
         ];
-        _this.args = [function () { CategorySidePanel.toggle(category); }];
-        return _this;
+        this.args = [() => { CategorySidePanel.toggle(category); }];
     }
-    CategorySidePanel.prototype.getParent = function () {
-        var elements = document.getElementsByClassName(this.parentId);
+    /**
+     * Get parent element (handles class name parent selector)
+     */
+    getParent() {
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
-        return _super.prototype.getParent.call(this);
-    };
-    CategorySidePanel.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.content, e < this.args.length ? this.args[e] : undefined);
+        return super.getParent();
+    }
+    /**
+     * Load child elements and hide panel initially
+     */
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.content, e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
-        var el = this.getElement();
+        const el = this.getElement();
         if (el) {
-            el.style.display = ClassNames_1.DisplayStyle.NONE;
+            el.style.display = DisplayStyle.NONE;
         }
-    };
-    CategorySidePanel.toggle = function (category) {
-        var sidePanel = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
-        var container = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
+    }
+    /**
+     * Toggle side panel visibility for a category
+     */
+    static toggle(category) {
+        const sidePanel = document.getElementById(`${ClassName.CATEGORY_SIDE_PANEL}_${category.name}`);
+        const container = document.getElementById(`${ClassName.CATEGORY_CONTAINER}_${category.name}`);
         if (!sidePanel || !container)
             return;
-        if (sidePanel.style.display === ClassNames_1.DisplayStyle.NONE) {
+        if (sidePanel.style.display === DisplayStyle.NONE) {
             this.hideAll();
         }
         container.classList.toggle("simple-drop-shadow");
-        sidePanel.style.display = sidePanel.style.display === ClassNames_1.DisplayStyle.NONE
-            ? ClassNames_1.DisplayStyle.FLEX
-            : ClassNames_1.DisplayStyle.NONE;
-        document.body.style.setProperty("--side-panel-color", "#".concat(category.color));
-    };
-    CategorySidePanel.hideAll = function () {
-        var _a;
-        var panels = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL);
-        var containers = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_CONTAINER);
-        for (var i = 0; i < panels.length; i++) {
-            panels[i].style.display = ClassNames_1.DisplayStyle.NONE;
-            (_a = containers[i]) === null || _a === void 0 ? void 0 : _a.classList.remove("simple-drop-shadow");
+        sidePanel.style.display = sidePanel.style.display === DisplayStyle.NONE
+            ? DisplayStyle.FLEX
+            : DisplayStyle.NONE;
+        document.body.style.setProperty(`--side-panel-color`, `#${category.color}`);
+    }
+    /**
+     * Hide all category side panels
+     */
+    static hideAll() {
+        const panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        const containers = document.getElementsByClassName(ClassName.CATEGORY_CONTAINER);
+        for (let i = 0; i < panels.length; i++) {
+            panels[i].style.display = DisplayStyle.NONE;
+            containers[i]?.classList.remove("simple-drop-shadow");
         }
-    };
-    return CategorySidePanel;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanel = CategorySidePanel;
-var CategorySidePanelTagContainer = (function (_super) {
-    __extends(CategorySidePanelTagContainer, _super);
-    function CategorySidePanelTagContainer(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER, category.id) || this;
-        _this.category = category;
-        _this.content = category;
-        _this.elements = [
+    }
+}
+/**
+ * Container for category side panel tags and filters
+ */
+class CategorySidePanelTagContainer extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER, category.id);
+        this.category = category;
+        this.content = category;
+        this.elements = [
             HorizontalDivider,
             CategorySidePanelTagTitle,
             CategorySidePanelTagContainerS
         ];
-        return _this;
     }
-    CategorySidePanelTagContainer.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.content);
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.content);
             element.initiate();
             element.load();
         }
-    };
-    return CategorySidePanelTagContainer;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagContainer = CategorySidePanelTagContainer;
-var CategoryDescription = (function (_super) {
-    __extends(CategoryDescription, _super);
-    function CategoryDescription(parent, category) {
-        var _this = _super.call(this, parent, category.id) || this;
-        _this.className = ClassNames_1.ClassName.CATEGORY_DESCRIPTION;
-        _this.content = category.description;
-        return _this;
     }
-    return CategoryDescription;
-}(contentElement_1.TextElement));
-exports.CategoryDescription = CategoryDescription;
-var CategorySidePanelTagTitle = (function (_super) {
-    __extends(CategorySidePanelTagTitle, _super);
-    function CategorySidePanelTagTitle(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER_TITLE, category.name) || this;
-        _this.category = category;
-        _this.content = "Filter by tags";
-        _this.clickHandler = function () {
-            CategorySidePanel.toggle(_this.category);
+}
+/**
+ * Description text for category in side panel
+ */
+class CategoryDescription extends TextElement {
+    constructor(parent, category) {
+        super(parent, category.id);
+        this.className = ClassName.CATEGORY_DESCRIPTION;
+        this.content = category.description;
+    }
+}
+/**
+ * Title button for tag filtering section
+ */
+class CategorySidePanelTagTitle extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_TITLE, category.name);
+        this.category = category;
+        this.content = "Filter by tags";
+        this.clickHandler = () => {
+            CategorySidePanel.toggle(this.category);
         };
-        return _this;
     }
-    CategorySidePanelTagTitle.prototype.getElementTag = function () {
+    getElementTag() {
         return 'button';
-    };
-    CategorySidePanelTagTitle.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    CategorySidePanelTagTitle.prototype.afterInit = function () {
+    }
+    afterInit() {
         this.addEventListener('click', this.clickHandler);
-    };
-    return CategorySidePanelTagTitle;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagTitle = CategorySidePanelTagTitle;
-var HorizontalDivider = (function (_super) {
-    __extends(HorizontalDivider, _super);
-    function HorizontalDivider(parent, category) {
-        return _super.call(this, parent, '', category.id) || this;
     }
-    HorizontalDivider.prototype.getElementTag = function () {
+}
+/**
+ * Horizontal divider line
+ */
+class HorizontalDivider extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, '', category.id);
+    }
+    getElementTag() {
         return 'hr';
-    };
-    HorizontalDivider.prototype.load = function () {
-    };
-    return HorizontalDivider;
-}(BaseComponent_1.BaseComponent));
-exports.HorizontalDivider = HorizontalDivider;
-var CategorySidePanelTagContainerS = (function (_super) {
-    __extends(CategorySidePanelTagContainerS, _super);
-    function CategorySidePanelTagContainerS(parent, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_SIDE_TAG_CONTAINER_S, category.name) || this;
-        _this.category = category;
-        _this.content = category;
-        return _this;
     }
-    CategorySidePanelTagContainerS.prototype.load = function () {
-        var _this = this;
+    load() {
+        // No children to load
+    }
+}
+/**
+ * Small container for subcategory tags
+ */
+class CategorySidePanelTagContainerS extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_S, category.name);
+        this.category = category;
+        this.content = category;
+    }
+    load() {
         if (!this.content.subcategories)
             return;
-        this.content.subcategories.forEach(function (subcat) {
-            var element = new container_1.SubcategoryTag(_this.makeId(), subcat);
+        this.content.subcategories.forEach((subcat) => {
+            let element = new SubcategoryTag(this.makeId(), subcat);
             element.initiate();
         });
-    };
-    return CategorySidePanelTagContainerS;
-}(BaseComponent_1.BaseComponent));
-exports.CategorySidePanelTagContainerS = CategorySidePanelTagContainerS;
+    }
+}

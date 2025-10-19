@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,9 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContentElement = void 0;
-var BaseComponent_1 = require("./BaseComponent");
 var ContentElement = (function (_super) {
     __extends(ContentElement, _super);
     function ContentElement(parentId, id, content) {
@@ -29,5 +25,4 @@ var ContentElement = (function (_super) {
         return element;
     };
     return ContentElement;
-}(BaseComponent_1.BaseComponent));
-exports.ContentElement = ContentElement;
+}(BaseComponent));

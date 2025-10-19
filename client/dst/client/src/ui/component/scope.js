@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,9 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Scope = void 0;
-var BaseComponent_1 = require("./BaseComponent");
 var Scope = (function (_super) {
     __extends(Scope, _super);
     function Scope(parentId) {
@@ -33,5 +29,4 @@ var Scope = (function (_super) {
         return element;
     };
     return Scope;
-}(BaseComponent_1.BaseComponent));
-exports.Scope = Scope;
+}(BaseComponent));

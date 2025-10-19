@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SECTIONMAP = exports.SectionHelper = exports.Section = void 0;
 var Section;
 (function (Section) {
     Section["EXPLORE"] = "explore";
     Section["TEAM"] = "team";
     Section["ABOUT"] = "about";
-})(Section || (exports.Section = Section = {}));
+})(Section || (Section = {}));
 var SectionHelper = (function () {
     function SectionHelper() {
     }
@@ -23,8 +20,7 @@ var SectionHelper = (function () {
     ]);
     return SectionHelper;
 }());
-exports.SectionHelper = SectionHelper;
-exports.SECTIONMAP = {
+var SECTIONMAP = {
     EXPLORE: [Section.EXPLORE, Section.EXPLORE],
     TEAM: [Section.TEAM, Section.TEAM],
     ABOUT: [Section.ABOUT, Section.ABOUT],

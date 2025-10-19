@@ -1,6 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LEGAL_LINKS = exports.LEGAL = exports.LEGAL_CLASSNAMES = exports.LegalHelper = exports.LegalRoute = exports.LegalPage = exports.LegalClassName = void 0;
+/**
+ * Legal page constants.
+ * Refactored to use TypeScript enums.
+ */
 var LegalClassName;
 (function (LegalClassName) {
     LegalClassName["PANEL"] = "legalpanel";
@@ -12,37 +13,43 @@ var LegalClassName;
     LegalClassName["TEXT"] = "legaltext";
     LegalClassName["TEXT_FRAMED"] = "legaltextframed";
     LegalClassName["FOOTER"] = "legal_footer";
-})(LegalClassName || (exports.LegalClassName = LegalClassName = {}));
+})(LegalClassName || (LegalClassName = {}));
 var LegalPage;
 (function (LegalPage) {
     LegalPage["IMPRESSUM"] = "impressum";
     LegalPage["PRIVACY"] = "privacy policy";
     LegalPage["ACCESSIBILITY"] = "accessibility";
-})(LegalPage || (exports.LegalPage = LegalPage = {}));
+})(LegalPage || (LegalPage = {}));
 var LegalRoute;
 (function (LegalRoute) {
     LegalRoute["IMPRESSUM"] = "/impressum";
     LegalRoute["PRIVACY"] = "/privacy";
     LegalRoute["ACCESSIBILITY"] = "/accessibility";
-})(LegalRoute || (exports.LegalRoute = LegalRoute = {}));
-var LegalHelper = (function () {
-    function LegalHelper() {
-    }
-    LegalHelper.getRoute = function (page) {
+})(LegalRoute || (LegalRoute = {}));
+/**
+ * Utility class for legal page operations
+ */
+class LegalHelper {
+    /**
+     * Get route for legal page
+     */
+    static getRoute(page) {
         return this.linkMap.get(page);
-    };
-    LegalHelper.getAllPages = function () {
+    }
+    /**
+     * Get all legal pages
+     */
+    static getAllPages() {
         return Array.from(this.linkMap.keys());
-    };
-    LegalHelper.linkMap = new Map([
-        [LegalPage.IMPRESSUM, LegalRoute.IMPRESSUM],
-        [LegalPage.PRIVACY, LegalRoute.PRIVACY],
-        [LegalPage.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
-    ]);
-    return LegalHelper;
-}());
-exports.LegalHelper = LegalHelper;
-exports.LEGAL_CLASSNAMES = {
+    }
+}
+LegalHelper.linkMap = new Map([
+    [LegalPage.IMPRESSUM, LegalRoute.IMPRESSUM],
+    [LegalPage.PRIVACY, LegalRoute.PRIVACY],
+    [LegalPage.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
+]);
+// Legacy exports for backward compatibility
+const LEGAL_CLASSNAMES = {
     PANEL: LegalClassName.PANEL,
     HEADER: LegalClassName.HEADER,
     BODY: LegalClassName.BODY,
@@ -53,13 +60,13 @@ exports.LEGAL_CLASSNAMES = {
     TEXT_F: LegalClassName.TEXT_FRAMED,
     FOOTER: LegalClassName.FOOTER,
 };
-exports.LEGAL = {
+const LEGAL = {
     IMPRESSUM: LegalPage.IMPRESSUM,
     PRIVACY: LegalPage.PRIVACY,
     ACCESSIBILITY: LegalPage.ACCESSIBILITY,
 };
-exports.LEGAL_LINKS = new Map([
-    [exports.LEGAL.IMPRESSUM, LegalRoute.IMPRESSUM],
-    [exports.LEGAL.PRIVACY, LegalRoute.PRIVACY],
-    [exports.LEGAL.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
+const LEGAL_LINKS = new Map([
+    [LEGAL.IMPRESSUM, LegalRoute.IMPRESSUM],
+    [LEGAL.PRIVACY, LegalRoute.PRIVACY],
+    [LEGAL.ACCESSIBILITY, LegalRoute.ACCESSIBILITY],
 ]);

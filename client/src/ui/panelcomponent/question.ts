@@ -1,14 +1,12 @@
-import { ContentPanel } from "../panel/contentPanel";
-import { LineLogo } from "../component/logo";
-import { ClassName, DisplayStyle } from "../../constants/ClassNames";
-import { BaseComponent } from "../component/BaseComponent";
-import { HrElement } from "../component/hrElement";
-import { AnswerTree } from '../../../../src/logic/question/answerTree';
-import { QAPair, QASet } from '../../../../src/logic/question/question';
-import { TextElement } from "../component/textElement";
+
+
+
+
+
+
+
 
 // Legacy imports for compatibility
-import { CLASSNAMES, DISPLAY } from "../../constants/ClassNames";
 
 class QHeader extends ContentPanel{
     constructor(parent:string){
@@ -213,8 +211,8 @@ class NavButtons extends ContentPanel{
 
     static buttonConditions = new Map<string, (step:number, steps:number)=>boolean>([
         [BackButton.name, (step, steps)=>{return step==0}],
-        [NextButton.name, (step, steps)=>{return step==steps}],
-        [SubmitButton.name,(step, steps)=>{return step!=steps}]
+        [NextButton.name, (step, steps)=>{return step==steps-1}],
+        [SubmitButton.name,(step, steps)=>{return step!=steps-1}]
     ]);
 
     static reload(step:number, steps:number) {
@@ -225,7 +223,7 @@ class NavButtons extends ContentPanel{
                 if (bb.length>0){
                     let cond = this.buttonConditions.get(b.name);
                     let ba = bb[0] as HTMLElement;
-                    ba.style.display = cond(step, steps) ? DISPLAY.NONE : DISPLAY.BLOCKINLINE;
+                    ba.style.display = cond(step, steps) ? DISPLAY.NONE : "inline-block";
                 }
             }
         )
@@ -259,7 +257,7 @@ class Steps extends BaseComponent {
 
 class QContainer extends ContentPanel{
     
-    tree: AnswerTree;
+    tree:any;
 
     constructor(parent:string,id:string, content?:any){
         super(parent, CLASSNAMES.Q_CONTAINER);
@@ -273,15 +271,26 @@ class QContainer extends ContentPanel{
         this.load_(c, a);
     }
 
-    load_(step:number, display:boolean) {        
-        
-        this.content.forEach((qs:QASet, i:number)=>{
-            qs.content.forEach(
-            (qa, j)=>qa.make(this.makeId(), (i==step-1 && (j==0 || this.tree.get(qa.prev_id)!=undefined)
-
-            ), this.tree))
-        }
-    );
+    load_(step:number, display:boolean) {
+        console.log("QContainer.load_ called, step:", step, "content:", this.content);
+        // First initiate all QA pairs if not already done
+        this.content.forEach((qs:any, i:number) => {
+            qs.content.forEach((qa:any, j:number) => {
+                if (!qa.e) {  // Only initiate if not already done
+                    qa.initiate(this.makeId());
+                }
+            });
+        });
+        // Then make with visibility (i == step for 0-indexed steps)
+        this.content.forEach((qs:any, i:number) => {
+            qs.content.forEach((qa:any, j:number) => {
+                // Check if previous answer exists AND is truthy (for checkboxes, must be checked)
+                const prevValue = qa.prev_id ? this.tree.get(qa.prev_id) : undefined;
+                const shouldDisplay = (i == step && (j == 0 || !!prevValue));
+                console.log(`Step ${i}, QA ${j}: shouldDisplay=${shouldDisplay}, step=${step}, i==step=${i==step}, j==0=${j==0}, prev_id=${qa.prev_id}, prevValue=${prevValue}`);
+                qa.make(this.makeId(), shouldDisplay, this.tree);
+            });
+        });
     }
 }
 
@@ -319,14 +328,18 @@ class QuestionContainer extends ContentPanel{
 }
 
 class QAContainer extends ContentPanel{
-    
-    constructor(parent:string, id:string, content:QAPair){
+
+    constructor(parent:string, id:string, content:any){
         super(parent, id, content);
         this.name = CLASSNAMES.QA_CONTAINER;
         this.elements = [];
     }
 
-    load_(tree:AnswerTree, next_ids:Map<string, string>, display:boolean) {    
+    load(tree?:any, next_ids?:any, display?:any) {
+        this.load_(tree, next_ids, display);
+    }
+
+    load_(tree:any, next_ids:Map<string, string>, display:boolean) {
         this.content.question.make(this.makeId());
         this.content.answer.make(this.makeId(), tree, next_ids);
         this.show(display);
@@ -351,8 +364,8 @@ class QContainer_ extends ContentPanel{
 }
 
 // class QContainerLeg extends ContentPanel{
-//     tree: AnswerTree;
-//     constructor(parent, qtree, tree:AnswerTree){
+//     tree:any;
+//     constructor(parent, qtree, tree:any){
 //         super(parent, "question-container");
 //         this.name = CLASSNAMES.Q_CONTAINER;
 //         this.content = qtree;
@@ -372,4 +385,3 @@ class QContainer_ extends ContentPanel{
 //     }
 // }
 
-export {QContainer, QAContainer, QFooter, QHeader, QuestionContainer};

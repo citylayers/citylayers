@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,19 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Recognition = exports.ProjectTeam = exports.ProjectPeriodInfo = exports.ProjectPanel = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("./BaseComponent");
-var contentPanel_1 = require("../panel/contentPanel");
-var linkElement_1 = require("./linkElement");
-var textElement_1 = require("./textElement");
-var ClassNames_2 = require("../../constants/ClassNames");
 var ProjectPanel = (function (_super) {
     __extends(ProjectPanel, _super);
     function ProjectPanel(parent) {
         var _this = _super.call(this, parent, "id") || this;
-        _this.name = ClassNames_2.CLASSNAMES.PROJECT_PANEL;
+        _this.name = CLASSNAMES.PROJECT_PANEL;
         return _this;
     }
     ProjectPanel.prototype.load = function (projects) {
@@ -39,7 +30,7 @@ var ProjectPanel = (function (_super) {
         projects.forEach(function (project) {
             _this.add(ProjectCard, project);
         });
-        for (var _i = 0, _a = Object.entries(ClassNames_1.SECTIONMAP); _i < _a.length; _i++) {
+        for (var _i = 0, _a = Object.entries(SECTIONMAP); _i < _a.length; _i++) {
             var _b = _a[_i], key = _b[0], value = _b[1];
             this.add(SectionCard, value);
         }
@@ -50,13 +41,12 @@ var ProjectPanel = (function (_super) {
         div.load();
     };
     return ProjectPanel;
-}(contentPanel_1.ContentPanel));
-exports.ProjectPanel = ProjectPanel;
+}(ContentPanel));
 var Card = (function (_super) {
     __extends(Card, _super);
     function Card(parentId, id, content) {
         var _a;
-        var _this = _super.call(this, parentId || ClassNames_1.ClassName.CARD, ClassNames_1.ClassName.CARD, id, content) || this;
+        var _this = _super.call(this, parentId || ClassName.CARD, ClassName.CARD, id, content) || this;
         _this.cardContent = content;
         _this.link = "/project/".concat((_a = _this.cardContent) === null || _a === void 0 ? void 0 : _a.name);
         _this.elements = [ProjectTitle, ProjectCardInfo, ProjectCardButton];
@@ -76,14 +66,14 @@ var Card = (function (_super) {
         }
     };
     return Card;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectCard = (function (_super) {
     __extends(ProjectCard, _super);
     function ProjectCard(parent, project) {
         var _this = _super.call(this, parent, project === null || project === void 0 ? void 0 : project.name, project) || this;
         _this.link = "/project/".concat(_this.content.name);
-        _this.name = ClassNames_2.CLASSNAMES.CARD;
-        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.CARD;
+        _this.name = CLASSNAMES.CARD;
+        _this.parent = parent ? parent : CLASSNAMES.CARD;
         _this.elements = [
             ProjectTitle,
             ProjectCardInfo,
@@ -105,7 +95,7 @@ var ProjectCardInfo = (function (_super) {
         return _this;
     }
     ProjectCardInfo.prototype._makeText = function (project) {
-        return "\uD83D\uDCCD ".concat(project.getPlace(), "\n\uD83D\uDD59 ").concat(project.getPeriod(), "\n\uD83E\uDD42 ").concat(project.getStatus(), "\n");
+        return "\uD83D\uDD59 ".concat(project.getPeriod(), "\n\uD83E\uDD42 ").concat(project.getStatus(), "\n");
     };
     ProjectCardInfo.prototype.load = function () {
         for (var e = 0; e < this.elements.length; e++) {
@@ -114,12 +104,12 @@ var ProjectCardInfo = (function (_super) {
         }
     };
     return ProjectCardInfo;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var ProjectTeam = (function (_super) {
     __extends(ProjectTeam, _super);
     function ProjectTeam(parent, id, team) {
         var _this = _super.call(this, parent, id, team) || this;
-        _this.name = ClassNames_2.CLASSNAMES.TEAM;
+        _this.name = CLASSNAMES.TEAM;
         _this.content = team;
         _this.elements = team.map(function (t) { return TeamPersonInfo; });
         return _this;
@@ -132,32 +122,31 @@ var ProjectTeam = (function (_super) {
         }
     };
     return ProjectTeam;
-}(contentPanel_1.ContentPanel));
-exports.ProjectTeam = ProjectTeam;
+}(ContentPanel));
 var TeamPersonInfo = (function (_super) {
     __extends(TeamPersonInfo, _super);
     function TeamPersonInfo(parent, id, teamMember) {
         var _this = _super.call(this, parent, id, teamMember) || this;
-        _this.name = ClassNames_2.CLASSNAMES.TEAM_MEMBER;
+        _this.name = CLASSNAMES.TEAM_MEMBER;
         _this.content = teamMember;
-        _this.elements = [linkElement_1.LinkElement, textElement_1.TextElement];
+        _this.elements = [LinkElement, TextElement];
         return _this;
     }
     TeamPersonInfo.prototype.load = function () {
-        var element = new linkElement_1.LinkElement(this.makeId(), this.id, [this.content.name, this.content.link]);
+        var element = new LinkElement(this.makeId(), this.id, [this.content.name, this.content.link]);
         element.initiate();
-        var element1 = new textElement_1.TextElement(this.makeId(), this.id, this.content.role);
+        var element1 = new TextElement(this.makeId(), this.id, this.content.role);
         element1.initiate();
     };
     return TeamPersonInfo;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var ProjectPeriodInfo = (function (_super) {
     __extends(ProjectPeriodInfo, _super);
     function ProjectPeriodInfo(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
         _this.name = id;
         _this.content = content;
-        _this.elements = [textElement_1.TextElement, textElement_1.TextElement, textElement_1.TextElement, textElement_1.TextElement];
+        _this.elements = [TextElement, TextElement, TextElement, TextElement];
         _this.args = [
             "Start: ",
             _this.content.period.start,
@@ -174,15 +163,14 @@ var ProjectPeriodInfo = (function (_super) {
         }
     };
     return ProjectPeriodInfo;
-}(contentPanel_1.ContentPanel));
-exports.ProjectPeriodInfo = ProjectPeriodInfo;
+}(ContentPanel));
 var Recognition = (function (_super) {
     __extends(Recognition, _super);
     function Recognition(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
         _this.name = id;
         _this.content = content;
-        _this.elements = content.map(function (e) { return textElement_1.TextElement; });
+        _this.elements = content.map(function (e) { return TextElement; });
         return _this;
     }
     Recognition.prototype.load = function () {
@@ -193,8 +181,7 @@ var Recognition = (function (_super) {
         }
     };
     return Recognition;
-}(contentPanel_1.ContentPanel));
-exports.Recognition = Recognition;
+}(ContentPanel));
 var ProjectCardButton = (function (_super) {
     __extends(ProjectCardButton, _super);
     function ProjectCardButton(parentId, id, project) {
@@ -218,34 +205,34 @@ var ProjectCardButton = (function (_super) {
     };
     ProjectCardButton.BUTTON_TEXT = "To project";
     return ProjectCardButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectCardText = (function (_super) {
     __extends(ProjectCardText, _super);
     function ProjectCardText(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_2.CLASSNAMES.PROJECT_DESCRIPTION;
+        _this.name = CLASSNAMES.PROJECT_DESCRIPTION;
         _this.content = content;
         return _this;
     }
     return ProjectCardText;
-}(textElement_1.TextElement));
+}(TextElement));
 var ProjectTitle = (function (_super) {
     __extends(ProjectTitle, _super);
     function ProjectTitle(parent, id, project) {
         var _this = _super.call(this, parent, id, project.name) || this;
-        _this.name = ClassNames_2.CLASSNAMES.TITLE;
+        _this.name = CLASSNAMES.TITLE;
         return _this;
     }
     return ProjectTitle;
-}(textElement_1.TextElement));
+}(TextElement));
 var SectionCard = (function (_super) {
     __extends(SectionCard, _super);
     function SectionCard(parent, section) {
         var _this = _super.call(this, parent, section[0], section) || this;
         _this.id = section[0];
         _this.content = section[0];
-        _this.name = "".concat(ClassNames_2.CLASSNAMES.CARD, " section");
-        _this.parent = parent ? parent : ClassNames_2.CLASSNAMES.PROJECT_PANEL;
+        _this.name = "".concat(CLASSNAMES.CARD, " section");
+        _this.parent = parent ? parent : CLASSNAMES.PROJECT_PANEL;
         _this.link = section[1];
         _this.elements = [ProjectCardText];
         return _this;

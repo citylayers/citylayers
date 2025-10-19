@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,15 +13,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AboutLogo = exports.AboutText = exports.AboutDescription = exports.AboutPanel = exports.AboutLabel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var closeButton_1 = require("../component/closeButton");
-var ClassNames_1 = require("../../constants/ClassNames");
 var AboutLabel = (function (_super) {
     __extends(AboutLabel, _super);
     function AboutLabel(parent) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.ABOUT_LABEL, "aboutlabelid") || this;
+        var _this = _super.call(this, parent || "body", ClassName.ABOUT_LABEL, "aboutlabelid") || this;
         _this.content = "about";
         _this.elements = [];
         _this.clickHandler = function (e) {
@@ -62,7 +56,7 @@ var AboutLabel = (function (_super) {
         }).then(function (result) {
             if (result.status == 200) {
                 return result.json().then(function (res) {
-                    var geocodingPanels = document.getElementsByClassName(ClassNames_1.CLASSNAMES.GEOCODONG_PANEL);
+                    var geocodingPanels = document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL);
                     if (geocodingPanels.length > 0 && GeocodeParser) {
                         geocodingPanels[0].innerHTML = GeocodeParser.run(res);
                     }
@@ -82,14 +76,13 @@ var AboutLabel = (function (_super) {
         });
     };
     return AboutLabel;
-}(BaseComponent_1.BaseComponent));
-exports.AboutLabel = AboutLabel;
+}(BaseComponent));
 var AboutPanel = (function (_super) {
     __extends(AboutPanel, _super);
     function AboutPanel(parent) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.ABOUT_PANEL, "id") || this;
+        var _this = _super.call(this, parent || "body", ClassName.ABOUT_PANEL, "id") || this;
         _this.elements = [
-            closeButton_1.CloseButton,
+            CloseButton,
             AboutDescription,
             AboutLogo,
             AboutText
@@ -112,24 +105,23 @@ var AboutPanel = (function (_super) {
         }
         var el = this.getElement();
         if (el) {
-            el.style.display = ClassNames_1.DisplayStyle.NONE;
+            el.style.display = DisplayStyle.NONE;
         }
     };
     AboutPanel.toggle = function () {
-        var panel = document.getElementById("".concat(ClassNames_1.ClassName.ABOUT_PANEL, "_id"));
+        var panel = document.getElementById("".concat(ClassName.ABOUT_PANEL, "_id"));
         if (panel) {
-            panel.style.display = panel.style.display === ClassNames_1.DisplayStyle.NONE
-                ? ClassNames_1.DisplayStyle.FLEX
-                : ClassNames_1.DisplayStyle.NONE;
+            panel.style.display = panel.style.display === DisplayStyle.NONE
+                ? DisplayStyle.FLEX
+                : DisplayStyle.NONE;
         }
     };
     return AboutPanel;
-}(BaseComponent_1.BaseComponent));
-exports.AboutPanel = AboutPanel;
+}(BaseComponent));
 var AboutDescription = (function (_super) {
     __extends(AboutDescription, _super);
     function AboutDescription(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.ABOUT_DESCRIPTION) || this;
+        var _this = _super.call(this, parent, ClassName.ABOUT_DESCRIPTION) || this;
         _this.content = "City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!";
         return _this;
     }
@@ -141,12 +133,11 @@ var AboutDescription = (function (_super) {
     AboutDescription.prototype.load = function () {
     };
     return AboutDescription;
-}(BaseComponent_1.BaseComponent));
-exports.AboutDescription = AboutDescription;
+}(BaseComponent));
 var AboutText = (function (_super) {
     __extends(AboutText, _super);
     function AboutText(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.ABOUT_TEXT) || this;
+        var _this = _super.call(this, parent, ClassName.ABOUT_TEXT) || this;
         _this.content = "City Layers embody the motto \"act local to go global\"\n        by relying on citizen mapping as a holistic and inclusive city-making\n        practice that aims to tackle the contemporary spatial, social and\n        environmental challenges our cities are facing. <br><br>\n\n        This powerful city mapping app serves as a means of\n        communication between cities and their citizens,\n        generating a new type of data that is\n        collectively generated, managed and cared for. ";
         return _this;
     }
@@ -157,10 +148,9 @@ var AboutText = (function (_super) {
     };
     AboutText.prototype.load = function () {
     };
-    AboutText._name = ClassNames_1.ClassName.ABOUT_TEXT;
+    AboutText._name = ClassName.ABOUT_TEXT;
     return AboutText;
-}(BaseComponent_1.BaseComponent));
-exports.AboutText = AboutText;
+}(BaseComponent));
 var AboutLogo = (function (_super) {
     __extends(AboutLogo, _super);
     function AboutLogo(parent, category) {
@@ -183,5 +173,4 @@ var AboutLogo = (function (_super) {
         return element;
     };
     return AboutLogo;
-}(BaseComponent_1.BaseComponent));
-exports.AboutLogo = AboutLogo;
+}(BaseComponent));

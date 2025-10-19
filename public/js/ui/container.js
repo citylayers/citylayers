@@ -1,325 +1,315 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SubcategoryTag = exports.SubcategoryTagContainer = exports.CategoryInfo = exports.CategorySwitch = exports.Switch = exports.CategoryLabel = exports.CategoryHeader = exports.CategoryElement = exports.CategoryPanelDescr = exports.CategoryPanelLabel = exports.ToProjects = exports.PanelHeader = void 0;
-var BaseComponent_1 = require("./component/BaseComponent");
-var ClassNames_1 = require("../constants/ClassNames");
-var slider_1 = require("./component/slider");
-var sidePanel_1 = require("./panel/sidePanel");
-var PanelHeader = (function (_super) {
-    __extends(PanelHeader, _super);
-    function PanelHeader(parent, id) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORYPANEL_HEADER, id) || this;
-        _this.elements = [CategoryPanelLabel, CategoryPanelDescr, ToProjects];
-        return _this;
+/**
+ * Category Container Components
+ * Migrated from container.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Header for category panel with label and description
+ */
+class PanelHeader extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.CATEGORYPANEL_HEADER, id);
+        this.elements = [CategoryPanelLabel, CategoryPanelDescr, ToProjects];
     }
-    PanelHeader.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.id);
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.id);
             element.initiate();
         }
-    };
-    return PanelHeader;
-}(BaseComponent_1.BaseComponent));
-exports.PanelHeader = PanelHeader;
-var ToProjects = (function (_super) {
-    __extends(ToProjects, _super);
-    function ToProjects(parent, id) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORYPANEL_LABEL, id) || this;
-        _this.content = ToProjects.content;
-        _this.clickHandler = function () {
-            var CityLayersPanel = window.CityLayersPanel;
+    }
+}
+/**
+ * Navigation button to return to projects view
+ */
+class ToProjects extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.CATEGORYPANEL_LABEL, id);
+        this.content = ToProjects.content;
+        this.clickHandler = () => {
+            const CityLayersPanel = window.CityLayersPanel;
             if (CityLayersPanel) {
                 CityLayersPanel.switch();
             }
         };
-        return _this;
     }
-    ToProjects.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
-        element.classList.add(ClassNames_1.ClassName.CLICK);
+    createElement() {
+        const element = super.createElement();
+        element.classList.add(ClassName.CLICK);
         element.innerHTML = this.content;
         return element;
-    };
-    ToProjects.prototype.afterInit = function () {
+    }
+    afterInit() {
         this.addEventListener('click', this.clickHandler);
-    };
-    ToProjects.activate = function (on) {
-        var elements = Array.from(document.getElementsByClassName(ClassNames_1.ClassName.CATEGORYPANEL_LABEL)).filter(function (e) { return e.innerText == ToProjects.content; });
-        if (elements.length > 0) {
-            elements[0].style.display = on === false ? ClassNames_1.DisplayStyle.NONE : ClassNames_1.DisplayStyle.FLEX;
-        }
-    };
-    ToProjects.hide = function () {
-        var elements = Array.from(document.getElementsByClassName(ClassNames_1.ClassName.CATEGORYPANEL_LABEL)).filter(function (e) { return e.innerText == ToProjects.content; });
-        if (elements.length > 0) {
-            elements[0].style.display = ClassNames_1.DisplayStyle.NONE;
-        }
-    };
-    ToProjects.content = "< To projects";
-    return ToProjects;
-}(BaseComponent_1.BaseComponent));
-exports.ToProjects = ToProjects;
-var CategoryPanelLabel = (function (_super) {
-    __extends(CategoryPanelLabel, _super);
-    function CategoryPanelLabel(parent, id) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORYPANEL_LABEL, id) || this;
-        _this.content = "Explore and compare layers";
-        return _this;
     }
-    CategoryPanelLabel.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    /**
+     * Show or hide the "To Projects" button
+     */
+    static activate(on) {
+        let elements = Array.from(document.getElementsByClassName(ClassName.CATEGORYPANEL_LABEL)).filter((e) => e.innerText == ToProjects.content);
+        if (elements.length > 0) {
+            elements[0].style.display = on === false ? DisplayStyle.NONE : DisplayStyle.FLEX;
+        }
+    }
+    /**
+     * Hide the "To Projects" button
+     */
+    static hide() {
+        let elements = Array.from(document.getElementsByClassName(ClassName.CATEGORYPANEL_LABEL)).filter((e) => e.innerText == ToProjects.content);
+        if (elements.length > 0) {
+            elements[0].style.display = DisplayStyle.NONE;
+        }
+    }
+}
+ToProjects.content = "< To projects";
+/**
+ * Main label for category panel
+ */
+class CategoryPanelLabel extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.CATEGORYPANEL_LABEL, id);
+        this.content = "Explore and compare layers";
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    return CategoryPanelLabel;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryPanelLabel = CategoryPanelLabel;
-var CategoryPanelDescr = (function (_super) {
-    __extends(CategoryPanelDescr, _super);
-    function CategoryPanelDescr(parent, id) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORYPANEL_DESCR, id) || this;
-        _this.content = "Activate and adjust the ranges of \
+    }
+}
+/**
+ * Description text for category panel
+ */
+class CategoryPanelDescr extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.CATEGORYPANEL_DESCR, id);
+        this.content = "Activate and adjust the ranges of \
                 the various categories below in order to visualise \
                 them in the space.";
-        return _this;
     }
-    CategoryPanelDescr.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    return CategoryPanelDescr;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryPanelDescr = CategoryPanelDescr;
-var CategoryElement = (function (_super) {
-    __extends(CategoryElement, _super);
-    function CategoryElement(parent, category) {
-        var _this = _super.call(this, parent || ClassNames_1.ClassName.CATEGORY_PANEL, ClassNames_1.ClassName.CATEGORY_CONTAINER, category.name) || this;
-        _this.category = category;
-        _this.content = category;
-        _this.elements = [
-            CategoryHeader,
-            slider_1.DoubleSlider,
-            SubcategoryTagContainer,
-            sidePanel_1.CategorySidePanel
-        ];
-        return _this;
     }
-    CategoryElement.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = void 0;
+}
+/**
+ * Container for an entire category with header, slider, and tags
+ */
+class CategoryElement extends BaseComponent {
+    constructor(parent, category) {
+        super(parent || ClassName.CATEGORY_PANEL, ClassName.CATEGORY_CONTAINER, category.name);
+        this.category = category;
+        this.content = category;
+        this.elements = [
+            CategoryHeader,
+            DoubleSlider,
+            // SliderLabelContainer, // TODO: This class appears to be missing
+            SubcategoryTagContainer,
+            CategorySidePanel
+        ];
+    }
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element;
             switch (this.elements[e]) {
-                case (sidePanel_1.CategorySidePanel):
+                case (CategorySidePanel):
                     element = new this.elements[e](this.makeId(), this.content);
                     element.parent = "right-container";
                     break;
                 case (CategoryHeader):
                     element = new this.elements[e](this.makeId(), this.content.name, this.content);
                     break;
-                case (slider_1.DoubleSlider):
+                case (DoubleSlider):
                     element = new this.elements[e](this.makeId(), this.content.name, this.content);
                     break;
+                // case (SliderLabelContainer):
+                //     element = new this.elements[e](this.makeId(),
+                //         this.content.name, this.content);
+                //     break;
                 default:
                     element = new this.elements[e](this.makeId(), this.content.name, this.content.subcategories);
             }
             element.initiate();
             element.load();
         }
-    };
-    return CategoryElement;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryElement = CategoryElement;
-var CategoryHeader = (function (_super) {
-    __extends(CategoryHeader, _super);
-    function CategoryHeader(parent, id, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_HEADER, id) || this;
-        _this.category = category;
-        _this.elements = [CategoryInfo, CategoryLabel, CategorySwitch];
-        return _this;
     }
-    CategoryHeader.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), this.id, this.category);
+}
+/**
+ * Header for individual category with label, info, and switch
+ */
+class CategoryHeader extends BaseComponent {
+    constructor(parent, id, category) {
+        super(parent, ClassName.CATEGORY_HEADER, id);
+        this.category = category;
+        this.elements = [CategoryInfo, CategoryLabel, CategorySwitch];
+    }
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), this.id, this.category);
             element.initiate();
         }
-    };
-    return CategoryHeader;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryHeader = CategoryHeader;
-var CategoryLabel = (function (_super) {
-    __extends(CategoryLabel, _super);
-    function CategoryLabel(parent, id) {
-        return _super.call(this, parent, ClassNames_1.ClassName.CATEGORY_HEADER_TITLE, id) || this;
     }
-    CategoryLabel.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+}
+/**
+ * Label displaying category name
+ */
+class CategoryLabel extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.CATEGORY_HEADER_TITLE, id);
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.id;
         return element;
-    };
-    return CategoryLabel;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryLabel = CategoryLabel;
-var Switch = (function (_super) {
-    __extends(Switch, _super);
-    function Switch(parent, id, category) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.SWITCH, id) || this;
-        _this.category = category;
-        return _this;
     }
-    return Switch;
-}(BaseComponent_1.BaseComponent));
-exports.Switch = Switch;
-var CategorySwitch = (function (_super) {
-    __extends(CategorySwitch, _super);
-    function CategorySwitch(parent, id, category) {
-        var _this = _super.call(this, parent, id, category) || this;
-        _this.className = ClassNames_1.ClassName.CATEGORY_SWITCH;
-        _this.changeHandler = function () {
+}
+/**
+ * Base class for switch/toggle components
+ */
+class Switch extends BaseComponent {
+    constructor(parent, id, category) {
+        super(parent, ClassName.SWITCH, id);
+        this.category = category;
+    }
+}
+/**
+ * Toggle switch for activating/deactivating categories
+ */
+class CategorySwitch extends Switch {
+    constructor(parent, id, category) {
+        super(parent, id, category);
+        this.className = ClassName.CATEGORY_SWITCH;
+        this.changeHandler = () => {
+            // Category activation logic
         };
-        return _this;
     }
-    CategorySwitch.prototype.getElementTag = function () {
+    getElementTag() {
         return 'label';
-    };
-    CategorySwitch.prototype.afterInit = function () {
-        var element = this.getElement();
+    }
+    afterInit() {
+        const element = this.getElement();
         if (!element)
             return;
-        var checkbox = document.createElement("input");
+        const checkbox = document.createElement("input");
         checkbox.setAttribute("type", "checkbox");
         checkbox.onchange = this.changeHandler;
-        var span = document.createElement("span");
+        const span = document.createElement("span");
         element.appendChild(checkbox);
         element.appendChild(span);
-    };
-    CategorySwitch._name = ClassNames_1.ClassName.CATEGORY_SWITCH;
-    return CategorySwitch;
-}(Switch));
-exports.CategorySwitch = CategorySwitch;
-var CategoryInfo = (function (_super) {
-    __extends(CategoryInfo, _super);
-    function CategoryInfo(parent, id, category) {
-        var _this = _super.call(this, parent, "material-symbols-outlined", id) || this;
-        _this.category = category;
-        _this.content = "info";
-        _this.clickHandler = function () {
-            sidePanel_1.CategorySidePanel.toggle(_this.category);
-        };
-        return _this;
     }
-    CategoryInfo.prototype.getElementTag = function () {
+}
+CategorySwitch._name = ClassName.CATEGORY_SWITCH;
+/**
+ * Info icon button to show category details
+ */
+class CategoryInfo extends BaseComponent {
+    constructor(parent, id, category) {
+        super(parent, "material-symbols-outlined", id);
+        this.category = category;
+        this.content = "info";
+        this.clickHandler = () => {
+            CategorySidePanel.toggle(this.category);
+        };
+    }
+    getElementTag() {
         return 'span';
-    };
-    CategoryInfo.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    CategoryInfo.prototype.afterInit = function () {
-        this.addEventListener('click', this.clickHandler);
-    };
-    return CategoryInfo;
-}(BaseComponent_1.BaseComponent));
-exports.CategoryInfo = CategoryInfo;
-var SubcategoryTagContainer = (function (_super) {
-    __extends(SubcategoryTagContainer, _super);
-    function SubcategoryTagContainer(parent, id) {
-        return _super.call(this, parent, ClassNames_1.ClassName.TAG_CONTAINER, id) || this;
     }
-    SubcategoryTagContainer.prototype.load = function (labels) {
-        var _this = this;
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
+    }
+}
+/**
+ * Container for subcategory tags
+ */
+class SubcategoryTagContainer extends BaseComponent {
+    constructor(parent, id) {
+        super(parent, ClassName.TAG_CONTAINER, id);
+    }
+    load(labels) {
         if (labels === undefined) {
             labels = [];
         }
-        labels.forEach(function (label) {
-            var element = new SubcategoryTag(_this.makeId(), label);
+        labels.forEach(label => {
+            let element = new SubcategoryTag(this.makeId(), label);
             element.initiate();
         });
-    };
-    SubcategoryTagContainer.getByCategory = function (category) {
-        return document.getElementById("".concat(this.cname, "_").concat(category));
-    };
-    SubcategoryTagContainer.addLabel = function (category, label, togglable) {
-        if (togglable === void 0) { togglable = false; }
-        togglable = false;
-        var element = new SubcategoryTag("".concat(this.cname, "_").concat(category), label);
-        element.initiate(togglable);
-    };
-    SubcategoryTagContainer.cname = ClassNames_1.ClassName.TAG_CONTAINER;
-    return SubcategoryTagContainer;
-}(BaseComponent_1.BaseComponent));
-exports.SubcategoryTagContainer = SubcategoryTagContainer;
-var SubcategoryTag = (function (_super) {
-    __extends(SubcategoryTag, _super);
-    function SubcategoryTag(parent, tag) {
-        var _this = this;
-        var tagName = tag.name !== undefined ? tag.name : tag;
-        _this = _super.call(this, parent, ClassNames_1.ClassName.SUBCATEGORY_TAG, tagName) || this;
-        _this.tag = tag;
-        _this.subcat_id = tag.id;
-        return _this;
     }
-    SubcategoryTag.prototype.toggle = function () {
-        var _a;
-        var parentElement = this.getParent();
+    /**
+     * Get tag container by category name
+     */
+    static getByCategory(category) {
+        return document.getElementById(`${this.cname}_${category}`);
+    }
+    /**
+     * Add a new tag to the container
+     */
+    static addLabel(category, label, togglable = false) {
+        togglable = false;
+        let element = new SubcategoryTag(`${this.cname}_${category}`, label);
+        element.initiate(togglable);
+    }
+}
+SubcategoryTagContainer.cname = ClassName.TAG_CONTAINER;
+/**
+ * Individual subcategory tag with checkbox
+ */
+class SubcategoryTag extends BaseComponent {
+    constructor(parent, tag) {
+        const tagName = tag.name !== undefined ? tag.name : tag;
+        super(parent, ClassName.SUBCATEGORY_TAG, tagName);
+        this.tag = tag;
+        this.subcat_id = tag.id;
+    }
+    /**
+     * Toggle tag selection
+     */
+    toggle() {
+        const parentElement = this.getParent();
         if (!parentElement || !parentElement.parentElement || !parentElement.parentElement.parentElement)
             return;
-        var _cname = parentElement.parentElement.parentElement.className;
-        var _id = parentElement.parentElement.parentElement.id;
-        var category = _id.replace("".concat(_cname, "_"), "");
-        var new_id = "".concat(this.className, "_").concat(this.id);
-        var ControllerMultiCategorical = window.ControllerMultiCategorical;
-        var ConfigPanel = window.ConfigPanel;
+        let _cname = parentElement.parentElement.parentElement.className;
+        let _id = parentElement.parentElement.parentElement.id;
+        let category = _id.replace(`${_cname}_`, "");
+        let new_id = `${this.className}_${this.id}`;
+        const ControllerMultiCategorical = window.ControllerMultiCategorical;
+        const ConfigPanel = window.ConfigPanel;
         if (!ControllerMultiCategorical || !ConfigPanel)
             return;
-        var container = ControllerMultiCategorical.getByCategory(category);
-        var existing_ids = Array.from(container.children).map(function (el) { return el.id; });
+        let container = ControllerMultiCategorical.getByCategory(category);
+        let existing_ids = Array.from(container.children).map((el) => el.id);
         if (existing_ids.includes(new_id)) {
-            (_a = document.getElementById(new_id)) === null || _a === void 0 ? void 0 : _a.remove();
+            document.getElementById(new_id)?.remove();
         }
         else {
             ControllerMultiCategorical.addLabel(category, this.id, true);
         }
         ConfigPanel.markertoggle(this.subcat_id, !existing_ids.includes(new_id));
-    };
-    SubcategoryTag.prototype.initiate = function (togglable) {
-        var _this = this;
-        if (togglable === void 0) { togglable = true; }
-        _super.prototype.initiate.call(this);
-        var element = this.getElement();
+    }
+    /**
+     * Initialize tag with checkbox and label
+     */
+    initiate(togglable = true) {
+        super.initiate();
+        const element = this.getElement();
         if (!element)
             return;
-        var checkbox = document.createElement("input");
+        const checkbox = document.createElement("input");
         checkbox.setAttribute("type", "checkbox");
-        var labelContainer = document.createElement("div");
+        const labelContainer = document.createElement("div");
         labelContainer.setAttribute("class", "tag-element");
-        var label = document.createElement("label");
+        const label = document.createElement("label");
         label.innerHTML = this.id;
         labelContainer.appendChild(label);
         element.appendChild(checkbox);
         element.appendChild(labelContainer);
         if (togglable) {
-            checkbox.onclick = function () { _this.toggle(); };
+            checkbox.onclick = () => { this.toggle(); };
         }
         else {
             checkbox.setAttribute("disabled", "true");
         }
-    };
-    return SubcategoryTag;
-}(BaseComponent_1.BaseComponent));
-exports.SubcategoryTag = SubcategoryTag;
+    }
+}

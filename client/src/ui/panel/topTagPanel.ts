@@ -1,5 +1,4 @@
-import { BaseComponent } from '../component/BaseComponent';
-import { ClassName, CLASSNAMES } from '../../constants/ClassNames';
+
 
 /**
  * Top Tag Panel / Geocoding Panel
@@ -9,7 +8,7 @@ import { ClassName, CLASSNAMES } from '../../constants/ClassNames';
 /**
  * Panel for displaying geocoding information based on user location
  */
-export class TopTagPanel extends BaseComponent {
+class TopTagPanel extends BaseComponent {
     protected elements: any[];
 
     constructor(parent: string) {

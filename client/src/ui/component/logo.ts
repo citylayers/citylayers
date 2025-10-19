@@ -1,13 +1,12 @@
-import { ClassName } from "../../constants/ClassNames";
-import { Illustration } from '../../../../src/logic/illustration';
-import { ImageElement } from "./imageElement";
+
+
 
 /**
  * Logo component.
  * Extends ImageElement with logo-specific behavior.
  */
 class Logo extends ImageElement {
-    constructor(parentId: string, illustration?: Illustration) {
+    constructor(parentId: string, illustration?:any) {
         const content = illustration || new Illustration("/images/logo_2.svg", "/");
         super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
@@ -33,4 +32,3 @@ class LineLogo extends ImageElement {
     }
 }
 
-export { Logo, ColorLogo, LineLogo };

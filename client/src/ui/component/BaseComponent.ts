@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-import { DisplayStyle } from '../../constants/ClassNames';
+
 
 /**
  * Base component class for UI elements.
@@ -7,7 +6,7 @@ import { DisplayStyle } from '../../constants/ClassNames';
  *
  * Design Pattern: Template Method Pattern
  */
-export abstract class BaseComponent {
+abstract class BaseComponent {
     protected id: string;
     protected className: string;
     protected parentId: string;
@@ -16,7 +15,7 @@ export abstract class BaseComponent {
     protected element: HTMLElement | null;
 
     constructor(parentId: string, className: string, id?: string, content?: any) {
-        this.id = id || uuidv4();
+        this.id = id || window.uuidv4();
         this.className = className;
         this.parentId = parentId;
         this.content = content;

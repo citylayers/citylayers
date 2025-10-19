@@ -3,14 +3,14 @@
  * Centralized service following Service Layer pattern.
  */
 
-export enum HttpMethod {
+enum HttpMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',
     DELETE = 'DELETE',
 }
 
-export interface ApiConfig {
+interface ApiConfig {
     baseUrl?: string;
     headers?: Record<string, string>;
     timeout?: number;
@@ -19,7 +19,7 @@ export interface ApiConfig {
 /**
  * Base API service class for HTTP operations
  */
-export class ApiService {
+class ApiService {
     private baseUrl: string;
     private defaultHeaders: Record<string, string>;
     private timeout: number;
@@ -155,7 +155,7 @@ export class ApiService {
 /**
  * Project API service
  */
-export class ProjectApiService extends ApiService {
+class ProjectApiService extends ApiService {
     public async getProjects(): Promise<any[]> {
         return this.get('/getprojects');
     }
@@ -184,7 +184,7 @@ export class ProjectApiService extends ApiService {
 /**
  * Observation API service
  */
-export class ObservationApiService extends ApiService {
+class ObservationApiService extends ApiService {
     public async submitObservation(data: {
         coords: { lat: number; lon: number };
         data: any[];
@@ -199,5 +199,5 @@ export class ObservationApiService extends ApiService {
 }
 
 // Singleton instances
-export const projectApi = new ProjectApiService();
-export const observationApi = new ObservationApiService();
+const projectApi = new ProjectApiService();
+const observationApi = new ObservationApiService();

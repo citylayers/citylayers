@@ -1,5 +1,4 @@
-import { ClassName, DisplayStyle } from "../../constants/ClassNames";
-import { BaseComponent } from "../component/BaseComponent";
+
 
 /**
  * Content panel base class for panels with dynamic content.
@@ -13,10 +12,27 @@ class ContentPanel extends BaseComponent {
     public parent: string;
 
     constructor(parentId: string, id: string, content?: any) {
-        super(parentId || "body", ClassName.CATEGORY_PANEL, id, content);
+        super(parentId || "body", "", id, content);  // className set by subclass via this.name
         this.elements = [];
         this.name = "";
         this.parent = parentId;
+    }
+
+    /**
+     * Override createElement to use this.name as className
+     */
+    protected createElement(): HTMLElement {
+        const element = document.createElement(this.getElementTag());
+        element.setAttribute('class', this.name || ClassName.CATEGORY_PANEL);
+        element.setAttribute('id', this.makeId());
+        return element;
+    }
+
+    /**
+     * Override makeId to use this.name instead of this.className
+     */
+    protected makeId(): string {
+        return `${this.name || this.className}_${this.id}`;
     }
 
     /**
@@ -64,4 +80,3 @@ class ContentPanel extends BaseComponent {
     }
 }
 
-export { ContentPanel };

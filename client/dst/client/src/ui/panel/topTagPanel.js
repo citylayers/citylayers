@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,14 +13,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TopTagPanel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var ClassNames_1 = require("../../constants/ClassNames");
 var TopTagPanel = (function (_super) {
     __extends(TopTagPanel, _super);
     function TopTagPanel(parent) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.GEOCODING_PANEL, "geocodingpanelid") || this;
+        var _this = _super.call(this, parent || "body", ClassName.GEOCODING_PANEL, "geocodingpanelid") || this;
         _this.content = "";
         _this.elements = [];
         return _this;
@@ -64,7 +59,7 @@ var TopTagPanel = (function (_super) {
         }).then(function (result) {
             if (result.status === 200) {
                 return result.json().then(function (res) {
-                    var panels = document.getElementsByClassName(ClassNames_1.ClassName.GEOCODING_PANEL);
+                    var panels = document.getElementsByClassName(ClassName.GEOCODING_PANEL);
                     if (panels.length > 0 && GeocodeParser) {
                         panels[0].innerHTML = GeocodeParser.run(res);
                     }
@@ -84,5 +79,4 @@ var TopTagPanel = (function (_super) {
         });
     };
     return TopTagPanel;
-}(BaseComponent_1.BaseComponent));
-exports.TopTagPanel = TopTagPanel;
+}(BaseComponent));

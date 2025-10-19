@@ -1,16 +1,15 @@
-import { ClassName, ElementId } from "../../constants/ClassNames";
-import { BaseComponent } from "./BaseComponent";
-import { Illustration } from '../../../../src/logic/illustration';
+
+
 
 /**
  * Image element component for displaying images.
  * Extends BaseComponent with proper OOP principles.
  */
 class ImageElement extends BaseComponent {
-    protected illustration: Illustration;
+    protected illustration:any;
     private clickHandler?: () => void;
 
-    constructor(parentId: string, id: string, image?: Illustration, className?: string) {
+    constructor(parentId: string, id: string, image?:any, className?: string) {
         super(parentId, className || ClassName.LOGO, id);
         this.illustration = image || new Illustration("", "", "");
 
@@ -41,7 +40,7 @@ class ImageElement extends BaseComponent {
     /**
      * Update image source
      */
-    public setImage(illustration: Illustration): void {
+    public setImage(illustration:any): void {
         this.illustration = illustration;
         const element = this.getElement() as HTMLImageElement;
         if (element) {
@@ -55,7 +54,7 @@ class ImageElement extends BaseComponent {
  * Specialized ImageElement for image upload previews.
  */
 class ImagePreviewElement extends BaseComponent {
-    protected illustration: Illustration;
+    protected illustration:any;
 
     constructor(parentId: string, id?: string, className?: string) {
         super(parentId, className || ClassName.LOGO, ElementId.IMG_PREVIEW);
@@ -75,7 +74,7 @@ class ImagePreviewElement extends BaseComponent {
     /**
      * Update preview image
      */
-    public setImage(illustration: Illustration): void {
+    public setImage(illustration:any): void {
         this.illustration = illustration;
         const element = this.getElement() as HTMLImageElement;
         if (element) {
@@ -84,4 +83,3 @@ class ImagePreviewElement extends BaseComponent {
     }
 }
 
-export { ImageElement, ImagePreviewElement };

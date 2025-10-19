@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,19 +13,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProjectContentPanel = void 0;
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("../component/BaseComponent");
-var closeButton_1 = require("../component/closeButton");
-var textElement_1 = require("../component/textElement");
-var contentPanel_1 = require("./contentPanel");
-var ClassNames_2 = require("../../constants/ClassNames");
 var ProjectContentPanel = (function (_super) {
     __extends(ProjectContentPanel, _super);
     function ProjectContentPanel(parent) {
         var _this = _super.call(this, parent, "") || this;
-        _this.name = ClassNames_2.CLASSNAMES.PROJECT_PANEL;
+        _this.name = CLASSNAMES.PROJECT_PANEL;
         return _this;
     }
     ProjectContentPanel.prototype.load = function (projects) {
@@ -46,12 +37,11 @@ var ProjectContentPanel = (function (_super) {
         div.load();
     };
     return ProjectContentPanel;
-}(contentPanel_1.ContentPanel));
-exports.ProjectContentPanel = ProjectContentPanel;
+}(ContentPanel));
 var ProjectElement = (function (_super) {
     __extends(ProjectElement, _super);
     function ProjectElement(parentId, project) {
-        var _this = _super.call(this, parentId || ClassNames_1.ClassName.CATEGORY_PANEL, ClassNames_1.ClassName.CATEGORY_CONTAINER, project.name) || this;
+        var _this = _super.call(this, parentId || ClassName.CATEGORY_PANEL, ClassName.CATEGORY_CONTAINER, project.name) || this;
         _this.project = project;
         _this.elements = [ProjectHeader, ProjectDescription];
         return _this;
@@ -64,38 +54,38 @@ var ProjectElement = (function (_super) {
         }
     };
     return ProjectElement;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectHeader = (function (_super) {
     __extends(ProjectHeader, _super);
     function ProjectHeader(parent, id, project) {
         var _this = _super.call(this, parent, id, project) || this;
         _this.elements = [
-            textElement_1.HeaderElement, ProjectConfig,
+            HeaderElement, ProjectConfig,
             ProjectSwitch
         ];
         return _this;
     }
     return ProjectHeader;
-}(contentPanel_1.ContentPanel));
+}(ContentPanel));
 var ProjectDescription = (function (_super) {
     __extends(ProjectDescription, _super);
     function ProjectDescription(parent, id, project) {
         var _this = _super.call(this, parent, id) || this;
-        _this.name = ClassNames_2.CLASSNAMES.CATEGORY_DESCRIPTION;
+        _this.name = CLASSNAMES.CATEGORY_DESCRIPTION;
         _this.content = project.info.description;
         return _this;
     }
     return ProjectDescription;
-}(textElement_1.TextElement));
+}(TextElement));
 var ProjectSwitch = (function (_super) {
     __extends(ProjectSwitch, _super);
     function ProjectSwitch(parentId, id, project) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.CATEGORY_SWITCH, id, project) || this;
+        var _this = _super.call(this, parentId, ClassName.CATEGORY_SWITCH, id, project) || this;
         _this.project = project;
         return _this;
     }
     ProjectSwitch.isActive = function (project) {
-        var element = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SWITCH, "_").concat(project));
+        var element = document.getElementById("".concat(ClassName.CATEGORY_SWITCH, "_").concat(project));
         if (element) {
             var child = element.children[0];
             return child.checked;
@@ -117,13 +107,13 @@ var ProjectSwitch = (function (_super) {
             element.appendChild(span);
         }
     };
-    ProjectSwitch.componentName = ClassNames_1.ClassName.CATEGORY_SWITCH;
+    ProjectSwitch.componentName = ClassName.CATEGORY_SWITCH;
     return ProjectSwitch;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectConfig = (function (_super) {
     __extends(ProjectConfig, _super);
     function ProjectConfig(parentId, id, project) {
-        var _this = _super.call(this, parentId, ClassNames_1.ClassName.CONFIG, id) || this;
+        var _this = _super.call(this, parentId, ClassName.CONFIG, id) || this;
         _this.project = project;
         _this.clickHandler = function () {
         };
@@ -138,13 +128,13 @@ var ProjectConfig = (function (_super) {
         this.addEventListener('click', this.clickHandler);
     };
     return ProjectConfig;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectSidePanel = (function (_super) {
     __extends(ProjectSidePanel, _super);
     function ProjectSidePanel(parentId, project) {
-        var _this = _super.call(this, parentId || "body", ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, project.name) || this;
+        var _this = _super.call(this, parentId || "body", ClassName.CATEGORY_SIDE_PANEL, project.name) || this;
         _this.project = project;
-        _this.elements = [closeButton_1.CloseButton, textElement_1.TextElement];
+        _this.elements = [CloseButton, TextElement];
         _this.args = [function () { ProjectSidePanel.toggle(project); }];
         return _this;
     }
@@ -160,8 +150,8 @@ var ProjectSidePanel = (function (_super) {
         }
     };
     ProjectSidePanel.toggle = function (category) {
-        var sidePanel = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
-        var container = document.getElementById("".concat(ClassNames_1.ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
+        var sidePanel = document.getElementById("".concat(ClassName.CATEGORY_SIDE_PANEL, "_").concat(category.name));
+        var container = document.getElementById("".concat(ClassName.CATEGORY_CONTAINER, "_").concat(category.name));
         if (sidePanel && container) {
             if (sidePanel.style.display === "none") {
                 this.hideAll();
@@ -172,12 +162,12 @@ var ProjectSidePanel = (function (_super) {
         }
     };
     ProjectSidePanel.hideAll = function () {
-        var panels = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL);
-        var containers = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_CONTAINER);
+        var panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        var containers = document.getElementsByClassName(ClassName.CATEGORY_CONTAINER);
         for (var i = 0; i < panels.length; i++) {
             panels[i].style.display = "none";
             containers[i].classList.remove("simple-drop-shadow");
         }
     };
     return ProjectSidePanel;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));

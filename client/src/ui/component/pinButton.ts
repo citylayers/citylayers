@@ -1,4 +1,3 @@
-import { BaseComponent } from "./BaseComponent";
 
 /**
  * Pin button component for adding location pins.
@@ -32,4 +31,3 @@ class PinButton extends BaseComponent {
     }
 }
 
-export { PinButton };

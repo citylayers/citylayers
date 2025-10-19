@@ -1,4 +1,3 @@
-import { BaseComponent } from "./BaseComponent";
 
 /**
  * Span element component for inline text.
@@ -23,4 +22,3 @@ class SpanElement extends BaseComponent {
     }
 }
 
-export { SpanElement };

@@ -1,7 +1,5 @@
-import { InputContainer } from './inputElement';
-import { RangeInputElement } from './inputElement';
-import { ClassName } from '../../constants/ClassNames';
-import { CLASSNAMES, RANGE_LABELS, SLIDER_IDS } from '../../constants/ClassNames';
+// QPanel is a global variable (defined in qPanel.ts)
+// See client/src/types/global.d.ts for type declarations
 
 /**
  * Double range slider component for category filtering
@@ -38,18 +36,22 @@ class DoubleRangeContainerElement extends InputContainer {
         this.elements.forEach((el, i) => {
             el.limit(() => {
                 el.controlSlider(this.elements[1 - i], i == 0);
-                this.updateDashboard();
+                this.action();
             });
         });
 
-        this.elements.forEach(el => el.activate(false));
+        this.activate(false);
     }
 
     /**
      * Handle action when slider value changes
      */
-    action(ev: Event, tree: any, next?: Map<string, string>): void {
-        tree.add(this.id, this.getCurrentValue());
+    action(ev?: Event, tree?: any, next?: Map<string, string>): void {
+        // Use QPanel.tree directly (set globally on map page)
+        const QPanel = (window as any).QPanel;
+        if (QPanel && QPanel.tree) {
+            QPanel.tree.add(this.id, this.getCurrentValue());
+        }
     }
 
     /**
@@ -75,6 +77,13 @@ class DoubleRangeContainerElement extends InputContainer {
                 this.elements[1].getValue()
             );
         }
+    }
+
+    /**
+     * Activate or deactivate both sliders (called by Controller)
+     */
+    activate(on: boolean): void {
+        this.elements.forEach(el => el.activate(on));
     }
 
     /**
@@ -124,7 +133,7 @@ class Slider extends RangeInputElement {
     protected border: string;
 
     constructor(parent: string, border: string, content?: any) {
-        super(parent, "", content);
+        super(parent, (window as any).uuidv4(), content);
         this.border = border;
     }
 
@@ -213,5 +222,4 @@ class Slider extends RangeInputElement {
 }
 
 // Export for backward compatibility
-export const DoubleSlider = DoubleRangeContainerElement;
-export { Slider, DoubleRangeContainerElement };
+const DoubleSlider = DoubleRangeContainerElement;

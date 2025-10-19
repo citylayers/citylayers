@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,14 +13,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommentSearch = exports.CommentCloseButton = exports.CommentText = exports.CommentPane = exports.CommentContainer = exports.CommentPanel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var ClassNames_1 = require("../../constants/ClassNames");
 var CommentPanel = (function (_super) {
     __extends(CommentPanel, _super);
     function CommentPanel(parent, comments) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTPANEL, "id") || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTPANEL, "id") || this;
         _this.comments = comments;
         _this.content = comments;
         _this.elements = [
@@ -47,12 +42,12 @@ var CommentPanel = (function (_super) {
         });
     };
     CommentPanel.search = function (value) {
-        var panel = document.getElementById("".concat(ClassNames_1.ClassName.COMMENTPANEL, "_id"));
-        var container = document.getElementById("".concat(ClassNames_1.ClassName.COMMENTCONTAINER, "_id"));
+        var panel = document.getElementById("".concat(ClassName.COMMENTPANEL, "_id"));
+        var container = document.getElementById("".concat(ClassName.COMMENTCONTAINER, "_id"));
         if (panel && !panel.classList.contains("open")) {
             panel.classList.add("open");
         }
-        var comments = Array.from(document.getElementsByClassName(ClassNames_1.ClassName.COMMENTTEXT));
+        var comments = Array.from(document.getElementsByClassName(ClassName.COMMENTTEXT));
         comments.forEach(function (c) {
             if (c.parentElement) {
                 c.parentElement.setAttribute("style", "order: 8");
@@ -79,26 +74,25 @@ var CommentPanel = (function (_super) {
         }
     };
     CommentPanel.toggle = function () {
-        var panel = document.getElementById("".concat(ClassNames_1.ClassName.COMMENTPANEL, "_id"));
+        var panel = document.getElementById("".concat(ClassName.COMMENTPANEL, "_id"));
         if (panel) {
             panel.classList.toggle("open");
         }
     };
     CommentPanel.hideAll = function () {
-        var panels = document.getElementsByClassName(ClassNames_1.ClassName.CATEGORY_SIDE_PANEL);
+        var panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
         Array.from(panels).forEach(function (panel) {
             panel.style.display = "none";
         });
     };
-    CommentPanel._name = ClassNames_1.ClassName.COMMENTPANEL;
+    CommentPanel._name = ClassName.COMMENTPANEL;
     CommentPanel.toggleMarker = function (value, active) { console.log(value, active); };
     return CommentPanel;
-}(BaseComponent_1.BaseComponent));
-exports.CommentPanel = CommentPanel;
+}(BaseComponent));
 var CommentContainer = (function (_super) {
     __extends(CommentContainer, _super);
     function CommentContainer(parent, id) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTCONTAINER, id) || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTCONTAINER, id) || this;
         _this.elements = [];
         return _this;
     }
@@ -120,14 +114,13 @@ var CommentContainer = (function (_super) {
             });
         }
     };
-    CommentContainer._name = ClassNames_1.ClassName.COMMENTCONTAINER;
+    CommentContainer._name = ClassName.COMMENTCONTAINER;
     return CommentContainer;
-}(BaseComponent_1.BaseComponent));
-exports.CommentContainer = CommentContainer;
+}(BaseComponent));
 var CommentPane = (function (_super) {
     __extends(CommentPane, _super);
     function CommentPane(parent, id, comment) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTPANE, id) || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTPANE, id) || this;
         _this.comment = comment;
         _this.content = comment;
         _this.elements = [CommentText];
@@ -152,14 +145,13 @@ var CommentPane = (function (_super) {
             element.initiate();
         }
     };
-    CommentPane._name = ClassNames_1.ClassName.COMMENTPANE;
+    CommentPane._name = ClassName.COMMENTPANE;
     return CommentPane;
-}(BaseComponent_1.BaseComponent));
-exports.CommentPane = CommentPane;
+}(BaseComponent));
 var CommentText = (function (_super) {
     __extends(CommentText, _super);
     function CommentText(parent, id, content) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTTEXT, id) || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTTEXT, id) || this;
         _this.content = content;
         return _this;
     }
@@ -168,14 +160,13 @@ var CommentText = (function (_super) {
         element.innerHTML = this.content;
         return element;
     };
-    CommentText._name = ClassNames_1.ClassName.COMMENTTEXT;
+    CommentText._name = ClassName.COMMENTTEXT;
     return CommentText;
-}(BaseComponent_1.BaseComponent));
-exports.CommentText = CommentText;
+}(BaseComponent));
 var CommentCloseButton = (function (_super) {
     __extends(CommentCloseButton, _super);
     function CommentCloseButton(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTPANEL_CLOSE, "id") || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTPANEL_CLOSE, "id") || this;
         _this.content = "<div class='chevron'></div>";
         _this.clickHandler = function (e) {
             var element = _this.getElement();
@@ -197,14 +188,13 @@ var CommentCloseButton = (function (_super) {
     CommentCloseButton.prototype.afterInit = function () {
         this.addEventListener('click', this.clickHandler);
     };
-    CommentCloseButton._name = ClassNames_1.ClassName.COMMENTPANEL_CLOSE;
+    CommentCloseButton._name = ClassName.COMMENTPANEL_CLOSE;
     return CommentCloseButton;
-}(BaseComponent_1.BaseComponent));
-exports.CommentCloseButton = CommentCloseButton;
+}(BaseComponent));
 var CommentSearch = (function (_super) {
     __extends(CommentSearch, _super);
     function CommentSearch(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.COMMENTSEARCH, "id") || this;
+        var _this = _super.call(this, parent, ClassName.COMMENTSEARCH, "id") || this;
         _this.content = "Search through comments";
         _this.inputHandler = function (e) {
             var target = e.target;
@@ -222,7 +212,6 @@ var CommentSearch = (function (_super) {
         input.oninput = this.inputHandler;
         element.appendChild(input);
     };
-    CommentSearch._name = ClassNames_1.ClassName.COMMENTSEARCH;
+    CommentSearch._name = ClassName.COMMENTSEARCH;
     return CommentSearch;
-}(BaseComponent_1.BaseComponent));
-exports.CommentSearch = CommentSearch;
+}(BaseComponent));

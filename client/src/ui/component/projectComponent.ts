@@ -1,13 +1,11 @@
-import { ClassName, SECTIONMAP } from "../../constants/ClassNames";
-import { BaseComponent } from "./BaseComponent";
-import { ContentPanel } from "../panel/contentPanel";
-import { Project } from '../../../../src/logic/project';
-import { TeamMember } from '../../../../src/logic/teammember';
-import { LinkElement } from "./linkElement";
-import { TextElement } from "./textElement";
+
+
+
+
+
+
 
 // Legacy imports
-import { CLASSNAMES } from "../../constants/ClassNames";
 
 /*
     ------------------------------------------------------
@@ -85,9 +83,9 @@ class Card extends BaseComponent {
 }
 
 class ProjectCard extends Card{
-    content: Project;
+    content:any;
     link: string;
-    constructor(parent:string, project:Project){
+    constructor(parent:string, project:any){
         super(parent, project?.name, project);
         this.link = `/project/${this.content.name}`;
         this.name = CLASSNAMES.CARD;
@@ -103,8 +101,8 @@ class ProjectCard extends Card{
 }
 
 class ProjectCardInfo extends ContentPanel{
-    content:Project;
-    constructor(parent:string, id:string, project:Project){
+    content:any;
+    constructor(parent:string, id:string, project:any){
 
         super(parent, id, project);
         this.name = "projectstatus";
@@ -114,8 +112,8 @@ class ProjectCardInfo extends ContentPanel{
     }
 
     _makeText(project){
-        
-        return `📍 ${project.getPlace()}\n🕙 ${project.getPeriod()}\n🥂 ${project.getStatus()}\n`
+        //📍 ${project.getPlace()}\n
+        return `🕙 ${project.getPeriod()}\n🥂 ${project.getStatus()}\n`
     }
 
     load(){
@@ -130,7 +128,7 @@ class ProjectCardInfo extends ContentPanel{
 
 class ProjectTeam extends ContentPanel{
 
-    constructor(parent:string, id:string, team:TeamMember[]){
+    constructor(parent:string, id:string, team:any[]){
 
         super(parent, id, team);
         this.name = CLASSNAMES.TEAM;
@@ -153,7 +151,7 @@ class ProjectTeam extends ContentPanel{
 
 class TeamPersonInfo extends ContentPanel{
 
-    constructor(parent:string, id:string, teamMember:TeamMember){
+    constructor(parent:string, id:string, teamMember:any){
         super(parent, id, teamMember);
         this.name = CLASSNAMES.TEAM_MEMBER;
         this.content = teamMember;
@@ -226,10 +224,10 @@ class Recognition extends ContentPanel{
  */
 class ProjectCardButton extends BaseComponent {
     private static readonly BUTTON_TEXT = "To project";
-    private project: Project;
+    private project:any;
     private clickHandler: () => void;
 
-    constructor(parentId: string, id: string, project: Project) {
+    constructor(parentId: string, id: string, project:any) {
         super(parentId, "projectButton", id, project);
         this.project = project;
         this.clickHandler = () => {
@@ -261,7 +259,7 @@ class ProjectCardText extends TextElement {
 }
 
 class ProjectTitle extends TextElement {
-    constructor(parent:string, id:string, project:Project) {
+    constructor(parent:string, id:string, project:any) {
         super(parent, id, project.name);
         this.name = CLASSNAMES.TITLE;
     }
@@ -297,6 +295,4 @@ class SectionCard extends Card{
     
 }
 
-
-export {ProjectPanel, ProjectPeriodInfo, ProjectTeam, Recognition}
 

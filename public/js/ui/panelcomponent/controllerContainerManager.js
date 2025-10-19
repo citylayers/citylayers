@@ -17,9 +17,9 @@ class ControllerContainerManager{
 
     static mapping = new Map([
         [VIS.HIGHLIGHT, [ACTIVE_CONTROLS.SWITCH,
-                         ACTIVE_CONTROLS.RANGE, 
+                         ACTIVE_CONTROLS.RANGE,
                          ACTIVE_CONTROLS.COLOR]],
-        [VIS.GRADIENT, [ACTIVE_CONTROLS.SWITCH, ACTIVE_CONTROLS.GRADIENT]],
+        [VIS.GRADIENT, [ACTIVE_CONTROLS.SWITCH, ACTIVE_CONTROLS.RANGE, ACTIVE_CONTROLS.GRADIENT]],
         [VIS.ELEMENTS, [ACTIVE_CONTROLS.SWITCH, ACTIVE_CONTROLS.RANGE, ACTIVE_CONTROLS.TAGS]]
         ]
     );
@@ -30,8 +30,22 @@ class ControllerContainerManager{
 
     static show(control, hide){
         let dsp = control == ACTIVE_CONTROLS.GRADIENT ? DISPLAY.GRID : DISPLAY.FLEX;
-        [...document.getElementsByClassName(control)].forEach(element => {
-            element.style.display = hide==true ? DISPLAY.NONE : dsp;
+        // For gradient subcontainer, need to find elements with both classes
+        let elements = control === ACTIVE_CONTROLS.GRADIENT
+            ? [...document.querySelectorAll('.gradient.subcontainer')]
+            : [...document.getElementsByClassName(control)];
+
+        elements.forEach(element => {
+            if (hide) {
+                element.style.display = DISPLAY.NONE;
+            } else {
+                // For gradient, remove inline style to let CSS take over, otherwise set explicit display
+                if (control === ACTIVE_CONTROLS.GRADIENT) {
+                    element.style.removeProperty('display');
+                } else {
+                    element.style.display = dsp;
+                }
+            }
         });
     }
 
@@ -45,7 +59,7 @@ class ControllerContainerManager{
     }
 
     static update(){
-        
+
         let vis = ControllerContainerManager.getGlobalVis();
         let active_controls = ControllerContainerManager.mapping.get(vis);
         ControllerContainerManager.offSwitch();

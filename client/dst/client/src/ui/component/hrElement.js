@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,9 +13,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.HrElement = void 0;
-var BaseComponent_1 = require("./BaseComponent");
 var HrElement = (function (_super) {
     __extends(HrElement, _super);
     function HrElement(parentId) {
@@ -25,6 +21,11 @@ var HrElement = (function (_super) {
     HrElement.prototype.getElementTag = function () {
         return 'hr';
     };
+    HrElement.updateColor = function (ev, gradientEnd) {
+        var hrElements = document.getElementsByTagName("hr");
+        if (hrElements.length > 0) {
+            hrElements[0].style.setProperty(gradientEnd, ev.target.value);
+        }
+    };
     return HrElement;
-}(BaseComponent_1.BaseComponent));
-exports.HrElement = HrElement;
+}(BaseComponent));

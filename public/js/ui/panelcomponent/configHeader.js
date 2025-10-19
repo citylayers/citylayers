@@ -13,9 +13,9 @@ class ConfigDescrContainer extends ContentPanel{
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               `${e}`, 
+
+            let element = new this.elements[e](this.makeId(),
+                                               `${e}`,
                                                this.args[e]);
 
             element.initiate();
@@ -34,7 +34,7 @@ class ConfigHeader extends ContentPanel{
 
     load() {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), this.parent);
+            let element = new el(this.makeId(), this.parent);
             element.initiate();
             element.load();
         });

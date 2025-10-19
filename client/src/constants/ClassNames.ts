@@ -4,7 +4,7 @@
  * Follows "no hardcoded strings" principle.
  */
 
-export enum ClassName {
+enum ClassName {
     // Logo and controls
     LOGO = 'logo',
     CLOSE = 'closebutton',
@@ -67,6 +67,15 @@ export enum ClassName {
     CLICK = 'click',
     GRAD = 'grad',
 
+    // Map page
+    MAP = 'karta',
+    DASHBOARD = 'dashboard',
+    CONFIG_HEADER = 'configheader',
+    CONTROLLER_CONTAINER = 'controllercontainer',
+    CONTROLLER_BODY = 'controllerbody',
+    CONTROLLER_Q = 'controllerq',
+    GRADPICKER = 'gradpicker',
+
     // Project panel
     PROJECT_PANEL = 'projectpanel',
     CARD = 'card',
@@ -117,14 +126,14 @@ export enum ClassName {
     IMG_INPUT = 'imageinput',
 }
 
-export enum DisplayStyle {
+enum DisplayStyle {
     NONE = 'none',
     FLEX = 'flex',
     BLOCK = 'block',
     BLOCK_INLINE = 'block-inline',
 }
 
-export enum ElementId {
+enum ElementId {
     TEXT_INPUT = 'comment-input',
     IMG_INPUT = 'img-uploader',
     RANGE_INPUT = 'slider',
@@ -134,18 +143,18 @@ export enum ElementId {
     HIGH_SLIDER = 'endSlider',
 }
 
-export enum PanelId {
+enum PanelId {
     PROJECT = 'project',
     CATEGORY = 'category',
 }
 
-export enum RangeLabel {
+enum RangeLabel {
     MIN = 'min',
     MAX = 'max',
 }
 
 // Legacy export for backward compatibility
-export const CLASSNAMES = {
+const CLASSNAMES = {
     LOGO: ClassName.LOGO,
     CLOSE: ClassName.CLOSE,
     SWITCH: ClassName.SWITCH,
@@ -192,6 +201,13 @@ export const CLASSNAMES = {
     SELECTCOMMENT: ClassName.SELECTCOMMENT,
     CLICK: ClassName.CLICK,
     GRAD: ClassName.GRAD,
+    MAP: ClassName.MAP,
+    DASHBOARD: ClassName.DASHBOARD,
+    CONFIG_HEADER: ClassName.CONFIG_HEADER,
+    CONTROLLER_CONTAINER: ClassName.CONTROLLER_CONTAINER,
+    CONTROLLER_BODY: ClassName.CONTROLLER_BODY,
+    CONTROLLER_Q: ClassName.CONTROLLER_Q,
+    GRADPICKER: ClassName.GRADPICKER,
     PROJECT_PANEL: ClassName.PROJECT_PANEL,
     CARD: ClassName.CARD,
     CARD_INFO: ClassName.CARD_INFO,
@@ -231,14 +247,14 @@ export const CLASSNAMES = {
     IMG_INPUT: ClassName.IMG_INPUT,
 };
 
-export const DISPLAY = {
+const DISPLAY = {
     NONE: DisplayStyle.NONE,
     FLEX: DisplayStyle.FLEX,
     BLOCK: DisplayStyle.BLOCK,
     BLOCKINLINE: DisplayStyle.BLOCK_INLINE,
 };
 
-export const IDS = {
+const IDS = {
     TEXT_INPUT: ElementId.TEXT_INPUT,
     IMG_INPUT: ElementId.IMG_INPUT,
     RANGE_INPUT: ElementId.RANGE_INPUT,
@@ -246,36 +262,17 @@ export const IDS = {
     IMG_PREVIEW: ElementId.IMG_PREVIEW,
 };
 
-export const SLIDER_IDS = {
+const SLIDER_IDS = {
     LOW: ElementId.LOW_SLIDER,
     HIGH: ElementId.HIGH_SLIDER,
 };
 
-export const PANEL_IDS = {
+const PANEL_IDS = {
     PROJECT: PanelId.PROJECT,
     CATEGORY: PanelId.CATEGORY,
 };
 
-export const RANGE_LABELS = {
+const RANGE_LABELS = {
     MIN: RangeLabel.MIN,
     MAX: RangeLabel.MAX,
-};
-
-export const SECTIONMAP = {
-    TEAM: ["Team", "/team"],
-    ABOUT: ["About", "/about"]
-};
-
-export const LEGAL_CLASSNAMES = {
-    PANEL: "legalpanel",
-    HEADER: "legalheader",
-    BODY: "legalbody",
-    TITLE: "legaltitle",
-    TEXT: "legaltext",
-    TEXT_F: "legaltextfull",
-    LEGALBODYCONTENT: "legalbodycontent",
-    LEGAL_PANEL: "legalpanel",
-    LEGAL_HEADER: "legalheader",
-    LEGAL_BODY: "legalbody",
-    LEGAL_BODY_CONTENT: "legalbodycontent"
 };

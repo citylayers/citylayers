@@ -1,9 +1,8 @@
 
-import { CLASSNAMES } from "../../constants/ClassNames";
-import { TeamMember } from '../../../../src/logic/teammember';
-import { TextElement } from "../component/textElement";
-import { LegalPanel } from "./legal";
-import { TeamMemberContainer } from "../panelcomponent/teamComponent";
+
+
+
+
 
 class TeamPanel extends LegalPanel{
     
@@ -19,7 +18,7 @@ class TeamPanel extends LegalPanel{
         return els.length>0 ? els[0] as HTMLElement : document.body;
     }
 
-    load(team:TeamMember[]) {
+    load(team:any[]) {
         this.elements.forEach(el => {
             let element = new el(this.makeId(), "team");
             element.initiate();
@@ -28,6 +27,4 @@ class TeamPanel extends LegalPanel{
 
     }
 }
-
-export {TeamPanel}
 

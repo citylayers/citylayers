@@ -13,7 +13,7 @@ class LegalContainer extends ContentPanel{
     load() {
         Object.keys(LEGAL).forEach(el => {
             let element = new LinkElement(
-                this.make_id(),
+                this.makeId(),
                 LEGAL_CLASSNAMES.TEXT,
                 LEGAL[el], LEGAL_LINKS.get(LEGAL[el])
             );

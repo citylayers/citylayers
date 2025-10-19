@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,34 +13,22 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ClassNames_1 = require("../../constants/ClassNames");
-var BaseComponent_1 = require("../component/BaseComponent");
-var legal_1 = require("./legal");
-var logo_1 = require("../component/logo");
-var closeButton_1 = require("../component/closeButton");
-var imageElement_1 = require("../component/imageElement");
-var illustration_1 = require("../../../../src/logic/illustration");
-var imageContainerElement_1 = require("../component/imageContainerElement");
-var textElement_1 = require("../component/textElement");
-var projectComponent_1 = require("../component/projectComponent");
-var ClassNames_2 = require("../../constants/ClassNames");
 var ProjectCardPanel = (function (_super) {
     __extends(ProjectCardPanel, _super);
-    function ProjectCardPanel(parent, id, content) {
-        var _this = _super.call(this, parent, id, content) || this;
+    function ProjectCardPanel(parent, content) {
+        var _this = _super.call(this, parent, "project", content) || this;
         _this.content = content;
-        _this.name = ClassNames_1.LEGAL_CLASSNAMES.PANEL;
+        _this.name = LEGAL_CLASSNAMES.PANEL;
         _this.elements = [ProjectCardHeader, ProjectCardBody];
         return _this;
     }
     return ProjectCardPanel;
-}(legal_1.LegalPanel));
+}(LegalPanel));
 var ProjectCardHeader = (function (_super) {
     __extends(ProjectCardHeader, _super);
     function ProjectCardHeader(parentId, id, content) {
-        var _this = _super.call(this, parentId, ClassNames_1.LEGAL_CLASSNAMES.HEADER, id, content) || this;
-        _this.elements = [logo_1.Logo, closeButton_1.CloseButton];
+        var _this = _super.call(this, parentId, LEGAL_CLASSNAMES.HEADER, id, content) || this;
+        _this.elements = [Logo, CloseButton];
         _this.args = [undefined, function () { location.href = "/"; }];
         return _this;
     }
@@ -52,36 +39,36 @@ var ProjectCardHeader = (function (_super) {
         }
     };
     return ProjectCardHeader;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectCardBody = (function (_super) {
     __extends(ProjectCardBody, _super);
     function ProjectCardBody(parentId, id, content) {
-        var _this = _super.call(this, parentId, ClassNames_1.LEGAL_CLASSNAMES.BODY, id, content) || this;
+        var _this = _super.call(this, parentId, LEGAL_CLASSNAMES.BODY, id, content) || this;
         _this.elements = [
-            imageElement_1.ImageElement,
-            textElement_1.TextElement,
-            projectComponent_1.Recognition,
-            projectComponent_1.ProjectPeriodInfo,
-            projectComponent_1.ProjectTeam,
+            ImageElement,
+            TextElement,
+            Recognition,
+            ProjectPeriodInfo,
+            ProjectTeam,
             ExploreButton,
             ProjectSlogan,
-            textElement_1.TextElement,
-            imageContainerElement_1.ImageContainerElement,
-            imageContainerElement_1.ImageContainerElement
+            TextElement,
+            ImageContainerElement,
+            ImageContainerElement
         ];
         _this.classes = [
-            ClassNames_2.CLASSNAMES.COVER,
-            ClassNames_1.LEGAL_CLASSNAMES.TITLE,
-            ClassNames_2.CLASSNAMES.RECOGNITION,
-            ClassNames_2.CLASSNAMES.PERIOD,
-            ClassNames_2.CLASSNAMES.TEAM,
+            CLASSNAMES.COVER,
+            LEGAL_CLASSNAMES.TITLE,
+            CLASSNAMES.RECOGNITION,
+            CLASSNAMES.PERIOD,
+            CLASSNAMES.TEAM,
             "projectButton",
-            ClassNames_2.CLASSNAMES.PROJECT_DESCRIPTION,
-            ClassNames_2.CLASSNAMES.PROJECT_DESCRIPTION,
-            ClassNames_2.CLASSNAMES.PROJECT_IMAGE_CONTAINER,
-            ClassNames_2.CLASSNAMES.PARTNER
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_IMAGE_CONTAINER,
+            CLASSNAMES.PARTNER
         ];
-        var cover = new illustration_1.Illustration("/images/projects/".concat(content.name, "/cover.svg"), '');
+        var cover = new Illustration("/images/projects/".concat(content.name, "/cover.svg"), '');
         _this.args = [
             cover,
             content.name,
@@ -104,16 +91,16 @@ var ProjectCardBody = (function (_super) {
         }
     };
     return ProjectCardBody;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));
 var ProjectSlogan = (function (_super) {
     __extends(ProjectSlogan, _super);
     function ProjectSlogan(parent, id, content) {
         var _this = _super.call(this, parent, id, content) || this;
-        _this.name = ClassNames_2.CLASSNAMES.SLOGAN;
+        _this.name = CLASSNAMES.SLOGAN;
         return _this;
     }
     return ProjectSlogan;
-}(textElement_1.TextElement));
+}(TextElement));
 var ExploreButton = (function (_super) {
     __extends(ExploreButton, _super);
     function ExploreButton(parentId, id, project) {
@@ -138,4 +125,4 @@ var ExploreButton = (function (_super) {
     ExploreButton.BUTTON_TEXT = "Explore";
     ExploreButton.componentName = "projectButton";
     return ExploreButton;
-}(BaseComponent_1.BaseComponent));
+}(BaseComponent));

@@ -1,11 +1,10 @@
-import { CLASSNAMES, DISPLAY, RANGE_LABELS, ClassName } from "../../constants/ClassNames";
-import {ContentPanel} from "../panel/contentPanel";
-import {BaseComponent} from "./BaseComponent";
+
+
+
 // import { Illustration } from '../../../../src/logic/illustration';
-import {ImageElement, ImagePreviewElement} from "./imageElement";
-import {SpanElement} from "./spanElement";
-import {TextElement} from "./textElement";
-import {AnswerTree} from '../../../../src/logic/question/answerTree';
+
+
+
 
 const INPUT_TYPES = {
     TEXT: "text",
@@ -19,7 +18,7 @@ const INPUT_TYPES = {
  * Extends BaseComponent with custom initiation pattern for questionnaire logic.
  */
 class InputElement extends BaseComponent {
-    protected answerTree: AnswerTree | null;
+    protected answerTree:any | null;
     protected nextIds: Map<string, string> | null;
     protected elementTag: string;
     protected inputType: string;
@@ -32,8 +31,11 @@ class InputElement extends BaseComponent {
         this.elementTag = "input";
         this.inputType = INPUT_TYPES.TEXT;
         this.changeHandler = (ev: Event) => {
+            console.log("=== changeHandler fired ===", ev.type, this.id, "answerTree:", this.answerTree, "nextIds:", this.nextIds);
             if (this.answerTree && this.nextIds) {
                 this.action(ev, this.answerTree, this.nextIds);
+            } else {
+                console.log("Missing answerTree or nextIds - cannot activate next!");
             }
         };
     }
@@ -42,10 +44,14 @@ class InputElement extends BaseComponent {
      * Custom initiation for InputElement that accepts answerTree and nextIds.
      * This maintains backward compatibility with questionnaire logic.
      */
-    initiate(answerTree?: AnswerTree, nextid?: Map<string, string>): void {
+    initiate(answerTree?:any, nextid?: Map<string, string>): void {
+        console.log("=== InputElement.initiate ===", this.id, "answerTree:", answerTree, "nextid:", nextid);
         if (answerTree && nextid) {
             this.answerTree = answerTree;
             this.nextIds = nextid;
+            console.log("✓ Stored answerTree and nextIds");
+        } else {
+            console.log("⚠ answerTree or nextid missing!");
         }
         super.initiate();
     }
@@ -70,6 +76,7 @@ class InputElement extends BaseComponent {
     }
 
     protected afterInit(): void {
+        console.log("=== InputElement.afterInit ===", this.id, "adding 'change' listener");
         this.addEventListener('change', this.changeHandler);
         const element = this.getElement();
         if (element) {
@@ -85,7 +92,7 @@ class InputElement extends BaseComponent {
         // To be overridden by subclasses
     }
 
-    protected activateNext(tree: AnswerTree, nextids: Map<string, string>): void {
+    protected activateNext(tree:any, nextids: Map<string, string>): void {
         if (nextids === undefined) {
             return;
         }
@@ -101,7 +108,7 @@ class InputElement extends BaseComponent {
         }
     }
 
-    protected action(ev: any, tree: AnswerTree, next: Map<string, string>): void {
+    protected action(ev: any, tree:any, next: Map<string, string>): void {
         tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
     }
@@ -127,7 +134,7 @@ class ImageInputElement extends InputElement {
         this.inputType = INPUT_TYPES.FILE;
     }
 
-    protected action(ev: any, tree: AnswerTree, next: Map<string, string>): void {
+    protected action(ev: any, tree:any, next: Map<string, string>): void {
         this.activateNext(tree, next);
         tree.add(this.id, ev.target.files[0]);
     }
@@ -155,13 +162,34 @@ class InputContainer extends ContentPanel {
         return document.getElementById(`${this.name}_${this.id}`);
     }
 
-    load_(answerTree:AnswerTree, nextid:Map<string, string>) {
+    /**
+     * Public load method that matches Answer.make() call signature: load(nextids, tree)
+     * Swaps parameters and delegates to load_() for proper initialization
+     */
+    load(nextids?: any, answerTree?: any): void {
+        console.log("=== InputContainer.load ===", this.id, "nextids:", nextids, "answerTree:", answerTree);
+        this.load_(answerTree, nextids);
+    }
+
+    load_(answerTree:any, nextid:Map<string, string>): void {
+        console.log("=== InputContainer.load_ ===", this.id, "answerTree:", answerTree, "nextid:", nextid);
         this.elements.forEach((el, i) => {
-            let element = new el(this.makeId(), this.id, 
+            let element = new el(this.makeId(), this.id,
                                  this.content instanceof Array ? this.content[i] : this.content);
-                                 
-            element instanceof InputElement ? element.initiate(answerTree, nextid) : element.initiate();
-            element instanceof InputContainer ? element.load_(answerTree, nextid) : element.load();
+
+            // For InputElement instances, pass answerTree and nextid during initiate
+            if (element instanceof InputElement) {
+                element.initiate(answerTree, nextid);
+            } else {
+                element.initiate();
+            }
+
+            // For InputContainer instances, pass them during load_
+            if (element instanceof InputContainer) {
+                element.load_(answerTree, nextid);
+            } else {
+                element.load();
+            }
         });
     }
 }
@@ -225,6 +253,19 @@ class RangeInputElement extends InputElement {
         element.setAttribute('min', this.values.get(RANGE_LABELS.MIN)?.toString() || '0');
         element.setAttribute('max', this.values.get(RANGE_LABELS.MAX)?.toString() || '100');
     }
+
+    /**
+     * Override afterInit to use 'input' event instead of 'change' for real-time updates
+     */
+    protected afterInit(): void {
+        // Range inputs need 'input' event for real-time updates, not 'change'
+        console.log("=== RangeInputElement.afterInit ===", this.id, "adding 'input' listener");
+        this.addEventListener('input', this.changeHandler);
+        const element = this.getElement();
+        if (element) {
+            this.initExtra(element);
+        }
+    }
 }
 
 class RangeLabelElement extends InputContainer {
@@ -238,7 +279,7 @@ class RangeLabelElement extends InputContainer {
         super(parent, id, content);
         this.name = CLASSNAMES.RANGE_CONTAINER;
         this.elements = [SpanElement, SpanElement];
-        this.content = content.label ? [content.label[RANGE_LABELS.MIN], content.label[RANGE_LABELS.MAX]] : ["Less", "More"];
+        this.content = (content && content.labels) ? [content.labels[RANGE_LABELS.MIN], content.labels[RANGE_LABELS.MAX]] : ["Less", "More"];
     }
 
 
@@ -263,8 +304,8 @@ class CheckboxContainerElement extends InputContainer {
     parent: string;
     content: any;
     name: string;
-    elements: typeof CheckboxElement[]; 
-    
+    elements: typeof CheckboxElement[];
+
     constructor(parent:string, id:string, checks:any[]){
         super(parent, id, checks);
         this.name = CLASSNAMES.TAG_CONTAINER;
@@ -272,16 +313,31 @@ class CheckboxContainerElement extends InputContainer {
         this.elements = checks.map(c=>CheckboxElement);
     }
 
-    
+    load(nextids?: any, answerTree?: any): void {
+        // Create CheckboxElement for each checkbox data item
+        this.content.forEach((checkData: any, index: number) => {
+            let element = new CheckboxElement(this.makeId(), this.id, checkData);
+            element.initiate();
+            element.load(nextids, answerTree);
+        });
+    }
+
+    /**
+     * Activate or deactivate all checkboxes
+     */
+    activate(on: boolean): void {
+        // Checkboxes don't need activation logic for the map page
+        // This is a placeholder to satisfy the Controller interface
+    }
 }
 
 class CheckboxElement extends InputContainer {
-    
+
     id: string;
     parent: string;
     content: any;
     name: string;
-    elements: any[]; 
+    elements: any[];
     constructor(parent:string, id:string, content?:any){
         super(parent, content.id, content);
         this.name = "tag selectable";
@@ -290,6 +346,16 @@ class CheckboxElement extends InputContainer {
     }
     make_id():string {
         return `${this.name}_${this.id}_${this.content.name}`
+    }
+
+    load(nextids?: any, answerTree?: any): void {
+        // Pass this.content to both the checkbox input and label
+        this.elements.forEach(ElementClass => {
+            let element = new ElementClass(this.makeId(), this.id, this.content);
+            // Pass answerTree and nextids to InputElement instances (CheckboxInputElement)
+            element instanceof InputElement ? element.initiate(answerTree, nextids) : element.initiate();
+            element.load();
+        });
     }
 
 }
@@ -303,6 +369,22 @@ class CheckboxInputElement extends InputElement {
 
     protected initExtra(element: HTMLElement): void {
         // No extra initialization needed
+    }
+
+    protected action(ev: any, tree: any, next: Map<string, string>): void {
+        // Use checked state instead of value for checkboxes
+        const checked = ev.target.checked;
+        console.log(`Checkbox action: id=${this.id}, checked=${checked}`);
+        tree.add(this.id, checked);
+        console.log(`Tree after checkbox:`, tree.out());
+        this.activateNext(tree, next);
+
+        // Reload current step to show/hide followup questions based on updated tree
+        const QPanel = (window as any).QPanel;
+        if (QPanel && QPanel.controller) {
+            console.log(`Reloading step ${QPanel.currentStep} to show followup questions`);
+            QPanel.controller.load(QPanel.currentStep);
+        }
     }
 }
 
@@ -339,5 +421,34 @@ class CheckboxLabelElement extends InputElement {
     }
 }
 
-export {InputContainer, TextInputContainer, ImageInputContainerElement, RangeInputElement,
-    ImageInputContainer, RangeContainerElement, CheckboxContainerElement}
+class SingleChoiceInputElement extends InputElement {
+    constructor(parent: string, id?: string, content?: any) {
+        super(parent, id, content);
+        this.className = "input";
+        this.inputType = "radio";
+        this.changeHandler = content;
+    }
+
+    protected createElement(): HTMLElement {
+        const element = document.createElement("input");
+        element.setAttribute('type', this.inputType);
+        element.setAttribute('name', 'vis-choice');
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+
+        return element;
+    }
+
+    protected afterInit(): void {
+        const element = this.getElement();
+        if (element && typeof this.changeHandler === 'function') {
+            element.addEventListener('change', this.changeHandler);
+        }
+    }
+}
+

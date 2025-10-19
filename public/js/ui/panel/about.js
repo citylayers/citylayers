@@ -1,68 +1,58 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AboutLogo = exports.AboutText = exports.AboutDescription = exports.AboutPanel = exports.AboutLabel = void 0;
-var BaseComponent_1 = require("../component/BaseComponent");
-var logo_1 = require("../component/logo");
-var ClassNames_1 = require("../../constants/ClassNames");
-var AboutLabel = (function (_super) {
-    __extends(AboutLabel, _super);
-    function AboutLabel(parent) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.ABOUT_LABEL, "aboutlabelid") || this;
-        _this.content = "about";
-        _this.elements = [];
-        _this.clickHandler = function (e) {
+/**
+ * About Panel Components
+ * Migrated from about.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Label/button to open the about panel
+ */
+class AboutLabel extends BaseComponent {
+    constructor(parent) {
+        super(parent || "body", ClassName.ABOUT_LABEL, "aboutlabelid");
+        this.content = "about";
+        this.elements = [];
+        this.clickHandler = (e) => {
             AboutPanel.toggle();
         };
-        return _this;
     }
-    AboutLabel.prototype.getParent = function () {
-        var elements = document.getElementsByClassName(this.parentId);
+    /**
+     * Get parent element (handles class name parent selector)
+     */
+    getParent() {
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
-        return _super.prototype.getParent.call(this);
-    };
-    AboutLabel.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+        return super.getParent();
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    AboutLabel.prototype.afterInit = function () {
+    }
+    afterInit() {
         this.addEventListener('click', this.clickHandler);
-    };
-    AboutLabel.prototype.load = function () {
-    };
-    AboutLabel.prototype._call = function (geo) {
-        var _this = this;
-        var TopTagPanel = window.TopTagPanel;
-        var GeocodeParser = window.GeocodeParser;
+    }
+    load() {
+        // No children to load
+    }
+    /**
+     * Legacy geocoding call method (unused in current implementation)
+     */
+    _call(geo) {
+        const TopTagPanel = window.TopTagPanel;
+        const GeocodeParser = window.GeocodeParser;
         if (!TopTagPanel) {
             return Promise.reject('TopTagPanel not available');
         }
-        var url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
-        var sleep = function (ms) { return new Promise(function (resolve) { return setTimeout(resolve, ms); }); };
+        let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         return fetch(url, {
             method: "GET",
             headers: { 'Content-Type': 'application/json' },
-        }).then(function (result) {
+        }).then(result => {
             if (result.status == 200) {
-                return result.json().then(function (res) {
-                    var geocodingPanels = document.getElementsByClassName(ClassNames_1.CLASSNAMES.GEOCODING_PANEL);
+                return result.json().then(res => {
+                    const geocodingPanels = document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL);
                     if (geocodingPanels.length > 0 && GeocodeParser) {
                         geocodingPanels[0].innerHTML = GeocodeParser.run(res);
                     }
@@ -70,118 +60,131 @@ var AboutLabel = (function (_super) {
                 });
             }
             else if (result.status == 429) {
-                return sleep(1000).then(function () { return _this._call(geo); });
+                return sleep(1000).then(() => this._call(geo));
             }
             else if (result.status == 504) {
-                return _this._call(geo);
+                return this._call(geo);
             }
             else {
-                console.log("CODE: ".concat(result.status));
+                console.log(`CODE: ${result.status}`);
             }
             return result;
         });
-    };
-    return AboutLabel;
-}(BaseComponent_1.BaseComponent));
-exports.AboutLabel = AboutLabel;
-var AboutPanel = (function (_super) {
-    __extends(AboutPanel, _super);
-    function AboutPanel(parent) {
-        var _this = _super.call(this, parent || "body", ClassNames_1.ClassName.ABOUT_PANEL, "id") || this;
-        _this.elements = [
-            logo_1.CloseButton,
+    }
+}
+/**
+ * About panel showing project information
+ */
+class AboutPanel extends BaseComponent {
+    constructor(parent) {
+        super(parent || "body", ClassName.ABOUT_PANEL, "id");
+        this.elements = [
+            CloseButton,
             AboutDescription,
             AboutLogo,
             AboutText
         ];
-        _this.args = [function () { AboutPanel.toggle(); }];
-        return _this;
+        this.args = [() => { AboutPanel.toggle(); }];
     }
-    AboutPanel.prototype.getParent = function () {
-        var elements = document.getElementsByClassName(this.parentId);
+    /**
+     * Get parent element (handles class name parent selector)
+     */
+    getParent() {
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
-        return _super.prototype.getParent.call(this);
-    };
-    AboutPanel.prototype.load = function () {
-        for (var e = 0; e < this.elements.length; e++) {
-            var element = new this.elements[e](this.makeId(), undefined, e < this.args.length ? this.args[e] : undefined);
+        return super.getParent();
+    }
+    /**
+     * Load child elements and hide panel initially
+     */
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            let element = new this.elements[e](this.makeId(), undefined, e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
-        var el = this.getElement();
+        const el = this.getElement();
         if (el) {
-            el.style.display = ClassNames_1.DisplayStyle.NONE;
+            el.style.display = DisplayStyle.NONE;
         }
-    };
-    AboutPanel.toggle = function () {
-        var panel = document.getElementById("".concat(ClassNames_1.ClassName.ABOUT_PANEL, "_id"));
+    }
+    /**
+     * Toggle about panel visibility
+     */
+    static toggle() {
+        const panel = document.getElementById(`${ClassName.ABOUT_PANEL}_id`);
         if (panel) {
-            panel.style.display = panel.style.display === ClassNames_1.DisplayStyle.NONE
-                ? ClassNames_1.DisplayStyle.FLEX
-                : ClassNames_1.DisplayStyle.NONE;
+            panel.style.display = panel.style.display === DisplayStyle.NONE
+                ? DisplayStyle.FLEX
+                : DisplayStyle.NONE;
         }
-    };
-    return AboutPanel;
-}(BaseComponent_1.BaseComponent));
-exports.AboutPanel = AboutPanel;
-var AboutDescription = (function (_super) {
-    __extends(AboutDescription, _super);
-    function AboutDescription(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.ABOUT_DESCRIPTION) || this;
-        _this.content = "City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!";
-        return _this;
     }
-    AboutDescription.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+}
+/**
+ * Description text for about panel
+ */
+class AboutDescription extends BaseComponent {
+    constructor(parent) {
+        super(parent, ClassName.ABOUT_DESCRIPTION);
+        this.content = `City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!`;
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    AboutDescription.prototype.load = function () {
-    };
-    return AboutDescription;
-}(BaseComponent_1.BaseComponent));
-exports.AboutDescription = AboutDescription;
-var AboutText = (function (_super) {
-    __extends(AboutText, _super);
-    function AboutText(parent) {
-        var _this = _super.call(this, parent, ClassNames_1.ClassName.ABOUT_TEXT) || this;
-        _this.content = "City Layers embody the motto \"act local to go global\"\n        by relying on citizen mapping as a holistic and inclusive city-making\n        practice that aims to tackle the contemporary spatial, social and\n        environmental challenges our cities are facing. <br><br>\n\n        This powerful city mapping app serves as a means of\n        communication between cities and their citizens,\n        generating a new type of data that is\n        collectively generated, managed and cared for. ";
-        return _this;
     }
-    AboutText.prototype.createElement = function () {
-        var element = _super.prototype.createElement.call(this);
+    load() {
+        // No children to load
+    }
+}
+/**
+ * Detailed text content for about panel
+ */
+class AboutText extends BaseComponent {
+    constructor(parent) {
+        super(parent, ClassName.ABOUT_TEXT);
+        this.content = `City Layers embody the motto "act local to go global"
+        by relying on citizen mapping as a holistic and inclusive city-making
+        practice that aims to tackle the contemporary spatial, social and
+        environmental challenges our cities are facing. <br><br>
+
+        This powerful city mapping app serves as a means of
+        communication between cities and their citizens,
+        generating a new type of data that is
+        collectively generated, managed and cared for. `;
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
         return element;
-    };
-    AboutText.prototype.load = function () {
-    };
-    AboutText._name = ClassNames_1.ClassName.ABOUT_TEXT;
-    return AboutText;
-}(BaseComponent_1.BaseComponent));
-exports.AboutText = AboutText;
-var AboutLogo = (function (_super) {
-    __extends(AboutLogo, _super);
-    function AboutLogo(parent, category) {
-        var _this = _super.call(this, parent, "aboutlogo", category) || this;
-        _this.content = "/images/about.svg";
-        return _this;
     }
-    AboutLogo.prototype.getElementTag = function () {
+    load() {
+        // No children to load
+    }
+}
+AboutText._name = ClassName.ABOUT_TEXT;
+/**
+ * Logo image for about panel
+ */
+class AboutLogo extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, "aboutlogo", category);
+        this.content = "/images/about.svg";
+    }
+    getElementTag() {
         return 'img';
-    };
-    AboutLogo.prototype.createElement = function () {
-        var element = document.createElement('img');
+    }
+    createElement() {
+        const element = document.createElement('img');
         element.src = this.content;
         element.setAttribute('class', this.className);
         element.setAttribute('id', this.makeId());
-        var parent = this.getParent();
+        const parent = this.getParent();
         if (parent) {
             parent.appendChild(element);
         }
         return element;
-    };
-    return AboutLogo;
-}(BaseComponent_1.BaseComponent));
-exports.AboutLogo = AboutLogo;
+    }
+}

@@ -2,7 +2,7 @@
  * Section navigation constants.
  */
 
-export enum Section {
+enum Section {
     EXPLORE = 'explore',
     TEAM = 'team',
     ABOUT = 'about',
@@ -11,12 +11,12 @@ export enum Section {
 /**
  * Section configuration
  */
-export interface SectionConfig {
+interface SectionConfig {
     id: string;
     label: string;
 }
 
-export class SectionHelper {
+class SectionHelper {
     private static sections: Map<Section, SectionConfig> = new Map([
         [Section.EXPLORE, { id: 'explore', label: 'explore' }],
         [Section.TEAM, { id: 'team', label: 'team' }],
@@ -33,7 +33,7 @@ export class SectionHelper {
 }
 
 // Legacy export
-export const SECTIONMAP = {
+const SECTIONMAP = {
     EXPLORE: [Section.EXPLORE, Section.EXPLORE],
     TEAM: [Section.TEAM, Section.TEAM],
     ABOUT: [Section.ABOUT, Section.ABOUT],
