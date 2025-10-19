@@ -1,22 +1,21 @@
 steps:
-  - name: 'gcr.io/kaniko-project/executor'
-    args:
-      - --dockerfile=Dockerfile.neo4j
-      - --context=.
-      - --destination=${_GCP_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_NEO4J_VERSION}
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_GCP_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_REPO_NAME}/${_APP_IMAGE_NAME}:${_APP_VERSION}', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_GCP_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_REPO_NAME}/${_APP_IMAGE_NAME}:${_APP_VERSION}']
 
 substitutions:
-  _NEO4J_VERSION: $NEO4J_VERSION
+  _APP_VERSION: latest
   _GCP_PROJECT_ID: $GCP_PROJECT_ID
   _GCP_REGION: $GCP_REGION
   _REPO_NAME: $REPO_NAME
-  _IMAGE_NAME: $IMAGE_NAME
+  _APP_IMAGE_NAME: citylayers-app
 
 images:
-  - '${_GCP_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_NEO4J_VERSION}'
+  - '${_GCP_REGION}-docker.pkg.dev/${_GCP_PROJECT_ID}/${_REPO_NAME}/${_APP_IMAGE_NAME}:${_APP_VERSION}'
 
 options:
   logging: CLOUD_LOGGING_ONLY
   machineType: 'N1_HIGHCPU_8'
 
-timeout: '1200s'
+timeout: '1800s'

@@ -37,3 +37,6 @@ class ControllerContainer extends ContentPanel{
     }
 
 }
+
+// Export to global scope for ConfigPanel to use
+window.ControllerContainer = ControllerContainer;

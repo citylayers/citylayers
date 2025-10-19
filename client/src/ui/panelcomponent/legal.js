@@ -15,7 +15,7 @@ class LegalContainer extends ContentPanel{
             let element = new LinkElement(
                 this.makeId(),
                 LEGAL_CLASSNAMES.TEXT,
-                LEGAL[el], LEGAL_LINKS.get(LEGAL[el])
+                [LEGAL[el], LEGAL_LINKS.get(LEGAL[el])]
             );
             element.initiate();
             element.load();

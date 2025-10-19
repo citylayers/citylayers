@@ -1,5 +1,3 @@
-import { config, configDotenv } from 'dotenv';
-
 /**
  * Enum for all environment variable keys used in the application.
  * Prevents hardcoded strings and provides type safety.
@@ -52,14 +50,22 @@ export class Environment {
      */
     public init(envFilePath?: string): void {
         if (!this.initialized) {
-            if (envFilePath) {
-                configDotenv({ path: envFilePath });
-            } else {
-                // Load .dev.env for development, .env otherwise
-                const defaultPath = this.getMode() === EnvironmentMode.DEVELOPMENT
-                    ? '.dev.env'
-                    : '.env';
-                configDotenv({ path: defaultPath });
+            // Only try to load dotenv in development
+            // In production (Cloud Run), env vars are passed directly
+            try {
+                const dotenv = require('dotenv');
+                if (envFilePath) {
+                    dotenv.config({ path: envFilePath });
+                } else {
+                    // Load .dev.env for development, .env otherwise
+                    const defaultPath = this.getMode() === EnvironmentMode.DEVELOPMENT
+                        ? '.dev.env'
+                        : '.env';
+                    dotenv.config({ path: defaultPath });
+                }
+            } catch (error) {
+                // dotenv not available (production) - env vars passed by Cloud Run
+                // This is expected and OK
             }
             this.initialized = true;
         }

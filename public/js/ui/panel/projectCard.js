@@ -127,7 +127,7 @@ class ExploreButton extends BaseComponent {
         super(parentId, "projectButton", id, project);
         this.project = project;
         this.clickHandler = () => {
-            window.location.href = `/explore/${this.project.name}`;
+            window.location.href = `/map/${this.project.name}`;
         };
     }
     getElementTag() {

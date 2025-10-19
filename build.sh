@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# build.sh - Deploy Neo4j container to GCP
-# Usage: ./build.sh
+# deploy-app.sh - Deploy CityLayers application to GCP Cloud Run
+# Usage: ./deploy-app.sh
+
+set -e
 
 source .env
 
@@ -11,25 +13,44 @@ gcloud config set project "${GCP_PROJECT_ID}"
 
 # Enable required APIs
 echo "Enabling required GCP APIs..."
-gcloud services enable cloudbuild.googleapis.com
-gcloud services enable containerregistry.googleapis.com
-gcloud services enable run.googleapis.com
-gcloud services enable compute.googleapis.com
+gcloud services enable cloudbuild.googleapis.com \
+  containerregistry.googleapis.com \
+  run.googleapis.com \
+  artifactregistry.googleapis.com
+
+# Create Artifact Registry repository if it doesn't exist
+echo "Ensuring Artifact Registry repository exists..."
+gcloud artifacts repositories describe "${REPO_NAME}" \
+  --location="${GCP_REGION}" 2>/dev/null || \
+gcloud artifacts repositories create "${REPO_NAME}" \
+  --repository-format=docker \
+  --location="${GCP_REGION}" \
+  --description="CityLayers application images"
 
 # Build and push the image using Cloud Build
-
+echo "Building application image..."
 gcloud builds submit --config=imagebuild.yaml \
-  --substitutions=_GCP_PROJECT_ID="${GCP_PROJECT_ID}",_GCP_REGION="${GCP_REGION}",_REPO_NAME="${REPO_NAME}",_IMAGE_NAME="${IMAGE_NAME}",_NEO4J_VERSION="${NEO4J_VERSION}" \
-  . 
+  --substitutions=_GCP_PROJECT_ID="${GCP_PROJECT_ID}",_GCP_REGION="${GCP_REGION}",_REPO_NAME="${REPO_NAME}",_APP_IMAGE_NAME="citylayers-app",_APP_VERSION="latest" \
+  .
 
-
-gcloud run deploy "${SERVICE_NAME}" \
-    --image="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${NEO4J_VERSION}" \
+# Deploy to Cloud Run with environment variables
+echo "Deploying to Cloud Run..."
+gcloud run deploy "${APP_SERVICE_NAME:-citylayers-app}" \
+    --image="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${REPO_NAME}/citylayers-app:latest" \
     --region="${GCP_REGION}" \
     --platform=managed \
     --allow-unauthenticated \
-    --memory=4Gi \
+    --memory=2Gi \
     --cpu=2 \
-    --port=7474 \
-    --set-env-vars="NEO4J_AUTH=neo4j/${NEO4J_PWD}" \
-    --execution-environment=gen2
+    --port=8080 \
+    --min-instances=0 \
+    --max-instances=10 \
+    --set-env-vars="NEO4J_URI=${NEO4J_URI},NEO4J_USER=${NEO4J_USER},NEO4J_PWD=${NEO4J_PWD},NODE_ENV=production" \
+    --execution-environment=gen2 \
+    --timeout=300
+
+echo "Deployment complete!"
+echo "Service URL:"
+gcloud run services describe "${APP_SERVICE_NAME:-citylayers-app}" \
+  --region="${GCP_REGION}" \
+  --format='value(status.url)'
