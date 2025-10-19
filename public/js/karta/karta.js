@@ -348,57 +348,51 @@ class VisualizationManager{
     }
 
     static make(markers, tree){
-        
         let vis = this.getGlobalVis();
         let calc = this.calc_mapping().get(vis);
         let opacity = this.opacity_mapping().get(vis);
 
-        markers.forEach((marker, i) => {
-                    const markerElement = marker._icon;
-                    if (markerElement) {
-                        markerElement.style.display = 'none';
-                    }
-                });
-
         // clear all
         this.getAllLayers().forEach(l=>this.clearLayer(l));
-        
 
-        tree.forEach((tt, i)=>{
-            let id = tt.id;
-            let _markers = markers.filter(m=>MarkerFilterer.run(tree, m, id).length>0)
-                .map(
-                    m=>[m._latlng.lat, m._latlng.lng, calc.make(tree, m, id)]
+        // work with the relevant layers
+        let layers = this.mapping().get(vis);
+
+        layers.forEach((l, i)=>{
+            let id = l.options.name.split("_")[1];
+            let m = markers.filter(
+                m=>MarkerFilterer.run(tree, m, id).length>0)
+                           .map(
+                m=>[m._latlng.lat, m._latlng.lng, calc.make(tree, m, id)]
             );
-
-            if (vis!="elements"){
-                // Find the specific layer for this ID (e.g., flat_<id>)
-                let layer = this.mapping().get(vis).find(l => l.options.name === `flat_${id}` || l.options.name === "heat");
-                if (layer) {
-                    layer.setLatLngs(_markers);
-                }
+            if (vis!=VIS.ELEMENTS){
+                l.setLatLngs(m);
             }
-            else{
-                document.getElementsByClassName("leaflet-marker-pane")[0].style.display = DISPLAY.FLEX;
-
-                markers.forEach((marker, i) => {
-                    const markerElement = marker._icon;
-                    if (markerElement) {
-                        markerElement.style.display = 'none';
-                    }
-                });
-
-                markers.forEach((marker, i) => {
-                    const shouldShow = MarkerFilterer.runWithTags(tree, marker, id);
-                    const markerElement = marker._icon;
-                    if (markerElement) {
-                        markerElement.style.display = shouldShow ? '' : 'none';
-                    }
-                });
-            }
-
         });
-        
+
+        // Handle elements mode - show/hide individual markers based on filters
+        if (vis === VIS.ELEMENTS) {
+            document.getElementsByClassName("leaflet-marker-pane")[0].style.display = DISPLAY.FLEX;
+
+            // First hide all markers
+            markers.forEach((marker) => {
+                const markerElement = marker._icon;
+                if (markerElement) {
+                    markerElement.style.display = 'none';
+                }
+            });
+
+            // Then show only markers that pass the filters
+            markers.forEach((marker) => {
+                // runWithTags checks both range and tag filters
+                const shouldShow = MarkerFilterer.runWithTags(tree, marker);
+                const markerElement = marker._icon;
+                if (markerElement) {
+                    markerElement.style.display = shouldShow ? '' : 'none';
+                }
+            });
+        }
+
         VisualizationManager.updateColors();
         OpacityController.run(opacity);
     }
@@ -459,25 +453,18 @@ class MarkerFilterer {
     
     static runWithTags(tree, marker, id){
         let relevantStats = this.getRelevantStats(tree);
-        console.log(tree);
         let rangeFilters = tree.filter(t => t.value instanceof Map);
         let tagFilters = tree.filter(t => typeof t.value === 'boolean' && t.value === true);
+
         if (rangeFilters.length === 0 && tagFilters.length === 0) {
-            
             return false;
         }
-        
+
         return this.passesRange(marker, rangeFilters); // && this.passesTag(marker, tagFilters);
-        // if (res.length>0){
-        //     console.log(marker.options.id);
-        // }
-        
-        //return this.oneCategory(res, id);
     }
 
 
     static passesRange(marker, rangeFilters){
-        
         let passesRange = false;
         if (rangeFilters.length > 0) {
             let rangeMatches = marker.options.values

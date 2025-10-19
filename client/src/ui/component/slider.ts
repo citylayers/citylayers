@@ -20,6 +20,7 @@ class DoubleRangeContainerElement extends InputContainer {
 
     constructor(parent: string, id: string, content?: any) {
         super(parent, id, content);
+        this.name = ClassName.CATEGORY_SLIDER_CONTAINER;
         this.elements = [];
     }
 
@@ -47,10 +48,14 @@ class DoubleRangeContainerElement extends InputContainer {
      * Handle action when slider value changes
      */
     action(ev?: Event, tree?: any, next?: Map<string, string>): void {
-        // Use QPanel.tree directly (set globally on map page)
-        const QPanel = (window as any).QPanel;
-        if (QPanel && QPanel.tree) {
-            QPanel.tree.add(this.id, this.getCurrentValue());
+        // Map page uses window.tree (ControlTree)
+        // Pin page uses QPanel.tree (AnswerTree)
+        const controlTree = (window as any).tree || (window as any).QPanel?.tree;
+
+        if (controlTree) {
+            controlTree.add(this.id, this.getCurrentValue());
+        } else {
+            console.warn("No tree available for slider update!");
         }
     }
 
@@ -151,7 +156,7 @@ class Slider extends RangeInputElement {
         super.initExtra(element);
         const inputElement = element as HTMLInputElement;
 
-        const isHigh = this.id.includes(SLIDER_IDS.HIGH);
+        const isHigh = this.border === SLIDER_IDS.HIGH;
         inputElement.setAttribute("value", isHigh ? "100" : "0");
         inputElement.setAttribute("class", isHigh ? SLIDER_IDS.HIGH : SLIDER_IDS.LOW);
     }

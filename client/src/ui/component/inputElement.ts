@@ -31,12 +31,11 @@ class InputElement extends BaseComponent {
         this.elementTag = "input";
         this.inputType = INPUT_TYPES.TEXT;
         this.changeHandler = (ev: Event) => {
-            console.log("=== changeHandler fired ===", ev.type, this.id, "answerTree:", this.answerTree, "nextIds:", this.nextIds);
             if (this.answerTree && this.nextIds) {
                 this.action(ev, this.answerTree, this.nextIds);
-            } else {
-                console.log("Missing answerTree or nextIds - cannot activate next!");
             }
+            // Note: answerTree/nextIds are only used for pin page question flow
+            // Map page sliders don't use this mechanism
         };
     }
 
@@ -45,13 +44,9 @@ class InputElement extends BaseComponent {
      * This maintains backward compatibility with questionnaire logic.
      */
     initiate(answerTree?:any, nextid?: Map<string, string>): void {
-        console.log("=== InputElement.initiate ===", this.id, "answerTree:", answerTree, "nextid:", nextid);
         if (answerTree && nextid) {
             this.answerTree = answerTree;
             this.nextIds = nextid;
-            console.log("✓ Stored answerTree and nextIds");
-        } else {
-            console.log("⚠ answerTree or nextid missing!");
         }
         super.initiate();
     }
@@ -76,7 +71,6 @@ class InputElement extends BaseComponent {
     }
 
     protected afterInit(): void {
-        console.log("=== InputElement.afterInit ===", this.id, "adding 'change' listener");
         this.addEventListener('change', this.changeHandler);
         const element = this.getElement();
         if (element) {
@@ -167,12 +161,10 @@ class InputContainer extends ContentPanel {
      * Swaps parameters and delegates to load_() for proper initialization
      */
     load(nextids?: any, answerTree?: any): void {
-        console.log("=== InputContainer.load ===", this.id, "nextids:", nextids, "answerTree:", answerTree);
         this.load_(answerTree, nextids);
     }
 
     load_(answerTree:any, nextid:Map<string, string>): void {
-        console.log("=== InputContainer.load_ ===", this.id, "answerTree:", answerTree, "nextid:", nextid);
         this.elements.forEach((el, i) => {
             let element = new el(this.makeId(), this.id,
                                  this.content instanceof Array ? this.content[i] : this.content);
@@ -259,7 +251,6 @@ class RangeInputElement extends InputElement {
      */
     protected afterInit(): void {
         // Range inputs need 'input' event for real-time updates, not 'change'
-        console.log("=== RangeInputElement.afterInit ===", this.id, "adding 'input' listener");
         this.addEventListener('input', this.changeHandler);
         const element = this.getElement();
         if (element) {
