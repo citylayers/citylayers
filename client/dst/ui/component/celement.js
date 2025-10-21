@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CElement = void 0;
 var uuid_1 = require("uuid");
-var classnames_1 = require("../../../classnames");
+var ClassNames_1 = require("../../constants/ClassNames");
 var CElement = (function () {
     function CElement(parent, id, content) {
         this.id = id ? id : (0, uuid_1.v4)();
-        this.name = classnames_1.CLASSNAMES.CATEGORY_CONTAINER;
+        this.name = ClassNames_1.CLASSNAMES.CATEGORY_CONTAINER;
         this.content = content;
         this.parent = parent;
         this.elements = [];

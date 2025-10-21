@@ -1,24 +1,26 @@
 
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
-
-class HrElement extends CElement{
-    id: string;
-    parent: string;
-    content: string;
-    name: string;
-    constructor(parent:string) {
-        super(parent);
-        this.name = "";
-        this.content = "";
+/**
+ * Horizontal rule element component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class HrElement extends BaseComponent {
+    constructor(parentId: string) {
+        super(parentId, "");
     }
-    load() { }
 
-    initiate() {
-        let element = document.createElement("hr");
-        this.getParent().appendChild(element);
+    protected getElementTag(): string {
+        return 'hr';
     }
-    
+
+    /**
+     * Static method to update gradient colors on hr element
+     * Used by gradient color pickers
+     */
+    static updateColor(ev: Event, gradientEnd: string): void {
+        const hrElements = document.getElementsByTagName("hr");
+        if (hrElements.length > 0) {
+            (hrElements[0] as HTMLElement).style.setProperty(gradientEnd, (ev.target as HTMLInputElement).value);
+        }
+    }
 }
 
-export {HrElement};

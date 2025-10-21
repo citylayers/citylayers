@@ -1,143 +1,89 @@
-
-
-class ProjectCardPanel extends LegalPanel{
-    constructor(parent, content){
-        super(parent, content);
+// Legacy imports
+class ProjectCardPanel extends LegalPanel {
+    constructor(parent, content) {
+        super(parent, "project", content);
         this.content = content;
         this.name = LEGAL_CLASSNAMES.PANEL;
         this.elements = [ProjectCardHeader, ProjectCardBody];
-
-    }
-
-    getParent() {
-        if (this.parent=="body"){
-            return document.body;
-        }
-        return document.getElementById(this.parent);
     }
 }
-
-class ProjectCardHeader extends CElement{
-    constructor(parent, name, content){
-        super(parent);
-        this.name = name? name : LEGAL_CLASSNAMES.HEADER;
-        this.content = content; 
-        this.elements = [Logo];
-        this.args = [undefined, ()=>{location.href = "/"}]
+/**
+ * Project card header component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectCardHeader extends BaseComponent {
+    constructor(parentId, id, content) {
+        super(parentId, LEGAL_CLASSNAMES.HEADER, id, content);
+        this.elements = [Logo, CloseButton];
+        this.args = [undefined, () => { location.href = "/"; }];
     }
-
-    initiate() {
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-    }
-
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.args[e]);
+            let element = new this.elements[e](this.makeId(), this.args[e]);
             element.initiate();
         }
     }
 }
-
-
-class ProjectCardBody extends CElement{
-    constructor(parent, name, content){
-        super(parent);
-        this.name = name? name : LEGAL_CLASSNAMES.BODY;
-        this.content = content;  // Project
+/**
+ * Project card body component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectCardBody extends BaseComponent {
+    constructor(parentId, id, content) {
+        super(parentId, LEGAL_CLASSNAMES.BODY, id, content);
         this.elements = [
-                        LegalText, 
-                        ImageElement, 
-                        ProjectSlogan,
-                        AddPinButton,
-                        DashboardButton,                        
-                        ProjectPeriodInfo,
-                        ProjectCardText,
-                        ImageContainerElement,
-                        Recognition,
-                        ProjectTeam,
-                        PartnerImageContainerElement
-                        ]; 
-
+            ImageElement,
+            TextElement,
+            Recognition,
+            ProjectPeriodInfo,
+            ProjectTeam,
+            ExploreButton,
+            ProjectSlogan,
+            TextElement,
+            ImageContainerElement,
+            ImageContainerElement
+        ];
         this.classes = [
-                        LEGAL_CLASSNAMES.TITLE, 
-                        CLASSNAMES.COVER, 
-                        CLASSNAMES.PROJECT_DESCRIPTION,
-                        "",
-                        "",
-                        CLASSNAMES.PERIOD,
-                        CLASSNAMES.PROJECT_DESCRIPTION,
-                        CLASSNAMES.PROJECT_IMAGE_CONTAINER,
-                        CLASSNAMES.RECOGNITION,
-                        CLASSNAMES.TEAM,
-                        CLASSNAMES.PARTNER
-                    
-                    ];
+            CLASSNAMES.COVER,
+            LEGAL_CLASSNAMES.TITLE,
+            CLASSNAMES.RECOGNITION,
+            CLASSNAMES.PERIOD,
+            CLASSNAMES.TEAM,
+            "projectButton",
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_DESCRIPTION,
+            CLASSNAMES.PROJECT_IMAGE_CONTAINER,
+            CLASSNAMES.PARTNER
+        ];
         let cover = new Illustration(`/images/projects/${content.name}/cover.svg`, '');
         this.args = [
-                     content.name, 
-                     cover, 
-                     content.info.subtitle,
-                     content.name,
-                     content.name,
-                     content.info,
-                     content.info.description,
-                     content.info.images,
-                     content.info.recognition,
-                     content.info.team,
-                     content.info.partners.map(e=>e.image)
-                    
-                    ];
+            cover,
+            content.name,
+            content.info.recognition,
+            content.info,
+            content.info.team,
+            content,
+            content.info.subtitle,
+            content.info.description,
+            content.info.images,
+            content.info.partners.map((e) => e.image)
+        ];
     }
-
-    initiate() {
-        var element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        
-    }
-
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            if ((this.elements[e]==AddPinButton || this.elements[e]==DashboardButton) && this.content.info.mappable==false){
-                continue
-            }
-            let element = undefined;
-
-            // TODO: refactor
-            if (this.elements[e]==ImageElement){
-
-                element = new this.elements[e](this.make_id(), uuidv4(), 
-                                    this.classes[e], 
-                                    e < this.args.length ? this.args[e] : undefined
-                                );
-            }
-            else{
-                element = new this.elements[e](this.make_id(), 
-                                    this.classes[e], 
-                                    e < this.args.length ? this.args[e] : undefined
-                                );
-            }
-            
-            
+            let element = new this.elements[e](this.makeId(), this.classes[e], e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
     }
 }
-
 class ProjectSlogan extends TextElement {
     constructor(parent, id, content) {
         super(parent, id, content);
         this.name = CLASSNAMES.SLOGAN;
     }
 }
-
 // class ProjectCardBodyContent extends ContentElement{
-    
 //     constructor(parent, name, content){
 //         parent = parent ? parent : LEGAL_CLASSNAMES.PANEL;
 //         super(parent, undefined);
@@ -165,33 +111,36 @@ class ProjectSlogan extends TextElement {
 //             else if (this.elements[e]==ImageContainerElement){
 //                 args = this.content.info.images;
 //             }
-//             let element = new this.elements[e](this.make_id(), 
+//             let element = new this.elements[e](this.makeId(), 
 //             CLASSNAMES.PROJECT_DESCRIPTION,  args);
 //             element.initiate();
 //             element.load();
 //         }
 //     }
 // }
-
-class ExploreButton extends CElement {
-
-    static _text = "Explore";
-    
-    constructor(parent, name, project) {
-        super(parent, project);
-        this.name = "projectButton";
-        this.content = project;
+/**
+ * Explore button for project card.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ExploreButton extends BaseComponent {
+    constructor(parentId, id, project) {
+        super(parentId, "projectButton", id, project);
+        this.project = project;
+        this.clickHandler = () => {
+            window.location.href = `/map/${this.project.name}`;
+        };
     }
-
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = ProjectCardButton._text;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            
-            window.location.href = `/pin/${this.content.id}`;
-        });
+    getElementTag() {
+        return 'button';
+    }
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = ExploreButton.BUTTON_TEXT;
+        return element;
+    }
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
     }
 }
+ExploreButton.BUTTON_TEXT = "Explore";
+ExploreButton.componentName = "projectButton";

@@ -1,27 +1,28 @@
+/**
+ * Logo component.
+ * Extends ImageElement with logo-specific behavior.
+ */
 class Logo extends ImageElement {
-    
-    constructor(parent, illustration) {
-        let content = illustration ? illustration : new Illustration("/images/logo_2.svg", "/");
-        super(parent, uuidv4(), CLASSNAMES.LOGO, content);
-        this.name = CLASSNAMES.LOGO;
-         // U+02715
+    constructor(parentId, illustration) {
+        const content = illustration || new Illustration("/images/logo_2.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }
-
-class ColorLogo extends Logo {
-    
-    constructor(parent) {
-        let content = new Illustration("/images/logo_full.svg", "/");
-        super(parent, content);
-        this.name = CLASSNAMES.LOGO;
+/**
+ * Color logo variant.
+ */
+class ColorLogo extends ImageElement {
+    constructor(parentId) {
+        const content = new Illustration("/images/logo_full.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }
-
-class LineLogo extends Logo {
-    
-    constructor(parent) {
-        let content = new Illustration("/images/logo_2.svg", "/");
-        super(parent, content);
-        this.name = CLASSNAMES.LOGO;
+/**
+ * Line logo variant.
+ */
+class LineLogo extends ImageElement {
+    constructor(parentId) {
+        const content = new Illustration("/images/logo_2.svg", "/");
+        super(parentId, ClassName.LOGO, content, ClassName.LOGO);
     }
 }

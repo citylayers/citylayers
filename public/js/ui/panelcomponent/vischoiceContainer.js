@@ -25,8 +25,8 @@ class VisChoiceIcon extends ContentPanel{
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), this.id, `vis`, this.image);
+
+            let element = new this.elements[e](this.makeId(), this.id, this.image, `vis`);
             element.initiate();
             element.load();
         }
@@ -47,9 +47,9 @@ class VisChoiceDescr extends ContentPanel{
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               uuidv4(), 
+
+            let element = new this.elements[e](this.makeId(),
+                                               uuidv4(),
                                                this.args[e]);
 
             element.initiate();
@@ -91,27 +91,28 @@ class VisChoice extends ContentPanel{
     load(){
         for (let e=0; e<this.elements.length; e++){
             let id = this.elements[e]==SingleChoiceInputElement ? this.vis : uuidv4();
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               id, 
+
+            let element = new this.elements[e](this.makeId(),
+                                               id,
                                                this.args[e]);
 
-            let _e = element.initiate();
+            element.initiate();
 
             if(this.elements[e]==VisChoiceIcon){
+                let _e = element.getElement();
                 _e.onclick = (ev)=>{
                     globalvisualization.active = this.vis;
                     let check = document.getElementById(`input_${ev.target.id.split("_")[1]}`);
-                    
+
                     if (check.checked!=true){
                         tree.clear();
                     }
-                    
+
                     check.checked = true;
                     this.getElement().setAttribute("class", VisChoice.name)
-                    check.onchange();
-                } 
-            } 
+                    check.dispatchEvent(new Event('change'));
+                }
+            }
             element.load();
         }
     }
@@ -133,9 +134,9 @@ class VisChoiceContainer extends ContentPanel{
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            
-            let element = new this.elements[e](this.make_id(), 
-                                               `${this.args[e]}`, 
+
+            let element = new this.elements[e](this.makeId(),
+                                               `${this.args[e]}`,
                                                this.args[e]);
 
             element.initiate();

@@ -42,12 +42,20 @@ class Karta extends CElement{
             // Karta.layers.heat = VisualizationManager.init();
             Karta.layers.heat.forEach(l=>l.addTo(Karta.content));
             Karta.layers.flat.forEach(l=>l.addTo(Karta.content));
+
+            // Add markers to map but hide them initially (default mode is gradient)
+            Karta.layers.markers.forEach(l=>l.addTo(Karta.content));
+            const markerPane = document.getElementsByClassName("leaflet-marker-pane")[0];
+            if (markerPane) {
+                markerPane.style.display = DISPLAY.NONE;
+            }
+
             // VisualizationManager.managed_layer = Karta.layers.heat;
             try {
                 pubsub.subscribe(this.update);
                 colorpubsub.subscribe(this.update);
                 vischoicepubsub.subscribe(this.update);
-                
+
             } catch (error) { }
             Karta.updatePositionOnMapMove();
             
@@ -105,11 +113,15 @@ class Karta extends CElement{
     }
 
     update(payload){
+        // If no payload provided, use the current tree state
+        const treePayload = window.tree ? window.tree.out() : [];
+        const currentPayload = payload !== undefined ? payload : treePayload;
+
+        // Filter markers and call VisualizationManager
+        const filteredMarkers = Object.values(Karta.layers.markers[0]._layers)
         
-        payload ? 
-        VisualizationManager.make(
-            Object.values(Karta.layers.markers[0]._layers).filter(l=>Karta._check(payload, l.options.values)), payload) : 
-        VisualizationManager.updateColors();
+
+        VisualizationManager.make(filteredMarkers, currentPayload);
     }    
 }
 
@@ -168,7 +180,7 @@ class LayerInitializer{
                     return [Position.lat +e, 
                             Position.lon , 
                             Math.min(1, 0.2 + e*10)]}), 
-                    HeatmapStyle.make(VIS.HIGHLIGHT, id, color)
+                    HeatmapStyle.make("highlight", id, color)
                 )
             })
         }
@@ -197,11 +209,13 @@ class LayerInitializer{
 class GradientManager{
 
     static makeClassic(){
-        
-        return {0: document.getElementById("gradient picker_1").value, 
-            // 0.75: '#65B89167', 
+        const picker1 = document.getElementById("gradpicker_1");
+        const picker2 = document.getElementById("gradpicker_2");
+
+        return {0: picker1 ? picker1.value : '#014751',
+            // 0.75: '#65B89167',
             // 0.9: '#93E5AB67',
-            1: document.getElementById("gradient picker_2").value};
+            1: picker2 ? picker2.value : '#014751'};
     }
     static makeElements(){
         return {
@@ -244,16 +258,22 @@ class HeatmapStyle{
         return {
             name: "elements"
         }
-        }
+    }
 
-    static mapping = new Map([
-        [VIS.HIGHLIGHT, this.makeFlat],
-        [VIS.GRADIENT, this.makeClassic],
-        [VIS.ELEMENTS, this.makeElements]
-        ]
-    )
+    static getMapping() {
+        // Lazy initialization to avoid VIS being undefined at class load time
+        if (!this._mapping) {
+            this._mapping = new Map([
+                [VIS.HIGHLIGHT, this.makeFlat],
+                [VIS.GRADIENT, this.makeClassic],
+                [VIS.ELEMENTS, this.makeElements]
+            ]);
+        }
+        return this._mapping;
+    }
+
     static make(vis, id, color){
-        return this.mapping.get(vis)(id, color);
+        return this.getMapping().get(vis)(id, color);
     }
 }
 
@@ -266,7 +286,7 @@ class GlobalVisualization{
 
 class VisualizationManager{
 
-    
+
     static mapping(){
         return new Map([
         [VIS.GRADIENT, Karta.layers.heat],
@@ -281,14 +301,15 @@ class VisualizationManager{
         [VIS.ELEMENTS, ValueCalculator],
     ]);
     }
-    static opacity_mapping = 
-         new Map([
+    static opacity_mapping(){
+         return new Map([
         [VIS.GRADIENT, 100],
         [VIS.HIGHLIGHT, 50],
         [VIS.ELEMENTS, 100],
     ]);
-    
-    
+    }
+
+
     static init(){
 
         let vis = this.getGlobalVis();
@@ -329,14 +350,15 @@ class VisualizationManager{
     static make(markers, tree){
         let vis = this.getGlobalVis();
         let calc = this.calc_mapping().get(vis);
-        let opacity = this.opacity_mapping.get(vis);
+        let opacity = this.opacity_mapping().get(vis);
 
         // clear all
         this.getAllLayers().forEach(l=>this.clearLayer(l));
-        
-        // work with the relevant
 
-        this.mapping().get(vis).forEach((l, i)=>{
+        // work with the relevant layers
+        let layers = this.mapping().get(vis);
+
+        layers.forEach((l, i)=>{
             let id = l.options.name.split("_")[1];
             let m = markers.filter(
                 m=>MarkerFilterer.run(tree, m, id).length>0)
@@ -346,11 +368,31 @@ class VisualizationManager{
             if (vis!=VIS.ELEMENTS){
                 l.setLatLngs(m);
             }
-            else{
-                document.getElementsByClassName("leaflet-marker-pane")[0].style.display = DISPLAY.FLEX;
-            }
-            
-        })
+        });
+
+        // Handle elements mode - show/hide individual markers based on filters
+        if (vis === VIS.ELEMENTS) {
+            document.getElementsByClassName("leaflet-marker-pane")[0].style.display = DISPLAY.FLEX;
+
+            // First hide all markers
+            markers.forEach((marker) => {
+                const markerElement = marker._icon;
+                if (markerElement) {
+                    markerElement.style.display = 'none';
+                }
+            });
+
+            // Then show only markers that pass the filters
+            markers.forEach((marker) => {
+                // runWithTags checks both range and tag filters
+                const shouldShow = MarkerFilterer.runWithTags(tree, marker);
+                const markerElement = marker._icon;
+                if (markerElement) {
+                    markerElement.style.display = shouldShow ? '' : 'none';
+                }
+            });
+        }
+
         VisualizationManager.updateColors();
         OpacityController.run(opacity);
     }
@@ -366,7 +408,7 @@ class VisualizationManager{
 
     static updateColors(){
         let vis = this.getGlobalVis();
-        if (vis!=VIS.ELEMENTS){
+        if (vis!="elements"){
             this.mapping().get(vis).forEach((l, i)=>{
                 let id = l.options.name.split("_")[1];
                 let color = VisualizationManager.getColor(id);
@@ -375,9 +417,9 @@ class VisualizationManager{
             })
 
         }
-        
-        
-        
+
+
+
     }
 }
 
@@ -389,6 +431,7 @@ class MarkerFilterer {
     }
 
     static oneCategory(marker_values, id){
+        
         if (id==undefined){
             return marker_values;
         }
@@ -406,6 +449,50 @@ class MarkerFilterer {
             .filter(v=>relevantStats.filter(s=>s.id==v.id)[0].value.get(RANGE_LABELS.MAX) > parseInt(v.value))
             ;
         return this.oneCategory(res, id);
+    }
+    
+    static runWithTags(tree, marker, id){
+        let relevantStats = this.getRelevantStats(tree);
+        let rangeFilters = tree.filter(t => t.value instanceof Map);
+        let tagFilters = tree.filter(t => typeof t.value === 'boolean' && t.value === true);
+
+        if (rangeFilters.length === 0 && tagFilters.length === 0) {
+            return false;
+        }
+
+        return this.passesRange(marker, rangeFilters); // && this.passesTag(marker, tagFilters);
+    }
+
+
+    static passesRange(marker, rangeFilters){
+        let passesRange = false;
+        if (rangeFilters.length > 0) {
+            let rangeMatches = marker.options.values
+                .filter(v=>rangeFilters.map(t=>t.id).includes(v.id))
+                .filter(v=>typeof v.value =="string")
+                .filter(v=>{
+                    let filter = rangeFilters.filter(s=>s.id==v.id)[0];
+                    if (!filter) return false;
+                    let min = filter.value.get(RANGE_LABELS.MIN);
+                    let max = filter.value.get(RANGE_LABELS.MAX);
+                    let val = parseInt(v.value);
+                    return min < val && val < max;
+                });
+            passesRange = rangeMatches.length > 0;
+        }
+        return passesRange;
+    }
+
+    static passesTag(marker, tagFilters){
+        let passesTags = false;
+        if (tagFilters.length > 0) {
+            let tagMatches = marker.options.values
+                .filter(v=>tagFilters.map(t=>t.id).includes(v.id))
+                .filter(v=>v.value === true);
+            passesTags = tagMatches.length > 0;
+        }
+        return passesTags;
+
     }
 }
 
@@ -457,17 +544,43 @@ class MarkerManager{
     }
 
     static addMarker(lat, lon, id, values){
-        
-        
-            let m = L.marker([lat, lon], 
-                            {icon: this.makeIcon(TAG_ICONS.NORMAL), 
-                            id: id, 
+
+
+            let m = L.marker([lat, lon],
+                            {icon: this.makeIcon(TAG_ICONS.NORMAL),
+                            id: id,
                             values:values
             }).addTo(Karta.content).on('click', (e)=>{
-                                                            
-                let icon_path = e.target.options.icon.options.iconUrl == 
+
+                let icon_path = e.target.options.icon.options.iconUrl ==
                                             TAG_ICONS.NORMAL ? TAG_ICONS.SELECTED : TAG_ICONS.NORMAL
                 e.target.setIcon(this.makeIcon(icon_path));
+
+                // Debug popup showing marker values and tags
+                let popupContent = '<div style="font-family: monospace; font-size: 11px;"><strong>Marker Debug Info</strong><br/>';
+                popupContent += '<strong>ID:</strong> '+ id + '<br/><br/>';
+
+                // Separate range values and tags
+                let rangeValues = values.filter(v => typeof v.value === "string");
+                let tagValues = values.filter(v => typeof v.value === "boolean");
+
+                if (rangeValues.length > 0) {
+                    popupContent += '<strong>Range Values:</strong><br/>';
+                    rangeValues.forEach(v => {
+                        popupContent += '  • ' + v.id + ': ' + v.value + '<br/>';
+                    });
+                }
+
+                if (tagValues.length > 0) {
+                    popupContent += '<br/><strong>Tags:</strong><br/>';
+                    tagValues.forEach(v => {
+                        popupContent += '  • ' + v.id + ': ' + (v.value ? '✓' : '✗') + '<br/>';
+                    });
+                }
+
+                popupContent += '</div>';
+
+                e.target.bindPopup(popupContent).openPopup();
     
                 // MapPanel.toggleComment(id, _icon_path==TAG_ICONS.SELECTED);
             
@@ -481,4 +594,44 @@ class MarkerManager{
 const TAG_ICONS = {
     NORMAL : '/images/tag_icon.png',
     SELECTED : '/images/tag_selected.svg'
+}
+class LocateButton extends CButton {
+    constructor(parent, id) {
+        super(parent, "locatebutton");
+        this.name = "locatebutton";
+        this.buttonText = "Use My Location";
+    }
+    
+    initiate() {
+        super.initiate();
+        this.getElement().innerHTML = this.buttonText;
+    }
+    
+    load() {
+        this.getElement().addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        console.log('Location:', lat, lng);
+                        // Store location in answer tree
+                        if (QPanel && QPanel.tree) {
+                            QPanel.tree.add('location', { lat, lng });
+                        }
+                        // Center map on location
+                        if (window.map) {
+                            window.map.setView([lat, lng], 15);
+                        }
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        alert('Could not get your location. Please select manually on the map.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+    }
 }

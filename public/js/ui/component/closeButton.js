@@ -1,18 +1,22 @@
-class CloseButton extends CElement {
-    
-    constructor(parent, category, onclick) {
-        super(parent, category ? category.name : "id");
-        this.name = CLASSNAMES.CLOSE;
-        this.content = "✕"; // U+02715
-        this.onclick = onclick ? onclick : () => { CategorySidePanel.toggle(category) };
+/**
+ * Close button component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class CloseButton extends BaseComponent {
+    constructor(parentId, id, onClick) {
+        super(parentId, ClassName.CLOSE, id);
+        this.buttonContent = "✕"; // U+02715
+        this.clickHandler = onClick || (() => { });
     }
-
-    initiate() {
-        let element = document.createElement("button");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        element.onclick = this.onclick;
-        this.getParent().appendChild(element);
+    getElementTag() {
+        return 'button';
+    }
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
+    }
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
     }
 }

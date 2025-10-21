@@ -1,208 +1,115 @@
-import {config, configDotenv} from 'dotenv';
 import neo4j from 'neo4j-driver';
 import {Driver, Session, QueryResult, RecordShape} from 'neo4j-driver';
+import { DatabaseConfig, DatabaseMode } from '../config/DatabaseConfig';
+import { GraphKey } from '../constants/GraphKeys';
+import { QueryConstants } from '../database/QueryConstants';
 
-if (process.env["NEO4J_URI"]==undefined){
-    configDotenv({path:".env"});
-}
-const URI = process.env["NEO4J_URI"]; 
-const USER = process.env["NEO4J_USER"]; 
-const PASSWORD = process.env["NEO4J_PWD"]; 
-
-
-const MODE = {
-    READ: 0,
-    WRITE: 1,
-}
-
+// Legacy export for backward compatibility - will be removed after full migration
 const GRAPH_KEYS = {
-    ANSWER: "answer",
-    ANSWER1: "answer1",
-    CATEGORY: "category",
-    CHOICE: "choice",
-    CONFIG: "c",
-    CONTENT: "content",
-    ID: "id",
-    ILLUSTRATION: "illustration",
-    LAT: "lat",
-    LON: "lon",
-    NODE: "node",
-    OBSERVATION: "obs",
-    PARTNER: "partner",
-    PLACE: "place",
-    PREV: "prev",
-    PROJECT: "p",
-    RECOGNITION: "recognition",
-    RESULT: "result",
-    ROLE: "r",
-    QUESTION: "question",
-    QUESTION1: "question1",
-    STEP: "step",
-    TEAMMEMBER: "t",
+    ANSWER: GraphKey.ANSWER,
+    ANSWER1: GraphKey.ANSWER1,
+    CATEGORY: GraphKey.CATEGORY,
+    CHOICE: GraphKey.CHOICE,
+    CONFIG: GraphKey.CONFIG,
+    CONTENT: GraphKey.CONTENT,
+    ID: GraphKey.ID,
+    ILLUSTRATION: GraphKey.ILLUSTRATION,
+    LAT: GraphKey.LAT,
+    LON: GraphKey.LON,
+    NODE: GraphKey.NODE,
+    OBSERVATION: GraphKey.OBSERVATION,
+    PARTNER: GraphKey.PARTNER,
+    PLACE: GraphKey.PLACE,
+    PREV: GraphKey.PREV,
+    PROJECT: GraphKey.PROJECT,
+    RECOGNITION: GraphKey.RECOGNITION,
+    RESULT: GraphKey.RESULT,
+    ROLE: GraphKey.ROLE,
+    QUESTION: GraphKey.QUESTION,
+    QUESTION1: GraphKey.QUESTION1,
+    STEP: GraphKey.STEP,
+    TEAMMEMBER: GraphKey.TEAMMEMBER,
 }
 
+// Legacy export - queries moved to QueryConstants for better organization
 const QUERYS = {
-    OBSERVATIONS: `match (p:Place)<-[r:REGISTERED]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[:ISANSWERED]-()
-                    <-[:ASKS]-(c:Config)<-[]-(pr:Project {name: "Mobility Dashboard"}) 
-                    return {content: {obs: o, obs_id: elementId(o), place_id: elementId(p), place:p}};`,
-
-    OBS: `match (p:Place)<-[]-(o:Observation)-[:EVALUATES]->(a:Answer)<-[]-()<-[]-(c:Config)<-[]-(pr:Project {name: $name}) 
-            with collect(p) as places, collect(elementId(o)) as obs
-            match (p)<-[:REGISTERED]-(o:Observation)-[e:EVALUATES]->(a:Answer) where elementId(o) in obs
-            with p, o, collect({id: elementId(a), value: e.value}) as answers
-            return { ${GRAPH_KEYS.LON}: p.lon, ${GRAPH_KEYS.LAT}: p.lat, ${GRAPH_KEYS.ID}: elementId(p), 
-            ${GRAPH_KEYS.OBSERVATION}: elementId(o), ${GRAPH_KEYS.ANSWER}: answers } AS ${GRAPH_KEYS.RESULT}`,
-            
-    SUBMIT: `MERGE (place: Place {lon: $lon, lat: $lat})<-[:REGISTERED]-(o:Observation {date: datetime()})`,
-    SUBMIT_BETA: `WITH $data AS data 
-            UNWIND data AS obs
-            MATCH (n) 
-            WHERE elementId(n) = obs.id 
-            MERGE (p: Place {lat: $lat, lon: $lon})
-            MERGE (p)<-[:REGISTERED]-(o:Observation {date: datetime()})<-[:ILLUSTRATED]-(img: Illustration {name: $image}) 
-            CREATE (n)<-[r:EVALUATES {value: obs.value}]-(o) RETURN n, r, o, obs`,
-    SUBMIT_NO_IMAGE: `WITH $data AS data 
-            UNWIND data AS obs
-            MATCH (n) 
-            WHERE elementId(n) = obs.id 
-            MERGE (p: Place {lat: $lat, lon: $lon})
-            MERGE (p)<-[:REGISTERED]-(o:Observation {date: datetime()})
-            CREATE (n)<-[r:EVALUATES {value: obs.value}]-(o) RETURN n, r, o, obs`,
-    ID_QUESTION: `MATCH (${GRAPH_KEYS.NODE}) WHERE elementId(${GRAPH_KEYS.NODE}) = $name RETURN ${GRAPH_KEYS.NODE}`,
-    PROJECTS: `MATCH (${GRAPH_KEYS.PROJECT}:Project) RETURN ${GRAPH_KEYS.PROJECT}`,
-    PROJECT_NAME: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name}) RETURN ${GRAPH_KEYS.PROJECT}`,
-    PROJECT_TEAM: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})<-[:WORKEDON]-(${GRAPH_KEYS.TEAMMEMBER}:TeamMember)-[rel:AS]->(${GRAPH_KEYS.ROLE}:Role) return ${GRAPH_KEYS.TEAMMEMBER}, rel, ${GRAPH_KEYS.ROLE}`,
-    PROJECT_RECOGNITION: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})-[:HAS]->\
-                        (${GRAPH_KEYS.RECOGNITION}:Recognition)<-[rel:RECOGNIZED]-(${GRAPH_KEYS.PARTNER}:Partner)\
-                         return ${GRAPH_KEYS.RECOGNITION}, rel, ${GRAPH_KEYS.PARTNER}`,
-    PROJECT_PARTNERS: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})<-[:SUPPORTS]-\
-                        (${GRAPH_KEYS.PARTNER}:Partner) return ${GRAPH_KEYS.PARTNER}`,
-    PROJECT_ILLUSTRATIONS: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})<-[:ILLUSTRATED]-\
-                            (${GRAPH_KEYS.ILLUSTRATION}:Illustration) return ${GRAPH_KEYS.ILLUSTRATION}`,
-
-    CONFIG_QUESTIONS_HL: `MATCH (${GRAPH_KEYS.PROJECT}: Project {name : $name})-[:ISSET]->(${GRAPH_KEYS.CONFIG}:Config)-[${GRAPH_KEYS.STEP}:ASKS]->
-                         (${GRAPH_KEYS.QUESTION}:Question)-[ans:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)
-                            return ${GRAPH_KEYS.STEP}, ${GRAPH_KEYS.QUESTION}, ${GRAPH_KEYS.ANSWER}`,
-
-    CONFIG_QUESTIONS: `MATCH (${GRAPH_KEYS.PROJECT}: Project {name : $name})-[:ISSET]->(${GRAPH_KEYS.CONFIG}:Config)-[${GRAPH_KEYS.STEP}:ASKS]\
-                    ->(${GRAPH_KEYS.QUESTION}:Question)-[ans:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)-\
-                    [fb:FOLLOWEDBY]->(${GRAPH_KEYS.QUESTION1}:Question)-[ans1:ISANSWERED]->(${GRAPH_KEYS.ANSWER1}:Answer)\
-                    -[:TOCHOOSE]->(${GRAPH_KEYS.CHOICE}:Answer)
-                    return ${GRAPH_KEYS.STEP}, ${GRAPH_KEYS.QUESTION}, ${GRAPH_KEYS.ANSWER}, \
-                    fb, ${GRAPH_KEYS.QUESTION1}, ans1, ${GRAPH_KEYS.ANSWER1}, ${GRAPH_KEYS.CHOICE}`,
-
-    QUESTION_ANSWERS: `MATCH (${GRAPH_KEYS.QUESTION}:Question {value: $question})-[ans:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)-\
-                    [fb:FOLLOWEDBY]->(${GRAPH_KEYS.QUESTION1}:Question)-[ans1:ISANSWERED]->(${GRAPH_KEYS.ANSWER1}:Answer)\
-                    -[:TOCHOOSE]->(${GRAPH_KEYS.CHOICE}:Answer)
-                    return ${GRAPH_KEYS.STEP}, ${GRAPH_KEYS.QUESTION}, ${GRAPH_KEYS.ANSWER}, \
-                    fb, ${GRAPH_KEYS.QUESTION1}, ans1, ${GRAPH_KEYS.ANSWER1}, ${GRAPH_KEYS.CHOICE}`,
-
-    FOLLOWUP_QUESTIONS: `MATCH (${GRAPH_KEYS.PROJECT}: Project {name : $name})-[:ISSET]->(${GRAPH_KEYS.CONFIG}:Config)
-                    -[${GRAPH_KEYS.STEP}:ASKS]->(q:Question)-[ans:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)\
-                    -[:FOLLOWEDBY]->(${GRAPH_KEYS.QUESTION}:Question)-[:ISANSWERED]->(${GRAPH_KEYS.ANSWER1}:Answer)\
-                    -[]->(${GRAPH_KEYS.CHOICE})
-                    return ${GRAPH_KEYS.STEP}, ${GRAPH_KEYS.ANSWER}, ${GRAPH_KEYS.QUESTION}, 
-                        ${GRAPH_KEYS.ANSWER1}, ${GRAPH_KEYS.CHOICE}`,
-
-    Q_TREE: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})-[:ISSET]->(${GRAPH_KEYS.CONFIG}:Config)-\
-            [${GRAPH_KEYS.STEP}:ASKS]->() \
-            ((${GRAPH_KEYS.QUESTION}:Question)-[r1]->(${GRAPH_KEYS.ANSWER}:Answer)){1,5}(()-[r3]->(${GRAPH_KEYS.CHOICE})){0,10}  \
-            return ${GRAPH_KEYS.STEP},  q1, r1, a1, r3, s`,
-
-    Q1: `MATCH (${GRAPH_KEYS.PROJECT}:Project {name : $name})-[:ISSET]->(${GRAPH_KEYS.CONFIG}:Config)-\
-            [${GRAPH_KEYS.STEP}:ASKS]->(${GRAPH_KEYS.QUESTION}:Question)-[:ISANSWERED]->(${GRAPH_KEYS.ANSWER}:Answer)
-                RETURN 
-                CASE 
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="range" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, \
-                content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
-                                        ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
-                                        value: {min: ${GRAPH_KEYS.ANSWER}.min, max: ${GRAPH_KEYS.ANSWER}.max}, 
-                                        label: {min: ${GRAPH_KEYS.ANSWER}.minlabel, max: ${GRAPH_KEYS.ANSWER}.maxlabel}} } }
-                WHEN ${GRAPH_KEYS.ANSWER}.atype="multicategory" THEN { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step,
-                ${GRAPH_KEYS.CONTENT}: {${GRAPH_KEYS.QUESTION}: {id: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
-                        ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype, 
-                        content: COLLECT {
-                                    MATCH (${GRAPH_KEYS.ANSWER}:Answer)-[r]->(child:Answer)
-                                        return {atype: child.atype, name: child.name}
-                                }
-                } } }
-                ELSE { ${GRAPH_KEYS.CATEGORY}: ${GRAPH_KEYS.STEP}.name, ${GRAPH_KEYS.STEP}: ${GRAPH_KEYS.STEP}.step, content: {${GRAPH_KEYS.QUESTION}: {${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.QUESTION}), help: ${GRAPH_KEYS.QUESTION}.help, value:${GRAPH_KEYS.QUESTION}.value}, 
-                                        ${GRAPH_KEYS.ANSWER}: {id: elementId(${GRAPH_KEYS.ANSWER}), atype: ${GRAPH_KEYS.ANSWER}.atype} } }
-                END AS ${GRAPH_KEYS.RESULT}
-                order by ${GRAPH_KEYS.STEP}.step`,
-
-    Q2: `MATCH (a:Answer)-[r:FOLLOWEDBY]->(q:Question)-[:ISANSWERED]->(${GRAPH_KEYS.ANSWER1}: Answer)
-        where elementId(a) in [$ids]
-        with collect(${GRAPH_KEYS.ANSWER1}) as answers, ${GRAPH_KEYS.ANSWER1} as ${GRAPH_KEYS.ANSWER1}, q as q, a as a
-
-        return {${GRAPH_KEYS.PREV}: elementId(a), 
-                ${GRAPH_KEYS.CONTENT}: {
-                        ${GRAPH_KEYS.QUESTION}: {
-                                ${GRAPH_KEYS.ID}: elementId(q), 
-                                help: q.help, 
-                                value: q.value
-                            }, 
-                        ${GRAPH_KEYS.ANSWER}: {
-                            ${GRAPH_KEYS.ID}: elementId(${GRAPH_KEYS.ANSWER1}),
-                            atype: ${GRAPH_KEYS.ANSWER1}.atype, 
-                            value: {min: ${GRAPH_KEYS.ANSWER1}.min, max: ${GRAPH_KEYS.ANSWER1}.max}, 
-                            label: {min: ${GRAPH_KEYS.ANSWER1}.minlabel, max: ${GRAPH_KEYS.ANSWER1}.maxlabel},
-                            ${GRAPH_KEYS.CONTENT}: COLLECT {
-                                    MATCH (a2:Answer)-[r]->(child:Answer)
-                                        where a2 in answers
-                                        return {${GRAPH_KEYS.ID}: elementId(child), atype: child.atype, name: child.name}
-                }
-}}
-        } as ${GRAPH_KEYS.RESULT}`,
-
-    QUESTION_TREES: `MATCH (p:Project)-[:ISSET]->(c:Config)-[${GRAPH_KEYS.STEP}:ASKS]->()\
-                        ((${GRAPH_KEYS.QUESTION}:Question)-[]->(${GRAPH_KEYS.ANSWER}:Answer)){1,5}(()-[]->(${GRAPH_KEYS.CHOICE})){0,100} \
-                        return ${GRAPH_KEYS.STEP}, ${GRAPH_KEYS.QUESTION}, ${GRAPH_KEYS.ANSWER}, ${GRAPH_KEYS.CHOICE}`,
-
-    TEAM: `MATCH (${GRAPH_KEYS.TEAMMEMBER}:TeamMember) RETURN ${GRAPH_KEYS.TEAMMEMBER}`,
-    TEAM_PROJECT: `MATCH (${GRAPH_KEYS.PROJECT}:Project)<-[w:WORKEDON]-(${GRAPH_KEYS.TEAMMEMBER}:TeamMember)\
-                    -[rel:AS]->(${GRAPH_KEYS.ROLE}:Role)<-[:EMPLOYED]-(p:Project) \
-                    return ${GRAPH_KEYS.PROJECT}, w, ${GRAPH_KEYS.TEAMMEMBER}, rel, ${GRAPH_KEYS.ROLE}`,
+    OBSERVATIONS: QueryConstants.OBSERVATIONS,
+    OBS: QueryConstants.OBS,
+    SUBMIT: QueryConstants.SUBMIT,
+    SUBMIT_BETA: QueryConstants.SUBMIT_BETA,
+    SUBMIT_NO_IMAGE: QueryConstants.SUBMIT_NO_IMAGE,
+    ID_QUESTION: QueryConstants.ID_QUESTION,
+    PROJECTS: QueryConstants.PROJECTS,
+    PROJECT_NAME: QueryConstants.PROJECT_NAME,
+    PROJECT_TEAM: QueryConstants.PROJECT_TEAM,
+    PROJECT_RECOGNITION: QueryConstants.PROJECT_RECOGNITION,
+    PROJECT_PARTNERS: QueryConstants.PROJECT_PARTNERS,
+    PROJECT_ILLUSTRATIONS: QueryConstants.PROJECT_ILLUSTRATIONS,
+    CONFIG_QUESTIONS_HL: QueryConstants.CONFIG_QUESTIONS_HL,
+    CONFIG_QUESTIONS: QueryConstants.CONFIG_QUESTIONS,
+    QUESTION_ANSWERS: QueryConstants.QUESTION_ANSWERS,
+    FOLLOWUP_QUESTIONS: QueryConstants.FOLLOWUP_QUESTIONS,
+    Q_TREE: QueryConstants.Q_TREE,
+    Q1: QueryConstants.Q1,
+    Q2: QueryConstants.Q2,
+    QUESTION_TREES: QueryConstants.QUESTION_TREES,
+    TEAM: QueryConstants.TEAM,
+    TEAM_PROJECT: QueryConstants.TEAM_PROJECT,
 }
 
 class DBConnection{
     driver: Driver;
     session: Session;
+    private config: DatabaseConfig;
 
     constructor(){
         this.driver = undefined;
         this.session = undefined;
+        this.config = DatabaseConfig.fromEnvironment();
     }
+
     async init(){
-        
         if (this.driver==undefined){
             try {
-                this.driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD),  { disableLosslessIntegers: true });
+                this.driver = neo4j.driver(
+                    this.config.getUri(),
+                    neo4j.auth.basic(this.config.getUser(), this.config.getPassword()),
+                    { disableLosslessIntegers: this.config.shouldDisableLosslessIntegers() }
+                );
                 const serverInfo = await this.driver.getServerInfo();
-                // this.initSession();
+                console.log(`Connected to Neo4j: ${this.config.getConnectionStringMasked()}`);
             } catch(err) {
-                    console.log(`Connection error\n${err}\nCause: ${err.cause}`)
+                console.log(`Connection error\n${err}\nCause: ${err.cause}`)
             }
-            }
-        //   await this.driver.close();
-    } 
+        }
+    }
 
-    async initSession(mode:number=0){
-            return this.init().then(k=>
-                this.session = mode==MODE.WRITE ? this.driver.session(
-                    { defaultAccessMode: neo4j.session.WRITE }) : this.driver.session({ defaultAccessMode: neo4j.session.READ })
-            )
+    async initSession(mode: DatabaseMode = DatabaseMode.READ){
+        return this.init().then(k=>
+            this.session = mode === DatabaseMode.WRITE
+                ? this.driver.session({ defaultAccessMode: neo4j.session.WRITE })
+                : this.driver.session({ defaultAccessMode: neo4j.session.READ })
+        )
     }
 
     async read(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        return this.initSession(MODE.READ).then(k=>{
-                return this.session.run(query, param, { timeout: 3000 } )
-                .then(result => {
-                    this.reset();
-                    return result;
-                })     
-            }) 
+        // Create a new session for each query to avoid transaction conflicts
+        // This allows Promise.all to work correctly when multiple queries run in parallel
+        const session = this.driver.session({ defaultAccessMode: neo4j.session.READ });
+        console.log('[DBConnection.read] Created new session for query:', query.substring(0, 50));
+
+        try {
+            const result = await session.run(query, param, { timeout: this.config.getDefaultTimeout() });
+            console.log('[DBConnection.read] Query completed successfully');
+            return result;
+        } catch (error) {
+            console.error('[DBConnection.read] Query failed:', error.message);
+            throw error;
+        } finally {
+            await session.close();
+            console.log('[DBConnection.read] Session closed');
         }
+    }
 
     reset(){
         if (this.session!=undefined){
@@ -212,24 +119,16 @@ class DBConnection{
     }
 
     async write(query:string, param:any):Promise<undefined | QueryResult<RecordShape>>{
-        /*
-        'MERGE (james:Person {name : $nameParam}) RETURN james.name AS name', {
-                    nameParam: 'James'
-                }
-         */
-        this.reset()
-        
-        return  this.initSession(MODE.WRITE).then(k=>{
-                return this.session.run(query, param, { timeout: 3000 } ).then(result => {
-                    this.reset();
-                    return result;
-                })
-            })
-        
-        
-                    
+        // Create a new session for each query to avoid transaction conflicts
+        const session = this.driver.session({ defaultAccessMode: neo4j.session.WRITE });
+
+        try {
+            const result = await session.run(query, param, { timeout: this.config.getDefaultTimeout() });
+            return result;
+        } finally {
+            await session.close();
         }
-        
     }
+}
 
 export {DBConnection, QUERYS, GRAPH_KEYS};

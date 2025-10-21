@@ -1,25 +1,15 @@
-class ImageContainerElement extends ContentPanel{
-    constructor(parent, name, illustrations){
-        super(parent, undefined, name);
-        this.name = CLASSNAMES.PROJECT_IMAGE_CONTAINER;
-        this.parent = parent ? parent : "main";
-        this.elements = illustrations.map(e=>ImageElement);
+/**
+ * Image container element for displaying multiple images.
+ * Extends ContentElement with proper OOP principles.
+ */
+class ImageContainerElement extends ContentElement {
+    constructor(parentId, className, illustrations) {
+        super(parentId || "main", undefined, className);
+        this.className = className;
         this.images = illustrations;
-    }
-
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), uuidv4(),
-                                    this.id, this.images[e]);
-            element.initiate();
-            element.load();
-        }
-    }
-}
-
-class PartnerImageContainerElement extends ImageContainerElement{
-    constructor(parent, name, illustrations){
-        super(parent, name, illustrations);
-        this.name = CLASSNAMES.PARTNER;
+        // Add ImageElement children for each illustration
+        illustrations.forEach((illustration, index) => {
+            this.addChild(new ImageElement(this.makeId(), `img_${index}`, illustration));
+        });
     }
 }

@@ -14,7 +14,7 @@ class ControllerContainer extends ContentPanel{
 
     load(config) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            let element = new el(this.makeId(), "main");
             element.initiate();
             element.load();
         });
@@ -24,14 +24,19 @@ class ControllerContainer extends ContentPanel{
             });
         }
         vischoicepubsub.subscribe(ControllerContainerManager.update);
-        
+        // Call initial update to set correct visibility for initial mode
+        ControllerContainerManager.update();
+
     }
 
 
     add(category) {
-        let element = new CategoryController(this.make_id(), category);
+        let element = new CategoryController(this.makeId(), category);
         element.initiate();
         element.load();
     }
 
 }
+
+// Export to global scope for ConfigPanel to use
+window.ControllerContainer = ControllerContainer;

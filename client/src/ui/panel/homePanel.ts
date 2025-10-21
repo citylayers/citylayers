@@ -1,8 +1,6 @@
-import { CLASSNAMES} from "../../../classnames";
-import {ContentPanel} from "./contentPanel";
-import {LandingIllustration, GeneralContent} from "../panelcomponent/landing";
-import { ProjectPanel } from "../component/projectComponent";
-import { Project } from "../../../../logic/project";
+
+
+
 
 
 class HomePanel extends ContentPanel{
@@ -13,15 +11,14 @@ class HomePanel extends ContentPanel{
         this.elements = [LandingIllustration, GeneralContent, ProjectPanel]
     }
 
-    load(projects:Project[]) {
+    load(projects:any[]) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            // Pass this.makeId() as parent so components nest properly
+            let element = new el(this.makeId(), this.id);
             element.initiate();
             element.load(projects);
         });
 
     }
 }
-
-export {HomePanel}
 

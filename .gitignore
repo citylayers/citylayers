@@ -1,9 +1,38 @@
+# Dependencies
 node_modules
+
+# Build outputs
 dist
+client/dst
 
-
+# Environment files
 .keys
 *.backup
 *.env
+.env
+.env.local
+.env.*.local
+
+# Uploads and views
 public/views
 public/uploads/*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp files
+tmp
+temp
+.cache

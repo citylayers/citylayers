@@ -1,152 +1,160 @@
-
-/*
-    ------------------------------------------------------
-
-    Category Side Panel and its elements
-
-    ------------------------------------------------------
-
-*/
-
-class CategorySidePanel extends CElement {
-    
+/**
+ * Category Side Panel Components
+ * Migrated from sidePanel.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Side panel for displaying category details and filtering options
+ */
+class CategorySidePanel extends BaseComponent {
     constructor(parent, category) {
-        super(parent, category.id);
-        this.id = category.name;
-        this.name = CLASSNAMES.CATEGORY_SIDE_PANEL;
-        this.parent = parent ? parent : "body";
-        
+        super(parent || "body", ClassName.CATEGORY_SIDE_PANEL, category.name);
+        this.category = category;
         this.content = category;
-
-        this.elements = [CloseButton,
+        this.elements = [
+            CloseButton,
             CategoryDescription,
             CategorySidePanelTagContainer
         ];
-        
-        this.args = [() => { CategorySidePanel.toggle(category); }]
+        this.args = [() => { CategorySidePanel.toggle(category); }];
     }
-
+    /**
+     * Get parent element (handles class name parent selector)
+     */
+    getParent() {
+        const elements = document.getElementsByClassName(this.parentId);
+        if (elements.length > 0) {
+            return elements[0];
+        }
+        return super.getParent();
+    }
+    /**
+     * Load child elements and hide panel initially
+     */
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.content, e<this.args.length?this.args[e]:undefined);
+            let element = new this.elements[e](this.makeId(), this.content, e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
-
-        this.getElement().style.display = DISPLAY.NONE;
+        const el = this.getElement();
+        if (el) {
+            el.style.display = DisplayStyle.NONE;
+        }
     }
-
+    /**
+     * Toggle side panel visibility for a category
+     */
     static toggle(category) {
-        
-        let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category.name}`);
-        let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category.name}`);
-        if (sidePanel.style.display === DISPLAY.NONE) {
+        const sidePanel = document.getElementById(`${ClassName.CATEGORY_SIDE_PANEL}_${category.name}`);
+        const container = document.getElementById(`${ClassName.CATEGORY_CONTAINER}_${category.name}`);
+        if (!sidePanel || !container)
+            return;
+        if (sidePanel.style.display === DisplayStyle.NONE) {
             this.hideAll();
         }
         container.classList.toggle("simple-drop-shadow");
-        sidePanel.style.display = sidePanel.style.display === DISPLAY.NONE ? DISPLAY.FLEX : DISPLAY.NONE;
+        sidePanel.style.display = sidePanel.style.display === DisplayStyle.NONE
+            ? DisplayStyle.FLEX
+            : DisplayStyle.NONE;
         document.body.style.setProperty(`--side-panel-color`, `#${category.color}`);
     }
-
+    /**
+     * Hide all category side panels
+     */
     static hideAll() {
-        let panels = document.getElementsByClassName(CLASSNAMES.CATEGORY_SIDE_PANEL);
-        let containers = document.getElementsByClassName(CLASSNAMES.CATEGORY_CONTAINER);
-        Array.from(panels).forEach(panel => {
-        })
+        const panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        const containers = document.getElementsByClassName(ClassName.CATEGORY_CONTAINER);
         for (let i = 0; i < panels.length; i++) {
-            panels[i].style.display = DISPLAY.NONE;
-            containers[i].classList.remove("simple-drop-shadow");            
+            panels[i].style.display = DisplayStyle.NONE;
+            containers[i]?.classList.remove("simple-drop-shadow");
         }
     }
 }
-
-class CategorySidePanelTagContainer extends CElement {
-    
-
+/**
+ * Container for category side panel tags and filters
+ */
+class CategorySidePanelTagContainer extends BaseComponent {
     constructor(parent, category) {
-        super(parent, category.id);
-        this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER;
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER, category.id);
+        this.category = category;
         this.content = category;
-        // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.elements = [
             HorizontalDivider,
             CategorySidePanelTagTitle,
-            CategorySidePanelTagContainerS];
+            CategorySidePanelTagContainerS
+        ];
     }
-
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.content);
+            let element = new this.elements[e](this.makeId(), this.content);
             element.initiate();
             element.load();
         }
     }
 }
-
+/**
+ * Description text for category in side panel
+ */
 class CategoryDescription extends TextElement {
-    
     constructor(parent, category) {
         super(parent, category.id);
-        this.name = CLASSNAMES.CATEGORY_DESCRIPTION;
+        this.className = ClassName.CATEGORY_DESCRIPTION;
         this.content = category.description;
     }
-
-    
 }
-
-
-
-class CategorySidePanelTagTitle extends CElement {
-    
+/**
+ * Title button for tag filtering section
+ */
+class CategorySidePanelTagTitle extends BaseComponent {
     constructor(parent, category) {
-        super(parent, category.name);
-        this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER_TITLE;
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_TITLE, category.name);
         this.category = category;
-        this.content = "Filter by tags"; // U+022C1  // keyboard_arrow_down 
-        // https://materialui.co/icon/keyboard-arrow-down
-        // <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        this.content = "Filter by tags";
+        this.clickHandler = () => {
+            CategorySidePanel.toggle(this.category);
+        };
     }
-
-    initiate() {
-        let element = document.createElement("button");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        element.onclick = () => { CategorySidePanel.toggle(this.category); };
+    getElementTag() {
+        return 'button';
+    }
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
-        // element.style.display = "none";
-        this.getParent().appendChild(element);
+        return element;
+    }
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
     }
 }
-
-class HorizontalDivider extends CElement {
+/**
+ * Horizontal divider line
+ */
+class HorizontalDivider extends BaseComponent {
     constructor(parent, category) {
-        super(parent, category.id);
+        super(parent, '', category.id);
     }
-
-    load() { }
-
-    initiate() {
-        let element = document.createElement("hr");
-        this.getParent().appendChild(element);
+    getElementTag() {
+        return 'hr';
     }
-}
-
-class CategorySidePanelTagContainerS extends CElement {
-    
-    constructor(parent, category) {
-        super(parent, category.name);
-        this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER_S;
-        this.content = category;
-        // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
-        this.elements = [CategoryLabel, CategorySwitch];
-    }
-
     load() {
-        this.content.subcategories.forEach(subcat => {
-            let element = new SubcategoryTag(this.make_id(), subcat);
+        // No children to load
+    }
+}
+/**
+ * Small container for subcategory tags
+ */
+class CategorySidePanelTagContainerS extends BaseComponent {
+    constructor(parent, category) {
+        super(parent, ClassName.CATEGORY_SIDE_TAG_CONTAINER_S, category.name);
+        this.category = category;
+        this.content = category;
+    }
+    load() {
+        if (!this.content.subcategories)
+            return;
+        this.content.subcategories.forEach((subcat) => {
+            let element = new SubcategoryTag(this.makeId(), subcat);
             element.initiate();
         });
     }
 }
-
-

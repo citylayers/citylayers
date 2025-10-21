@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "None",
+    "lib": ["ES2021", "DOM"],
+    "outDir": "./public/js",
+    "rootDir": "./client/src",
+    "removeComments": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "types": []
+  },
+  "include": ["client/src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,76 +1,36 @@
-
-
-class Position{
-    static lat = 48.210033;
-    static lon = 16.363449;
-
-    static make(){
+/**
+ * Position class for managing geolocation
+ * Stores and updates current latitude/longitude coordinates
+ */
+class Position {
+    /**
+     * Request user's current geolocation
+     * Updates Position.lat and Position.lon on success
+     */
+    static make() {
         if (navigator && navigator.geolocation) {
-            
-            navigator.geolocation.getCurrentPosition(
-                function success(pos) {
-                    Position.lat = pos.coords.latitude;
-                    Position.lon = pos.coords.longitude;
-                    console.log(`Latitude: ${pos.coords.latitude}`);
-                },
-                
-                function (error) {
-                    console.log(error);
-                    if (error.code == error.PERMISSION_DENIED) {
-                        alert("you need to allow your location in order to contiue");
-                    }
+            navigator.geolocation.getCurrentPosition((pos) => {
+                Position.lat = pos.coords.latitude;
+                Position.lon = pos.coords.longitude;
+                console.log(`Latitude: ${pos.coords.latitude}`);
+            }, (error) => {
+                console.log(error);
+                if (error.code === error.PERMISSION_DENIED) {
+                    alert("You need to allow your location in order to continue");
                 }
-            );
+            });
         }
     }
-
-    static update(lat, lon){
+    /**
+     * Manually update position coordinates
+     * @param lat - Latitude coordinate
+     * @param lon - Longitude coordinate
+     */
+    static update(lat, lon) {
         Position.lat = lat;
         Position.lon = lon;
-        console.log(`updated to: Latitude: ${lat} Longitude: ${lon}`);
-
+        console.log(`Updated to: Latitude: ${lat} Longitude: ${lon}`);
     }
-
-    // static load() {
-    //     if (navigator) {
-            
-    //         if (navigator.geolocation) {
-    //             console.log(navigator.geolocation);
-    //             return navigator.geolocation.getCurrentPosition(this._call, this._error);
-    //         }
-    //     }
-    //     console.log("Geoposition undefined");
-    // }
-
-    // _error(geo){
-    //     console.log(geo);
-    //     console.log("failed to get position");
-    // }
-
-    // _call(geo) {
-    //     console.log(geo);
-    //     let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
-    //     console.log(url);
-    //     return fetch(url, {
-    //         method: "GET",
-    //         headers: { 'Content-Type': 'application/json' },
-    //     }).then(result => {
-    //         if (result.status == 200) {
-    //             return result.json().then(res => {
-    //                 document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
-    //                 return res;
-    //             });
-    //         }
-    //         else if (result.status == 429) {
-    //             return sleep(1000).then(r => { return this.request() });
-    //         }
-    //         else if (result.status == 504) {
-    //             return this.request();
-    //         }
-    //         else {
-    //             console.log(`CODE: ${result.status}`);
-    //         }
-    //         return result;
-    //     });
-    // }
 }
+Position.lat = 48.210033;
+Position.lon = 16.363449;

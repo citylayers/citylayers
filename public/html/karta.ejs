@@ -13,6 +13,11 @@
     <script type="text/javascript" src="/js/logic/projectInfo.js"></script>
     <script type="text/javascript" src="/js/logic/project.js"></script>
 
+    <!-- Base UI Classes - MUST load before other components -->
+    <script type="text/javascript" src="/js/ui/component/celement.js"></script>
+    <script type="text/javascript" src="/js/ui/component/cbutton.js"></script>
+    <script type="text/javascript" src="/js/ui/component/infoelement.js"></script>
+
     <script type="text/javascript" src="/js/ui/component/inputElement.js"></script>
     <script type="text/javascript" src="/js/question/pubsub.js"></script>
     <script type="text/javascript" src="/js/question/question.js"></script>
@@ -24,26 +29,27 @@
     <script type="text/javascript" src="/js/question/controller.js"></script>
     <script type="text/javascript" src="/js/question/controllerParser.js"></script>
     
-    
-    <script type="text/javascript" src="/js/ui/component/hrElement.js"></script>
-    <script type="text/javascript" src="/js/ui/component/spanElement.js"></script>
+
+    <!-- hrElement.js and spanElement.js already loaded in header.ejs -->
     <script type="text/javascript" src="/js/ui/component/slider.js"></script>
-    <script type="text/javascript" src="/js/ui/component/infoElement.js"></script>
-    <script type="text/javascript" src="/js/ui/component/imageContainerElement.js"></script>
+    <!-- infoelement.js already loaded earlier (extends CElement) -->
+    <!-- imageContainerElement.js already loaded in header.ejs -->
     <script type="text/javascript" src="/js/ui/component/projectComponent.js"></script>
-    <script type="text/javascript" src="/js/ui/panel/legal.js"></script>
+    <!-- legal.js already loaded in header.ejs -->
     <script type="text/javascript" src="/js/ui/panel/sidePanel.js"></script>
-    <script type="text/javascript" src="/js/ui/panelcomponent/team.js"></script>
-    <script type="text/javascript" src="/js/ui/panel/team.js"></script>
+    <script type="text/javascript" src="/js/ui/panelcomponent/teamComponent.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/teamPanel.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/GradientContainer.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/configHeader.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/vischoiceContainer.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainerManager.js"></script>
     <script type="text/javascript" src="/js/ui/panelcomponent/controllerContainer.js"></script>
     
+    <script type="text/javascript" src="/js/ui/panel/qPanel.js"></script>
+
     <script type="text/javascript" src="/js/ui/panelcomponent/landing.js"></script>
     <script type="text/javascript" src="/js/ui/panel/projectCard.js"></script>
-    <script type="text/javascript" src="/js/ui/panel/home.js"></script>
+    <script type="text/javascript" src="/js/ui/panel/homePanel.js"></script>
     <script type="text/javascript" src="/js/page/pin.js"></script>
     <script type="text/javascript" src="/js/karta/positioning.js"></script>
     <script type="text/javascript" src="/js/karta/karta.js"></script>
@@ -61,13 +67,20 @@
 
 <div class="main" id="main">
     <script type='text/javascript'>
-        // console.log("DATA", <%- JSON.stringify(data) %>);
+        
         const pubsub = new PubSub();
         const colorpubsub = new PubSub();
         const vischoicepubsub = new PubSub();
         let globalvisualization = new GlobalVisualization(VIS.GRADIENT);
-        
+
         const tree = new ControlTree();
+        window.tree = tree; // Make tree globally accessible for controllers
+        
+        // Initialize QPanel.tree for slider components
+        if (typeof QPanel !== 'undefined') {
+            QPanel.tree = tree;
+        }
+
         PageBuilder.build(PAGES.KARTA, <%- JSON.stringify(data) %>);
 
     </script>

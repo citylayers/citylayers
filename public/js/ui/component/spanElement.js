@@ -1,17 +1,18 @@
-
-
-class SpanElement extends CElement{
-    constructor(parent, id, content) {
-        super(parent, id);
-        this.name = "";
-        this.content = content;
+/**
+ * Span element component for inline text.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class SpanElement extends BaseComponent {
+    constructor(parentId, id, content) {
+        super(parentId, "", id);
+        this.htmlContent = content || "";
     }
-    load() { }
-
-    initiate() {
-        let element = document.createElement("span");
-        element.innerHTML = this.content;
-        this.getParent().appendChild(element);
+    getElementTag() {
+        return 'span';
     }
-    
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.htmlContent;
+        return element;
+    }
 }

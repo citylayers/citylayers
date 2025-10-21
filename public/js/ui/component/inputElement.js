@@ -1,334 +1,334 @@
-
+// import { Illustration } from '../../../../src/logic/illustration';
 const INPUT_TYPES = {
     TEXT: "text",
     FILE: "file",
     RANGE: "range",
     CHECKBOX: "checkbox"
-}
-
-class InputElement extends CElement {
-    static name = "input";
+};
+/**
+ * Input element base class for form inputs.
+ * Extends BaseComponent with custom initiation pattern for questionnaire logic.
+ */
+class InputElement extends BaseComponent {
     constructor(parent, id, content) {
-        super(parent, id, content);
-        this.id = id;
-        this.content = content; //content ? content.replaceAll("\\n", "<br>") : "";
-        this.t = "input";
-        this.input_type = INPUT_TYPES.TEXT;
+        super(parent, "input", id, content);
+        this.answerTree = null;
+        this.nextIds = null;
+        this.elementTag = "input";
+        this.inputType = INPUT_TYPES.TEXT;
+        this.changeHandler = (ev) => {
+            if (this.answerTree && this.nextIds) {
+                this.action(ev, this.answerTree, this.nextIds);
+            }
+            // Note: answerTree/nextIds are only used for pin page question flow
+            // Map page sliders don't use this mechanism
+        };
     }
-    load() { }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
-    }
-
-    activateNext(tree, nextids){
-        if (nextids==undefined){
-            return
+    /**
+     * Custom initiation for InputElement that accepts answerTree and nextIds.
+     * This maintains backward compatibility with questionnaire logic.
+     */
+    initiate(answerTree, nextid) {
+        if (answerTree && nextid) {
+            this.answerTree = answerTree;
+            this.nextIds = nextid;
         }
-        if (tree.get(this.id)!=undefined){
+        super.initiate();
+    }
+    getElementTag() {
+        return this.elementTag;
+    }
+    createElement() {
+        const element = document.createElement(this.elementTag);
+        element.setAttribute('type', this.inputType);
+        element.setAttribute('name', this.className);
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
+    }
+    afterInit() {
+        this.addEventListener('change', this.changeHandler);
+        const element = this.getElement();
+        if (element) {
+            this.initExtra(element);
+        }
+    }
+    /**
+     * Template method for subclasses to add extra initialization.
+     * Override this in subclasses to customize element attributes.
+     */
+    initExtra(element) {
+        // To be overridden by subclasses
+    }
+    activateNext(tree, nextids) {
+        if (nextids === undefined) {
+            return;
+        }
+        if (tree.get(this.id) !== undefined) {
             let nextid = nextids.get(this.id);
-            if (nextid!=undefined){
+            if (nextid !== undefined) {
                 nextid = `qa-container_${nextid}`;
-                document.getElementById(nextid).style.display=DISPLAY.FLEX;
+                const nextElement = document.getElementById(nextid);
+                if (nextElement) {
+                    nextElement.style.display = DISPLAY.FLEX;
+                }
             }
         }
     }
-
-    action(ev, next, tree){
-        QPanel.tree.add(this.id, ev.target.value);
+    action(ev, tree, next) {
+        tree.add(this.id, ev.target.value);
         this.activateNext(tree, next);
-
     }
-
-    initiate(nextid, tree) {
-        let element = this.init_input(nextid, tree);
-        this.init_extra(element);
-    }
-
-    init_input(nextid, tree){
-        let element = document.createElement(this.t);
-        element.setAttribute('type', this.input_type);
-        element.setAttribute('name', this.name);
-        element.setAttribute("class", this.name);
-        element.setAttribute("id", this.make_id());
-        element.onchange = (ev)=>{
-            this.action(ev, nextid, tree)
-        };
-        this.getParent().appendChild(element);
-        return element;
-
-    }
-    init_extra(element){}
 }
-
 class TextInputElement extends InputElement {
-    static name = CLASSNAMES.TEXT_INPUT;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.t = "textarea";
-        this.input_type = INPUT_TYPES.TEXT;
+        this.className = CLASSNAMES.TEXT_INPUT;
+        this.elementTag = "textarea";
+        this.inputType = INPUT_TYPES.TEXT;
     }
-    init_extra(element){
+    initExtra(element) {
         element.setAttribute("placeholder", "Type your comment here");
     }
-
 }
-
 class ImageInputElement extends InputElement {
-    static name = CLASSNAMES.IMG_INPUT;
-    constructor(parent, name, content) {
-        super(parent, name, content);
-        this.input_type = INPUT_TYPES.FILE;
+    constructor(parent, id, content) {
+        super(parent, id, content);
+        this.className = CLASSNAMES.IMG_INPUT;
+        this.inputType = INPUT_TYPES.FILE;
     }
-
-    action(ev, next){
-        this.activateNext(next);
-        const file = ev.target.files[0];
-        
-        if (file) {
-            
-            const fileReader = new FileReader();
-            // fileReader.onload = event => {
-            //     this.image_src = event.target.result;
-            // }
-            fileReader.readAsDataURL(file);
-            QPanel.tree.add("image", file);
-            // this.place_data["image"] = file;
-        }
-
+    action(ev, tree, next) {
+        this.activateNext(tree, next);
+        tree.add(this.id, ev.target.files[0]);
     }
-
-    init_extra(element){
+    initExtra(element) {
         element.setAttribute('accept', ".jpg, .png, .jpeg");
     }
-
 }
-
 class InputContainer extends ContentPanel {
-    static name = CLASSNAMES.IMGINPUT_CONTAINER;
-    constructor(parent, id, content){
+    constructor(parent, id, content) {
         super(parent, id, content);
+        this.name = CLASSNAMES.IMGINPUT_CONTAINER;
         this.content = content ? content : ["", "or skip"];
-        this.components = [];
         this.elements = [];
     }
-
-    activate(value){
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
-    }
-
     getElement() {
         return document.getElementById(`${this.name}_${this.id}`);
     }
-
-    load(nextid, tree) {
-        this.elements = this.components.map((el, i) => {
-            let element = new el(this.make_id(), this.id, 
-                                 this.content instanceof Array ? this.content[i] : this.content);
-            
-            element instanceof InputElement ? element.initiate(nextid, tree) : element.initiate();
-            element instanceof InputContainer ? element.load(nextid, tree) : element.load();
-            return element;
+    /**
+     * Public load method that matches Answer.make() call signature: load(nextids, tree)
+     * Swaps parameters and delegates to load_() for proper initialization
+     */
+    load(nextids, answerTree) {
+        this.load_(answerTree, nextids);
+    }
+    load_(answerTree, nextid) {
+        this.elements.forEach((el, i) => {
+            let element = new el(this.makeId(), this.id, this.content instanceof Array ? this.content[i] : this.content);
+            // For InputElement instances, pass answerTree and nextid during initiate
+            if (element instanceof InputElement) {
+                element.initiate(answerTree, nextid);
+            }
+            else {
+                element.initiate();
+            }
+            // For InputContainer instances, pass them during load_
+            if (element instanceof InputContainer) {
+                element.load_(answerTree, nextid);
+            }
+            else {
+                element.load();
+            }
         });
     }
 }
-
 class ImageInputContainer extends InputContainer {
-    static name = CLASSNAMES.IMGINPUT_CONTAINER;
-    constructor(parent, id){
-        super(parent);
-        this.content = ["", "or skip"];
-        this.components = [ImageInputContainerElement, SpanElement];
-    }
-}
-
-class TextInputContainer extends InputContainer {
-    static name = CLASSNAMES.TEXTINPUT_CONTAINER;
-    constructor(parent, id, content){
+    constructor(parent, id) {
         super(parent, id);
-        this.content = content;
-        this.components = [TextInputElement];
+        this.content = ["", "or skip"];
+        this.name = CLASSNAMES.IMGINPUT_CONTAINER;
+        this.elements = [ImageInputContainerElement, SpanElement];
     }
 }
-
+class TextInputContainer extends InputContainer {
+    constructor(parent, id, content) {
+        super(parent, id);
+        this.name = CLASSNAMES.TEXTINPUT_CONTAINER;
+        this.content = content;
+        this.elements = [TextInputElement];
+    }
+}
 class ImageInputContainerElement extends InputContainer {
-    constructor(parent, id){
+    constructor(parent, id) {
         super(parent, id);
         this.name = CLASSNAMES.IMGINPUT_CONTAINER;
-        this.components = [ImageInputElement, ImagePreviewElement, TextElement];
+        this.elements = [ImageInputElement, ImagePreviewElement, TextElement];
         this.content = ["", "", "Upload an image"];
     }
 }
-
 class RangeInputElement extends InputElement {
-    static name = CLASSNAMES.RANGE_SLIDER;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.content = content;
-        let min = this.content.values ? this.content.values[RANGE_LABELS.MIN] : 0;
-        let max = this.content.values ? this.content.values[RANGE_LABELS.MAX] : 100;
-        this.values = new Map(
-            [
-                [RANGE_LABELS.MIN, min],
-                [RANGE_LABELS.MAX, max],
-            ]
-        );
-        this.input_type = INPUT_TYPES.RANGE;
+        this.className = CLASSNAMES.RANGE_SLIDER;
+        this.values = new Map([
+            [RANGE_LABELS.MIN, this.content?.value ? this.content.value["min"] : 0],
+            [RANGE_LABELS.MAX, this.content?.value ? this.content.value["max"] : 100],
+        ]);
+        this.inputType = INPUT_TYPES.RANGE;
     }
-
-    init_extra(element){
-        element.setAttribute('min', this.values.get(RANGE_LABELS.MIN).toString());
-        element.setAttribute('max', this.values.get(RANGE_LABELS.MAX).toString());
+    initExtra(element) {
+        element.setAttribute('min', this.values.get(RANGE_LABELS.MIN)?.toString() || '0');
+        element.setAttribute('max', this.values.get(RANGE_LABELS.MAX)?.toString() || '100');
     }
-
+    /**
+     * Override afterInit to use 'input' event instead of 'change' for real-time updates
+     */
+    afterInit() {
+        // Range inputs need 'input' event for real-time updates, not 'change'
+        this.addEventListener('input', this.changeHandler);
+        const element = this.getElement();
+        if (element) {
+            this.initExtra(element);
+        }
+    }
 }
-
 class RangeLabelElement extends InputContainer {
-    static name = CLASSNAMES.RANGE_CONTAINER;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.components = [SpanElement, SpanElement];
-        this.content = content.labels ? [content.labels[RANGE_LABELS.MIN], content.labels[RANGE_LABELS.MAX]] : ["Less", "More"];
+        this.name = CLASSNAMES.RANGE_CONTAINER;
+        this.elements = [SpanElement, SpanElement];
+        this.content = (content && content.labels) ? [content.labels[RANGE_LABELS.MIN], content.labels[RANGE_LABELS.MAX]] : ["Less", "More"];
     }
-
-
 }
-
 class RangeContainerElement extends InputContainer {
-    static name = CLASSNAMES.TAG_CONTAINER;
-    constructor(parent, id, content){
+    constructor(parent, id, content) {
         super(parent, id, content);
-        this.components = [RangeInputElement, RangeLabelElement];
+        this.name = CLASSNAMES.TAG_CONTAINER;
+        this.elements = [RangeInputElement, RangeLabelElement];
     }
-
 }
-
 class CheckboxContainerElement extends InputContainer {
-    static name = CLASSNAMES.TAG_CONTAINER;
-    constructor(parent, id, checks){
+    constructor(parent, id, checks) {
         super(parent, id, checks);
+        this.name = CLASSNAMES.TAG_CONTAINER;
         this.content = checks;
-        this.components = checks.map(c=>CheckboxElement);
+        this.elements = checks.map(c => CheckboxElement);
     }
-    activate(value){
-        
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
+    load(nextids, answerTree) {
+        // Create CheckboxElement for each checkbox data item
+        this.content.forEach((checkData, index) => {
+            let element = new CheckboxElement(this.makeId(), this.id, checkData);
+            element.initiate();
+            element.load(nextids, answerTree);
+        });
     }
-    
+    /**
+     * Activate or deactivate all checkboxes
+     */
+    activate(on) {
+        // Checkboxes don't need activation logic for the map page
+        // This is a placeholder to satisfy the Controller interface
+    }
 }
-
 class CheckboxElement extends InputContainer {
-    static name = "tag selectable";
-    constructor(parent, id, content){
+    constructor(parent, id, content) {
         super(parent, content.id, content);
+        this.name = "tag selectable";
         this.content = content;
-        this.components = [CheckboxInputElement, CheckboxLabelElement];
+        this.elements = [CheckboxInputElement, CheckboxLabelElement];
     }
-    activate(value){
-        
-        this.elements.forEach(s=>{
-            s.activate(value);
-        })
+    make_id() {
+        return `${this.name}_${this.id}_${this.content.name}`;
+    }
+    load(nextids, answerTree) {
+        // Pass this.content to both the checkbox input and label
+        this.elements.forEach(ElementClass => {
+            let element = new ElementClass(this.makeId(), this.id, this.content);
+            // Pass answerTree and nextids to InputElement instances (CheckboxInputElement)
+            element instanceof InputElement ? element.initiate(answerTree, nextids) : element.initiate();
+            element.load();
+        });
     }
 }
-
 class CheckboxInputElement extends InputElement {
-    static name = CLASSNAMES.TAG_LABEL;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.input_type = INPUT_TYPES.CHECKBOX;
+        this.className = CLASSNAMES.TAG_LABEL;
+        this.inputType = INPUT_TYPES.CHECKBOX;
     }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
+    initExtra(element) {
+        // No extra initialization needed
     }
-
-
-    init_extra(element){
-        };
-
-    action(ev, next, tree){
-        QPanel.tree.add(this.id, ev.target.checked);
+    action(ev, tree, next) {
+        // Use checked state instead of value for checkboxes
+        const checked = ev.target.checked;
+        console.log(`Checkbox action: id=${this.id}, checked=${checked}`);
+        tree.add(this.id, checked);
+        console.log(`Tree after checkbox:`, tree.out());
         this.activateNext(tree, next);
-
+        // Reload current step to show/hide followup questions based on updated tree
+        const QPanel = window.QPanel;
+        if (QPanel && QPanel.controller) {
+            console.log(`Reloading step ${QPanel.currentStep} to show followup questions`);
+            QPanel.controller.load(QPanel.currentStep);
+        }
     }
 }
-
 class CheckboxLabelElement extends InputElement {
-    static name = CLASSNAMES.TAG_LABEL;
     constructor(parent, id, content) {
         super(parent, id, content);
-        this.content = content.name ? content.name : content;
-        this.t = "div";
+        this.className = CLASSNAMES.TAG_LABEL;
+        this.content = content?.name ? content.name : content;
+        this.elementTag = "div";
     }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
-    }
-
-    initiate() {
-        let element = document.createElement(this.t);
-        element.setAttribute("class", this.name);
-        this.getParent().appendChild(element);
-
-        let element1 = document.createElement("label");
-        element1.setAttribute("class", this.name);
-        element1.innerHTML = this.content;
-        element.appendChild(element1);
-    }
-
-}
-
-class SingleChoiceInputElement extends InputElement {
-    static name = "input";
-    constructor(parent, id, content) {
-        super(parent, id, content);
-        this.id = id;
-        this.content = content; //content ? content.replaceAll("\\n", "<br>") : "";
-        this.t = "input";
-        this.input_type = "radio";
-    }
-    load() { }
-
-    activate(value){
-        let res = value==undefined || value == true ? false : true;
-        this.getElement().disabled = res;
-    }
-
-    activateNext(tree, nextids){
-    }
-
-    action(ev, next, tree){
-        this.content(ev, next, tree);
-    }
-
-    initiate(nextid, tree) {
-        let element = this.init_input(nextid, tree);
-        this.init_extra(element);
-    }
-
-    init_input(nextid, tree){
-        let element = document.createElement(this.t);
-        element.setAttribute('type', this.input_type);
-        element.setAttribute('name', this.name);
-        element.setAttribute("class", this.name);
-        element.setAttribute("id", this.make_id());
-        element.onchange = (ev)=>{
-            this.action(ev, nextid, tree)
-        };
-        this.getParent().appendChild(element);
+    createElement() {
+        const element = document.createElement(this.elementTag);
+        element.setAttribute("class", this.className);
+        element.setAttribute("id", this.makeId());
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
         return element;
-
     }
-    init_extra(element){}
+    afterInit() {
+        // Don't add change listener for label elements
+        const element = this.getElement();
+        if (element) {
+            const label = document.createElement("label");
+            label.setAttribute("class", this.className);
+            label.innerHTML = this.content;
+            element.appendChild(label);
+        }
+    }
 }
-
-
-
+class SingleChoiceInputElement extends InputElement {
+    constructor(parent, id, content) {
+        super(parent, id, content);
+        this.className = "input";
+        this.inputType = "radio";
+        this.changeHandler = content;
+    }
+    createElement() {
+        const element = document.createElement("input");
+        element.setAttribute('type', this.inputType);
+        element.setAttribute('name', 'vis-choice');
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
+    }
+    afterInit() {
+        const element = this.getElement();
+        if (element && typeof this.changeHandler === 'function') {
+            element.addEventListener('change', this.changeHandler);
+        }
+    }
+}

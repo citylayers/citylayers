@@ -1,29 +1,22 @@
-import { CLASSNAMES } from "../../../classnames";
-import {ContentElement} from "./contentElement";
-import { Illustration } from "../../../../logic/illustration";
-import {ImageElement} from "./imageElement";
 
-class ImageContainerElement extends ContentElement{
-    id: string;
-    parent: string;
-    images: Illustration[];
-    onclick: ()=>{};
-    name: string;
-    constructor(parent:string,  name:string, illustrations:Illustration[]){
-        super(parent, undefined, name);
-        this.name = name;
-        this.parent = parent ? parent : "main";
-        this.elements = illustrations.map(e=>ImageElement);
+
+
+/**
+ * Image container element for displaying multiple images.
+ * Extends ContentElement with proper OOP principles.
+ */
+class ImageContainerElement extends ContentElement {
+    private images:any[];
+
+    constructor(parentId: string, className: string, illustrations:any[]) {
+        super(parentId || "main", undefined, className);
+        this.className = className;
         this.images = illustrations;
-    }
 
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), 
-                                    this.id, this.images[e]);
-            element.initiate();
-            element.load();
-        }
+        // Add ImageElement children for each illustration
+        illustrations.forEach((illustration, index) => {
+            this.addChild(new ImageElement(this.makeId(), `img_${index}`, illustration));
+        });
     }
 }
-export {ImageContainerElement};
+

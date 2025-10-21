@@ -1,42 +1,25 @@
-class PinButton extends CElement {
-    
-    constructor(parent, category) {
-        super(parent, category);
-        this.name = "pinButton";
-        this.content = "Add a pin";
+/**
+ * Pin button component for adding location pins.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class PinButton extends BaseComponent {
+    constructor(parentId, getCoordinates) {
+        super(parentId, "pinButton primary-button");
+        this.buttonContent = "Add a pin";
+        this.onClickHandler = () => {
+            const coords = getCoordinates();
+            window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lon}`;
+        };
     }
-
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = this.content;
-        element.setAttribute('class', "" + this.name + " primary-button");
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            let coords = CityLayersPanel.getCoords();
-            window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lng}`;
-        });
+    getElementTag() {
+        return 'button';
     }
-}
-
-
-class LocateButton extends CElement {
-    
-    constructor(parent, category) {
-        super(parent, category);
-        this.name = "locatebutton";
-        this.content = "Locate me";
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.buttonContent;
+        return element;
     }
-
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = this.content;
-        element.setAttribute('class', "" + this.name + " button");
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            Position.make();
-            Karta.update(Position.lat, Position.lon);
-        });
+    afterInit() {
+        this.addEventListener('click', this.onClickHandler);
     }
 }

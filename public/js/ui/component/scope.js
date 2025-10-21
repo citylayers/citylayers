@@ -1,16 +1,18 @@
-class Scope extends CElement{
-    constructor(parent){
-        super(parent);
-        this.name = "scope";
-        this.content = "/images/scope.svg"; // U+02715
+/**
+ * Scope image component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class Scope extends BaseComponent {
+    constructor(parentId) {
+        super(parentId, "scope");
+        this.imageSrc = "/images/scope.svg";
     }
-
-
-    initiate() {
-        var element = document.createElement("img");
-        element.src = this.content;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
+    getElementTag() {
+        return 'img';
+    }
+    createElement() {
+        const element = super.createElement();
+        element.src = this.imageSrc;
+        return element;
     }
 }

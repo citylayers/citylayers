@@ -1,6 +1,0 @@
-
-
-
-
-export function buildTeamPanel(team){
-}

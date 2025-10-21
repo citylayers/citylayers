@@ -48,6 +48,11 @@ class CElement {
         return `${this.name}_${this.id}`
     }
 
+    // Alias for compatibility with BaseComponent naming convention
+    makeId() {
+        return this.make_id();
+    }
+
     show(display){
         this.getElement().style.display = display==false ? "none" : "flex";
     }

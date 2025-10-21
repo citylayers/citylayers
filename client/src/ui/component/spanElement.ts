@@ -1,23 +1,24 @@
-import { CLASSNAMES } from "../../../classnames";
-import {CElement} from "./celement";
 
-class SpanElement extends CElement{
-    id: string;
-    parent: string;
-    name: string; 
-    constructor(parent:string, id:string, content?:any) {
-        super(parent, id);
-        this.name = "";
-        this.content = content;
-    }
-    load() { }
+/**
+ * Span element component for inline text.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class SpanElement extends BaseComponent {
+    private htmlContent: string;
 
-    initiate() {
-        let element = document.createElement("span");
-        element.innerHTML = this.content;
-        this.getParent().appendChild(element);
+    constructor(parentId: string, id: string, content?: string) {
+        super(parentId, "", id);
+        this.htmlContent = content || "";
     }
-    
+
+    protected getElementTag(): string {
+        return 'span';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = this.htmlContent;
+        return element;
+    }
 }
 
-export {SpanElement};

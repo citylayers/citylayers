@@ -1,123 +1,105 @@
-
-
-class QPanel extends ContentPanel{
-    static name = CLASSNAMES.Q_PANEL;
-    static controller = undefined;
-    static initialStep = 0;
-    static currentStep = 0;
-    static totalSteps = 0;
-    static tree = undefined;
-
-    constructor(parent){
+/// <reference path="../../karta/positioning.ts" />
+// Position class is loaded globally via script tag
+// positioning.ts is compiled to public/js/karta/positioning.js
+// Legacy imports
+class QPanel extends ContentPanel {
+    constructor(parent) {
         super(parent, "id");
         this.name = CLASSNAMES.Q_PANEL;
-        this.elements = [QHeader,  QContainer, QFooter];
-        
+        this.elements = [QHeader, QContainer, QFooter];
     }
-
     load(qasets, answerTree) {
-        let kartaset = new QASet(0, [new KartaPair]);
-        qasets.unshift(kartaset);
-        QPanel.totalSteps = qasets.length -1;
+        QPanel.totalSteps = qasets.length;
         QPanel.tree = answerTree;
         this.elements.forEach((el, i) => {
-            
-            let element = el == QContainer ? new el(this.make_id(), qasets, answerTree) : 
-                                             new el(this.make_id(), "main");
+            let element = el == QContainer ? new el(this.makeId(), "", [qasets, answerTree]) :
+                new el(this.makeId(), "main");
             element.initiate();
-            
-            if (element instanceof QContainer){
-                element.load(QPanel.currentStep, i==QPanel.currentStep)
+            if (element instanceof QContainer) {
+                element.load(QPanel.currentStep, i == QPanel.currentStep);
                 QPanel.controller = element;
             }
-            else{
+            else {
                 element.load([QPanel.back, QPanel.next, QPanel.submit]);
             }
         });
     }
-
-    static back(){
-        QPanel.controller.load(QPanel.currentStep-1);
+    static back() {
+        QPanel.controller.load(QPanel.currentStep - 1);
         QPanel.currentStep -= 1;
         QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
     }
-
-    static next(){
-        QPanel.controller.load(QPanel.currentStep+1);
+    static next() {
+        QPanel.controller.load(QPanel.currentStep + 1);
         QPanel.currentStep += 1;
         QFooter.reload(QPanel.currentStep, QPanel.totalSteps);
     }
-
-    static make_form(){
-
+    static make_form() {
+        // Create FormData from image input if present
         const d = new FormData();
-
-        if (QPanel.tree.get("image")!=undefined && QPanel.tree.get("image")!=null && QPanel.tree.get("image")!=""){
+        if (QPanel.tree.get("image") != undefined &&
+            QPanel.tree.get("image") != null &&
+            QPanel.tree.get("image") != "") {
             d.set("image", QPanel.tree.get("image"));
         }
-
-        return d
+        return d;
+        // const imageInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        // const formData = new FormData();
+        // if (imageInput && imageInput.files && imageInput.files[0]) {
+        //     formData.append('image', imageInput.files[0]);
+        // }
+        // return formData;
     }
-
-    static submit(){
-        // window.location.href = "";
-        
+    static submit_image(dd, indata) {
+        fetch('/upload', {
+            method: 'POST',
+            body: dd
+        })
+            .then(response => {
+            response.json().then(response => {
+                indata.image = response.content;
+                QPanel.submit_form(dd, indata);
+            });
+        })
+            .catch(error => {
+            console.log(error);
+        });
+    }
+    static submit_form(dd, indata) {
+        fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(indata)
+        })
+            .then(response => {
+            window.location.href = "/success";
+        })
+            .catch(error => {
+            console.log(error);
+        });
+    }
+    static submit() {
         let indata = {
             coords: {
                 lat: Position.lat,
-                lon: Position.lon},
+                lon: Position.lon
+            },
             data: QPanel.tree.out()
-        }
-
+        };
         QPanel.currentStep = QPanel.initialStep;
-        
-
         let d = QPanel.make_form();
-        if (d.get("image")!=undefined && d.get("image")!=null && d.get("image")!=""){
-            fetch('/upload', {
-                method: 'POST',
-                body: d
-                })
-                .then(response => {
-                    response.json().then(response=>{
-                        
-                    indata.image = response.content;
-                    fetch('/submit', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(indata)
-                    })
-                        .then(response => {
-                            window.location.href = "/success"
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                })})
-                .catch(error => {
-                    console.log(error);
-                });
+        if (d.get("image") != undefined && d.get("image") != null && d.get("image") != "") {
+            QPanel.submit_image(d, indata);
         }
-        else{
-            
-            fetch('/submit', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(indata)
-            })
-                .then(response => {
-                    window.location.href = "/success"
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-
+        else {
+            QPanel.submit_form(d, indata);
         }
-
+    }
 }
-
-}
+QPanel.controller = undefined;
+QPanel.currentStep = 0;
+QPanel.initialStep = 0;
+QPanel.totalSteps = 0;
+QPanel.tree = undefined;

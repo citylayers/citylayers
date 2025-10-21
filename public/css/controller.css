@@ -355,12 +355,19 @@ input[type="color"] {
     margin-left: 5px;
     margin-right: 5px;
     border: solid 1px var(--tertiary-color);
+    cursor: pointer;
 }
 input[type="color"]::-webkit-color-swatch-wrapper {
 	padding: 0;
+    border-radius: var(--radius);
 }
 input[type="color"]::-webkit-color-swatch {
 	border: none;
+    border-radius: var(--radius);
+}
+input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: var(--radius);
 }
 
 .gradient.subcontainer > input:nth-child(3){
@@ -377,3 +384,37 @@ input[type="color"]::-webkit-color-swatch {
     inline-size: -webkit-fill-available;
     cursor: pointer;
 }
+
+.gradpicker {
+    padding: 0px;
+    width: 25px;
+    height: 25px;
+    border: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    max-height: 50px;
+    inline-size: -webkit-fill-available;
+    cursor: pointer;
+}
+
+.gradpicker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.gradpicker::-webkit-color-swatch {
+    border: none;
+    border-radius: 12px;
+}
+
+.gradpicker::-moz-color-swatch {
+    border: none;
+    border-radius: 12px;
+}
+
+.controllercontainer { 
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+ }

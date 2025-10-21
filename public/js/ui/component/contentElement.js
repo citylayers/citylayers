@@ -1,34 +1,15 @@
-
-
-class ContentElement extends CElement{
-    constructor(parent, id, name, content){
-        super(parent, id);
-        this.content = content;
-        this.name = name;
-        this.parent = parent ? parent : "main";
-        this.elements = [];
+/**
+ * Content element component for generic content containers.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ContentElement extends BaseComponent {
+    constructor(parentId, id, content) {
+        super(parentId || "main", "contentelement", id);
+        this.htmlContent = content;
     }
-
-    getParent() {
-        let element = document.getElementById(this.parent);
+    createElement() {
+        const element = super.createElement();
+        // Content is set via children, not innerHTML
         return element;
-    }
-
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            
-            let element = new this.elements[e](this.make_id(), 
-                                    this.id, this.content);
-            element.initiate();
-            element.load();
-        }
-    }
-
-    initiate() {
-        let panel = document.createElement("div");
-        panel.setAttribute('class', this.name);
-        panel.setAttribute("id", this.make_id());
-
-        this.getParent().appendChild(panel);
     }
 }

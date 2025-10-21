@@ -2,9 +2,10 @@
 
 class CategoryController extends ContentPanel{
     static name = CLASSNAMES.CATEGORY_CONTAINER;
-    
+
     constructor(parent, category){
         super(parent, category.name);
+        this.name = CategoryController.name;
         this.content = category;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
         this.elements = [
@@ -22,7 +23,7 @@ class CategoryController extends ContentPanel{
     load() {
         for (let e = 0; e < this.elements.length; e++) {
             let element = 0;
-            element = new this.elements[e](this.make_id(), this.content);
+            element = new this.elements[e](this.makeId(), this.content);
 
             // switch (this.elements[e]) {
             //     case (CategorySidePanel):
@@ -77,8 +78,15 @@ class ControllerHeader extends CElement{
         let id = this.category.content.map(c=>c.answer)
             .filter(a=>a.type==ANSWERS.RANGE)[0].id;
         for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), id, ...this.args[e]);
+            // Skip ColorPickerElement if in heatmap/gradient mode
+            const globalvisualization = window.globalvisualization;
+            if (this.elements[e] === ColorPickerElement &&
+                globalvisualization &&
+                globalvisualization.active === VIS.GRADIENT) {
+                continue;
+            }
 
+            let element = new this.elements[e](this.make_id(), id, ...this.args[e]);
             element.initiate(activation);
         }
     }
@@ -102,16 +110,33 @@ class ControllerBody extends CElement{
     }
 
     load(){
-        this.category.content.forEach(
-            qa=>{
+        // Only create one ControlQuestion per unique answer type
+        // Filter to only include one RANGE and one MULTICATEGORY answer
+        const seenTypes = new Set();
+        const globalvisualization = window.globalvisualization;
 
-                let element = new ControlQuestion(this.make_id(), qa);
-                element.initiate();
-                element.load();
-                element.activate(false);
-                this.questions.push(element);
+        const uniqueAnswers = this.category.content.filter(qa => {
+            const answerType = qa.answer?.type;
+            if (!answerType || seenTypes.has(answerType)) {
+                return false;
             }
-        );
+            // Skip MULTICATEGORY (tags) in heatmap/gradient mode
+            if (answerType === ANSWERS.MULTICATEGORY &&
+                globalvisualization &&
+                globalvisualization.active === VIS.GRADIENT) {
+                return false;
+            }
+            seenTypes.add(answerType);
+            return true;
+        });
+
+        uniqueAnswers.forEach(qa => {
+            let element = new ControlQuestion(this.make_id(), qa);
+            element.initiate();
+            element.load();
+            element.activate(false);
+            this.questions.push(element);
+        });
     }
 
     activate(on){
@@ -187,22 +212,58 @@ class CategorySwitch extends Switch{
 
             // update map observations
             // activate sliders and tags
-            
-            activation(CategorySwitch.isActive(this.make_id()));
+            const isActive = CategorySwitch.isActive(this.make_id());
+            activation(isActive);
+
             let id = this.category.content.map(c=>c.answer)
             .filter(a=>a.type==ANSWERS.RANGE)[0].id;
-            let slider = document.getElementById(`categoryslider_${id}`);
+            let sliderContainer = document.getElementById(`categoryslider_${id}`);
 
-            CategorySwitch.isActive(this.make_id()) ?
-            tree.add(id, new Map(
-            [
-                [RANGE_LABELS.MIN, slider.children[0].value],
-                [RANGE_LABELS.MAX, slider.children[1].value],
-            ]
-        )) : tree.remove(id);
+            // Handle range slider in tree
+            if (isActive && sliderContainer) {
+                // Find the low and high slider inputs within the container
+                let lowSlider = sliderContainer.querySelector('.startSlider');
+                let highSlider = sliderContainer.querySelector('.endSlider');
 
-            // CityLayersPanel.activation(this.category, 
-            //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
+                if (lowSlider && highSlider) {
+                    tree.add(id, new Map([
+                        [RANGE_LABELS.MIN, lowSlider.value],
+                        [RANGE_LABELS.MAX, highSlider.value],
+                    ]));
+                }
+            } else if (!isActive) {
+                tree.remove(id);
+            }
+
+            // Handle tags - get multicategory answer and toggle all checkboxes
+            const multiCatAnswer = this.category.content.map(c=>c.answer)
+                .filter(a=>a.type==ANSWERS.MULTICATEGORY)[0];
+
+            if (multiCatAnswer && multiCatAnswer.id) {
+                const tagContainer = document.getElementById(`${CLASSNAMES.TAG_CONTAINER}_${multiCatAnswer.id}`);
+                if (tagContainer) {
+                    // Get all checkboxes in this tag container
+                    const checkboxes = tagContainer.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach(checkbox => {
+                        if (isActive) {
+                            // Enable and check all checkboxes
+                            checkbox.disabled = false;
+                            checkbox.checked = true;
+                            // Trigger change event to add to tree
+                            checkbox.dispatchEvent(new Event('change'));
+                        } else {
+                            // Disable and uncheck all checkboxes
+                            checkbox.disabled = true;
+                            checkbox.checked = false;
+                            // Trigger change event to remove from tree
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                }
+            }
+
+            // CityLayersPanel.activation(this.category,
+            //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0,
             //                 CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
             // DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
 

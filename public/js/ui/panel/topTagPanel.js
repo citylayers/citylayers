@@ -1,66 +1,80 @@
-
-class TopTagPanel extends CElement {
-    
+/**
+ * Top Tag Panel / Geocoding Panel
+ * Migrated from topTagPanel.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Panel for displaying geocoding information based on user location
+ */
+class TopTagPanel extends BaseComponent {
     constructor(parent) {
-        super(parent);
-        this.id = "geocodingpanelid";
-        this.name = CLASSNAMES.GEOCODONG_PANEL;
-        this.parent = parent ? parent : "body";
+        super(parent || "body", ClassName.GEOCODING_PANEL, "geocodingpanelid");
         this.content = "";
         this.elements = [];
     }
-
+    /**
+     * Get parent element (handles class name parent selector)
+     */
     getParent() {
-        let elements = document.getElementsByClassName(this.parent);
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
+        return super.getParent();
     }
-
+    /**
+     * Generate OpenStreetMap Nominatim reverse geocoding URL
+     */
     static getUrl(lat, lon) {
-        return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2&zoom=12`
+        return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2&zoom=12`;
     }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.content;
+        return element;
     }
-
+    /**
+     * Load geocoding data using browser geolocation API
+     */
     load() {
-        if (navigator) {
-            
-            if (navigator.geolocation) {
-                return navigator.geolocation.getCurrentPosition(this._call, this._error);
-            }
+        if (navigator && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this._call.bind(this), this._error.bind(this));
         }
-        console.log("Geoposition undefined");
+        else {
+            console.log("Geoposition undefined");
+        }
     }
-
-    _error(geo){
-        console.log("failed to get position");
+    /**
+     * Error handler for geolocation failure
+     */
+    _error(geo) {
+        console.log(geo);
+        console.log("Failed to get position");
     }
-
+    /**
+     * Success handler for geolocation - fetch reverse geocoding data
+     */
     _call(geo) {
+        const GeocodeParser = window.GeocodeParser;
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
         return fetch(url, {
             method: "GET",
             headers: { 'Content-Type': 'application/json' },
         }).then(result => {
-            if (result.status == 200) {
+            if (result.status === 200) {
                 return result.json().then(res => {
-                    
-                    document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
+                    const panels = document.getElementsByClassName(ClassName.GEOCODING_PANEL);
+                    if (panels.length > 0 && GeocodeParser) {
+                        panels[0].innerHTML = GeocodeParser.run(res);
+                    }
                     return res;
                 });
             }
-            else if (result.status == 429) {
-                return sleep(1000).then(r => { return this.request() });
+            else if (result.status === 429) {
+                return sleep(1000).then(() => this._call(geo));
             }
-            else if (result.status == 504) {
-                return this.request();
+            else if (result.status === 504) {
+                return this._call(geo);
             }
             else {
                 console.log(`CODE: ${result.status}`);

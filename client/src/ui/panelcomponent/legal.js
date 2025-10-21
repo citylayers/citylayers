@@ -13,9 +13,9 @@ class LegalContainer extends ContentPanel{
     load() {
         Object.keys(LEGAL).forEach(el => {
             let element = new LinkElement(
-                this.make_id(),
-                LEGAL_CLASSNAMES.TEXT,
-                LEGAL[el], LEGAL_LINKS.get(LEGAL[el])
+                this.makeId(),
+                el,  // Use the key as the unique id
+                [LEGAL[el], LEGAL_LINKS.get(LEGAL[el])]
             );
             element.initiate();
             element.load();

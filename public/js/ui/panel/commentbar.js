@@ -1,191 +1,228 @@
-class CommentPanel extends CElement {
-    static _name = CLASSNAMES.COMMENTPANEL;
-    toggleMarker = (value) => { console.log(value) };
-
+/**
+ * Comment Bar Components
+ * Migrated from commentbar.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Main comment panel containing search and comment container
+ */
+class CommentPanel extends BaseComponent {
     constructor(parent, comments) {
-        super(parent, "id");
+        super(parent, ClassName.COMMENTPANEL, "id");
+        this.comments = comments;
         this.content = comments;
-
         this.elements = [
             CommentCloseButton,
             CommentSearch,
             CommentContainer
         ];
     }
-
+    /**
+     * Get parent element (handles class name parent selector)
+     */
     getParent() {
-        let elements = document.getElementsByClassName(this.parent);
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
+        return super.getParent();
     }
-
-
-    load(comments) {
+    /**
+     * Load comment panel elements
+     * Overrides base load to accept comments parameter
+     */
+    loadComments(comments) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "id");
+            let element = new el(this.makeId(), "id");
             element.initiate();
             element.load(comments);
         });
     }
-
+    /**
+     * Search through comments and reorder by relevance
+     */
     static search(value) {
-        const panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
-        const container = document.getElementById(`${CLASSNAMES.COMMENTCONTAINER}_id`);
-        if(!panel.classList.contains("open")) panel.classList.add("open");
-
-        let comments = Array.from(document.getElementsByClassName(CLASSNAMES.COMMENTTEXT));
-        comments.forEach(c => c.parentElement.setAttribute("style", "order: 8"));
-        comments.filter(c => c.innerHTML.toLowerCase().includes(value.toLowerCase())).forEach(
-            c => c.parentElement.setAttribute("style", "order: 1")
-        );
-        //scroll container to the left to have the searched comment in view.
-        container.scrollLeft= 0;
-    }
-
-    static focusComment(id, on) {
-        let _comment = document.getElementById(`commentpane_${id}`);
-        if (_comment != undefined) {
-            if (on == true) {
-                _comment.scrollIntoView({
-                    behavior: 'smooth'
-                });
-                _comment.focus();
+        const panel = document.getElementById(`${ClassName.COMMENTPANEL}_id`);
+        const container = document.getElementById(`${ClassName.COMMENTCONTAINER}_id`);
+        if (panel && !panel.classList.contains("open")) {
+            panel.classList.add("open");
+        }
+        let comments = Array.from(document.getElementsByClassName(ClassName.COMMENTTEXT));
+        comments.forEach((c) => {
+            if (c.parentElement) {
+                c.parentElement.setAttribute("style", "order: 8");
             }
-
+        });
+        comments.filter((c) => c.innerHTML.toLowerCase().includes(value.toLowerCase())).forEach((c) => {
+            if (c.parentElement) {
+                c.parentElement.setAttribute("style", "order: 1");
+            }
+        });
+        // Scroll container to the left to have the searched comment in view
+        if (container) {
+            container.scrollLeft = 0;
         }
     }
-
-
-    static toggle() {
-        let panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
-        panel.classList.toggle("open");
+    /**
+     * Focus on a specific comment by ID
+     */
+    static focusComment(id, on) {
+        let _comment = document.getElementById(`commentpane_${id}`);
+        if (_comment !== null && on === true) {
+            _comment.scrollIntoView({
+                behavior: 'smooth'
+            });
+            _comment.focus();
+        }
     }
-
+    /**
+     * Toggle comment panel visibility
+     */
+    static toggle() {
+        let panel = document.getElementById(`${ClassName.COMMENTPANEL}_id`);
+        if (panel) {
+            panel.classList.toggle("open");
+        }
+    }
+    /**
+     * Hide all comment panels
+     */
     static hideAll() {
-        let panels = document.getElementsByClassName(CLASSNAMES.CATEGORY_SIDE_PANEL);
-        Array.from(panels).forEach(panel => {
+        let panels = document.getElementsByClassName(ClassName.CATEGORY_SIDE_PANEL);
+        Array.from(panels).forEach((panel) => {
             panel.style.display = "none";
-        })
+        });
     }
 }
-
-class CommentContainer extends CElement {
-    static _name = CLASSNAMES.COMMENTCONTAINER;
+CommentPanel._name = ClassName.COMMENTPANEL;
+CommentPanel.toggleMarker = (value, active) => { console.log(value, active); };
+/**
+ * Container for all comment panes
+ */
+class CommentContainer extends BaseComponent {
     constructor(parent, id) {
-        super(parent);
-        this.id = id;
+        super(parent, ClassName.COMMENTCONTAINER, id);
         this.elements = [];
     }
-
+    /**
+     * Add a single comment to the container
+     */
     addComment(comment, id) {
-        let div = new CommentPane(this.make_id(), id, comment);
+        let div = new CommentPane(this.makeId(), id, comment);
         div.initiate();
         div.load();
     }
-
+    /**
+     * Load all comments
+     */
     load(comments) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            let element = new el(this.makeId(), "main");
             element.initiate();
             element.load();
         });
-
-        comments.forEach((c, i) => {
-            this.addComment(c.comment, c.place_id.toString());
-
-        });
-    }
-}
-
-class CommentPane extends CElement {
-    static _name = CLASSNAMES.COMMENTPANE;
-    constructor(parent, id, comment) {
-        super(parent);
-        this.id = id;
-        this.content = comment;
-        this.elements = [CommentText];
-    }
-
-    initiate() {
-        let el = document.createElement("div");
-        el.setAttribute('class', this._name + " simple-drop-shadow");
-        el.setAttribute("id", this.make_id());
-        this.getParent().appendChild(el);
-        el.setAttribute("tabindex", "0");
-        el.onclick = () => {
-            
-            CommentPanel.toggleMarker(this.id, document.activeElement == el);
+        if (comments) {
+            comments.forEach((c, i) => {
+                this.addComment(c.comment, c.place_id.toString());
+            });
         }
     }
-
+}
+CommentContainer._name = ClassName.COMMENTCONTAINER;
+/**
+ * Individual comment pane with text content
+ */
+class CommentPane extends BaseComponent {
+    constructor(parent, id, comment) {
+        super(parent, ClassName.COMMENTPANE, id);
+        this.comment = comment;
+        this.content = comment;
+        this.elements = [CommentText];
+        this.clickHandler = () => {
+            const el = this.getElement();
+            CommentPanel.toggleMarker(this.id, document.activeElement === el);
+        };
+    }
+    createElement() {
+        const el = super.createElement();
+        el.classList.add("simple-drop-shadow");
+        el.setAttribute("tabindex", "0");
+        return el;
+    }
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
+    }
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.id, this.content);
+            let element = new this.elements[e](this.makeId(), this.id, this.content);
             element.initiate();
         }
     }
 }
-
-class CommentText extends CElement {
-    static _name = CLASSNAMES.COMMENTTEXT;
+CommentPane._name = ClassName.COMMENTPANE;
+/**
+ * Text content of a comment
+ */
+class CommentText extends BaseComponent {
     constructor(parent, id, content) {
-        super(parent);
-        this.id = id;
-        this.content = content
-        
-        this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
+        super(parent, ClassName.COMMENTTEXT, id);
+        this.content = content;
     }
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
+    createElement() {
+        const element = super.createElement();
         element.innerHTML = this.content;
-        this.getParent().appendChild(element);
+        return element;
     }
 }
-
-class CommentCloseButton extends CElement {
-    static _name = CLASSNAMES.COMMENTPANEL_CLOSE;
+CommentText._name = ClassName.COMMENTTEXT;
+/**
+ * Close/toggle button for comment panel
+ */
+class CommentCloseButton extends BaseComponent {
     constructor(parent) {
-        super(parent, "id");
+        super(parent, ClassName.COMMENTPANEL_CLOSE, "id");
         this.content = "<div class='chevron'></div>";
-    }
-
-    initiate() {
-        let element = document.createElement("button");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        element.onclick = (e) => {
-            element.classList.toggle("open");
+        this.clickHandler = (e) => {
+            const element = this.getElement();
+            if (element) {
+                element.classList.toggle("open");
+            }
             CommentPanel.toggle();
         };
-        this.getParent().appendChild(element);
     }
-
+    getElementTag() {
+        return 'button';
+    }
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.content;
+        return element;
+    }
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
+    }
 }
-
-class CommentSearch extends CElement {
-    // <input type="text" placeholder="Search..">
-    static _name = CLASSNAMES.COMMENTSEARCH;
+CommentCloseButton._name = ClassName.COMMENTPANEL_CLOSE;
+/**
+ * Search input for filtering comments
+ */
+class CommentSearch extends BaseComponent {
     constructor(parent) {
-        super(parent, "id");
-        this.content = "Search through comments" // Search through comments 
+        super(parent, ClassName.COMMENTSEARCH, "id");
+        this.content = "Search through comments";
+        this.inputHandler = (e) => {
+            const target = e.target;
+            CommentPanel.search(target.value);
+        };
     }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        // element.innerHTML = "🔎︎";
-        this.getParent().appendChild(element);
-        let e1 = document.createElement("input");
-        e1.setAttribute("type", "text");
-        e1.setAttribute("placeholder", this.content);
-        e1.oninput = (e) => {
-            CommentPanel.search(e.target.value);
-        }
-        element.appendChild(e1);
+    afterInit() {
+        const element = this.getElement();
+        if (!element)
+            return;
+        const input = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("placeholder", this.content);
+        input.oninput = this.inputHandler;
+        element.appendChild(input);
     }
 }
+CommentSearch._name = ClassName.COMMENTSEARCH;

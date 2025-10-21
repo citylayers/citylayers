@@ -1,10 +1,11 @@
-import { CLASSNAMES , SECTIONMAP} from "../../../classnames";
-import {CElement} from "./celement";
-import { ContentPanel } from "../panel/contentPanel";
-import { Project } from "../../../../logic/project";
-import { TeamMember } from "../../../../logic/teammember";
-import { LinkElement } from "./linkElement";
-import { TextElement } from "./textElement";
+
+
+
+
+
+
+
+// Legacy imports
 
 /*
     ------------------------------------------------------
@@ -26,7 +27,7 @@ class ProjectPanel extends ContentPanel{
 
     load(projects) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            let element = new el(this.makeId(), "main");
             element.initiate();
             element.load();
         });
@@ -40,42 +41,41 @@ class ProjectPanel extends ContentPanel{
     }
 
     add(element:any, args:any) {
-        let div = new element(this.make_id(), args);
+        let div = new element(this.makeId(), args);
         div.initiate();
         div.load();
     }
 }
 
-class Card extends CElement{
-    content: any;
-    link: string;
-    constructor(parent:string, id: string, content?:any){
-        super(parent, id, content);
-        this.link = `/project/${this.content.name}`;
-        this.name = CLASSNAMES.CARD;
-        this.parent = parent ? parent : CLASSNAMES.CARD;
-        this.elements = [
-            ProjectTitle,
-            ProjectCardInfo,
-            ProjectCardButton
-        ]
+/**
+ * Card base component for project and section cards.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class Card extends BaseComponent {
+    protected cardContent: any;
+    protected link: string;
+    protected elements: any[];
+    protected clickHandler: () => void;
+    public name: string;
+    public parent: string;
+
+    constructor(parentId: string, id: string, content?: any) {
+        super(parentId || ClassName.CARD, ClassName.CARD, id, content);
+        this.cardContent = content;
+        this.link = `/project/${this.cardContent?.name}`;
+        this.elements = [ProjectTitle, ProjectCardInfo, ProjectCardButton];
+        this.clickHandler = () => {
+            window.location.href = this.link;
+        };
     }
 
-    initiate() {
-        var element = document.createElement("div");
-        // element.innerHTML = ExploreCard._text;
-        element.setAttribute('class', this.name );
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            window.location.href = `${this.link}`; // `/explore`;
-        });
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
     }
-    load() {
+
+    public load(): void {
         for (let e = 0; e < this.elements.length; e++) {
-            
-            let element = new this.elements[e](this.make_id(), 
-                                    this.id, this.content);
+            let element = new this.elements[e](this.makeId(), this.id, this.cardContent);
             element.initiate();
             element.load();
         }
@@ -83,9 +83,9 @@ class Card extends CElement{
 }
 
 class ProjectCard extends Card{
-    content: Project;
+    content:any;
     link: string;
-    constructor(parent:string, project:Project){
+    constructor(parent:string, project:any){
         super(parent, project?.name, project);
         this.link = `/project/${this.content.name}`;
         this.name = CLASSNAMES.CARD;
@@ -101,8 +101,8 @@ class ProjectCard extends Card{
 }
 
 class ProjectCardInfo extends ContentPanel{
-    content:Project;
-    constructor(parent:string, id:string, project:Project){
+    content:any;
+    constructor(parent:string, id:string, project:any){
 
         super(parent, id, project);
         this.name = "projectstatus";
@@ -112,13 +112,13 @@ class ProjectCardInfo extends ContentPanel{
     }
 
     _makeText(project){
-        
-        return `📍 ${project.getPlace()}\n🕙 ${project.getPeriod()}\n🥂 ${project.getStatus()}\n`
+        //📍 ${project.getPlace()}\n
+        return `🕙 ${project.getPeriod()}\n🥂 ${project.getStatus()}\n`
     }
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                 this.id, this._makeText(this.content));
 
             element.initiate();
@@ -128,7 +128,7 @@ class ProjectCardInfo extends ContentPanel{
 
 class ProjectTeam extends ContentPanel{
 
-    constructor(parent:string, id:string, team:TeamMember[]){
+    constructor(parent:string, id:string, team:any[]){
 
         super(parent, id, team);
         this.name = CLASSNAMES.TEAM;
@@ -139,7 +139,7 @@ class ProjectTeam extends ContentPanel{
     load(){
         for (let e=0; e<this.elements.length; e++){
             
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                                this.content[e].id, 
                                                this.content[e]);
 
@@ -151,7 +151,7 @@ class ProjectTeam extends ContentPanel{
 
 class TeamPersonInfo extends ContentPanel{
 
-    constructor(parent:string, id:string, teamMember:TeamMember){
+    constructor(parent:string, id:string, teamMember:any){
         super(parent, id, teamMember);
         this.name = CLASSNAMES.TEAM_MEMBER;
         this.content = teamMember;
@@ -161,10 +161,10 @@ class TeamPersonInfo extends ContentPanel{
 
     load(){
         
-        let element = new LinkElement(this.make_id(), this.id, 
+        let element = new LinkElement(this.makeId(), this.id, 
                             [this.content.name, this.content.link]);
         element.initiate();
-        let element1 = new TextElement(this.make_id(), this.id, this.content.role);
+        let element1 = new TextElement(this.makeId(), this.id, this.content.role);
         element1.initiate();
     }
 }
@@ -187,7 +187,7 @@ class ProjectPeriodInfo extends ContentPanel{
     load(){
         for (let e=0; e<this.elements.length; e++){
             
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                                `${e}`, 
                                                this.args[e]);
 
@@ -208,7 +208,7 @@ class Recognition extends ContentPanel{
     load(){
         for (let e=0; e<this.elements.length; e++){
             
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                                `${e}`, 
                                                this.content[e].value);
 
@@ -218,25 +218,35 @@ class Recognition extends ContentPanel{
     }
 }
 
-class ProjectCardButton extends CElement {
+/**
+ * Project card button component.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class ProjectCardButton extends BaseComponent {
+    private static readonly BUTTON_TEXT = "To project";
+    private project:any;
+    private clickHandler: () => void;
 
-    static _text = "To project";
-    content: Project;
-    constructor(parent:string, id:string, project:Project) {
-        super(parent, id, project);
-        this.name = "projectButton";
-        this.content = project;
+    constructor(parentId: string, id: string, project:any) {
+        super(parentId, "projectButton", id, project);
+        this.project = project;
+        this.clickHandler = () => {
+            window.location.href = `/project/${this.project.name}`;
+        };
     }
 
-    initiate() {
-        var element = document.createElement("button");
-        element.innerHTML = ProjectCardButton._text;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-        element.addEventListener("click", () => {
-            window.location.href = `/project/${this.content}`;
-        });
+    protected getElementTag(): string {
+        return 'button';
+    }
+
+    protected createElement(): HTMLElement {
+        const element = super.createElement();
+        element.innerHTML = ProjectCardButton.BUTTON_TEXT;
+        return element;
+    }
+
+    protected afterInit(): void {
+        this.addEventListener('click', this.clickHandler);
     }
 }
 
@@ -249,7 +259,7 @@ class ProjectCardText extends TextElement {
 }
 
 class ProjectTitle extends TextElement {
-    constructor(parent:string, id:string, project:Project) {
+    constructor(parent:string, id:string, project:any) {
         super(parent, id, project.name);
         this.name = CLASSNAMES.TITLE;
     }
@@ -275,7 +285,7 @@ class SectionCard extends Card{
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), 
+            let element = new this.elements[e](this.makeId(), 
                                     this.id, 
                                     this._makeText(this.content));
             element.initiate();
@@ -285,6 +295,4 @@ class SectionCard extends Card{
     
 }
 
-
-export {ProjectPanel, ProjectPeriodInfo, ProjectTeam, Recognition}
 

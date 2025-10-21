@@ -1,59 +1,69 @@
-
-class AboutLabel extends CElement {
-    
+/**
+ * About Panel Components
+ * Migrated from about.js to TypeScript with BaseComponent pattern
+ */
+/**
+ * Label/button to open the about panel
+ */
+class AboutLabel extends BaseComponent {
     constructor(parent) {
-        super(parent);
-        this.id = "aboutlabelid";
-        this.name = CLASSNAMES.ABOUT_LABEL;
-        this.parent = parent ? parent : "body";
+        super(parent || "body", ClassName.ABOUT_LABEL, "aboutlabelid");
         this.content = "about";
-
         this.elements = [];
+        this.clickHandler = (e) => {
+            AboutPanel.toggle();
+        };
     }
-
+    /**
+     * Get parent element (handles class name parent selector)
+     */
     getParent() {
-        let elements = document.getElementsByClassName(this.parent);
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
+        return super.getParent();
     }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        element.onclick = (e) => {
-            AboutPanel.toggle();
-
-
-        };
-        this.getParent().appendChild(element);
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.content;
+        return element;
     }
-
+    afterInit() {
+        this.addEventListener('click', this.clickHandler);
+    }
     load() {
+        // No children to load
     }
-
+    /**
+     * Legacy geocoding call method (unused in current implementation)
+     */
     _call(geo) {
-
+        const TopTagPanel = window.TopTagPanel;
+        const GeocodeParser = window.GeocodeParser;
+        if (!TopTagPanel) {
+            return Promise.reject('TopTagPanel not available');
+        }
         let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
-        // fetch(url, )
-
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         return fetch(url, {
             method: "GET",
             headers: { 'Content-Type': 'application/json' },
         }).then(result => {
             if (result.status == 200) {
                 return result.json().then(res => {
-                    document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
+                    const geocodingPanels = document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL);
+                    if (geocodingPanels.length > 0 && GeocodeParser) {
+                        geocodingPanels[0].innerHTML = GeocodeParser.run(res);
+                    }
                     return res;
                 });
             }
             else if (result.status == 429) {
-                return sleep(1000).then(r => { return this.request() });
+                return sleep(1000).then(() => this._call(geo));
             }
             else if (result.status == 504) {
-                return this.request();
+                return this._call(geo);
             }
             else {
                 console.log(`CODE: ${result.status}`);
@@ -62,106 +72,119 @@ class AboutLabel extends CElement {
         });
     }
 }
-
-class AboutPanel extends CElement {
-    
+/**
+ * About panel showing project information
+ */
+class AboutPanel extends BaseComponent {
     constructor(parent) {
-        super(parent);
-        this.id = "id";
-        this.name = CLASSNAMES.ABOUT_PANEL;
-        this.parent = parent ? parent : "body";
-
-        this.elements = [CloseButton,
+        super(parent || "body", ClassName.ABOUT_PANEL, "id");
+        this.elements = [
+            CloseButton,
             AboutDescription,
             AboutLogo,
             AboutText
         ];
-        this.args = [() => { AboutPanel.toggle(); }]
+        this.args = [() => { AboutPanel.toggle(); }];
     }
-
+    /**
+     * Get parent element (handles class name parent selector)
+     */
     getParent() {
-        let elements = document.getElementsByClassName(this.parent);
+        const elements = document.getElementsByClassName(this.parentId);
         if (elements.length > 0) {
             return elements[0];
         }
+        return super.getParent();
     }
-
+    /**
+     * Load child elements and hide panel initially
+     */
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), undefined, e<this.args.length?this.args[e]:undefined);
+            let element = new this.elements[e](this.makeId(), undefined, e < this.args.length ? this.args[e] : undefined);
             element.initiate();
             element.load();
         }
-
-        this.getElement().style.display = "none";
+        const el = this.getElement();
+        if (el) {
+            el.style.display = DisplayStyle.NONE;
+        }
     }
-
+    /**
+     * Toggle about panel visibility
+     */
     static toggle() {
-        let panel = document.getElementById(`${CLASSNAMES.ABOUT_PANEL}_id`);
-        panel.style.display = panel.style.display === "none" ? "flex" : "none";
+        const panel = document.getElementById(`${ClassName.ABOUT_PANEL}_id`);
+        if (panel) {
+            panel.style.display = panel.style.display === DisplayStyle.NONE
+                ? DisplayStyle.FLEX
+                : DisplayStyle.NONE;
+        }
     }
 }
-
-
-class AboutDescription extends CElement {
-    
+/**
+ * Description text for about panel
+ */
+class AboutDescription extends BaseComponent {
     constructor(parent) {
-        super(parent);
-        this.name = CLASSNAMES.ABOUT_DESCRIPTION;
+        super(parent, ClassName.ABOUT_DESCRIPTION);
         this.content = `City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!`;
     }
-
-    load() { }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.content;
+        return element;
+    }
+    load() {
+        // No children to load
     }
 }
-
-class AboutText extends CElement {
-    static _name = CLASSNAMES.ABOUT_TEXT;
+/**
+ * Detailed text content for about panel
+ */
+class AboutText extends BaseComponent {
     constructor(parent) {
-        super(parent);
-        this.content = `City Layers embody the motto “act local to go global” 
-        by relying on citizen mapping as a holistic and inclusive city-making 
-        practice that aims to tackle the contemporary spatial, social and 
+        super(parent, ClassName.ABOUT_TEXT);
+        this.content = `City Layers embody the motto "act local to go global"
+        by relying on citizen mapping as a holistic and inclusive city-making
+        practice that aims to tackle the contemporary spatial, social and
         environmental challenges our cities are facing. <br><br>
 
-        This powerful city mapping app serves as a means of 
-        communication between cities and their citizens, 
-        generating a new type of data that is 
-        collectively generated, managed and cared for. `
+        This powerful city mapping app serves as a means of
+        communication between cities and their citizens,
+        generating a new type of data that is
+        collectively generated, managed and cared for. `;
     }
-
-    load() { }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
+    createElement() {
+        const element = super.createElement();
+        element.innerHTML = this.content;
+        return element;
+    }
+    load() {
+        // No children to load
     }
 }
-
-class AboutLogo extends CElement {
-    
+AboutText._name = ClassName.ABOUT_TEXT;
+/**
+ * Logo image for about panel
+ */
+class AboutLogo extends BaseComponent {
     constructor(parent, category) {
-        super(parent, category);
-        this.name = "aboutlogo";
-        this.content = "/images/about.svg"; // U+02715
+        super(parent, "aboutlogo", category);
+        this.content = "/images/about.svg";
     }
-
-    initiate() {
-        var element = document.createElement("img");
+    getElementTag() {
+        return 'img';
+    }
+    createElement() {
+        const element = document.createElement('img');
         element.src = this.content;
-        element.setAttribute('class', this._name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
+        element.setAttribute('class', this.className);
+        element.setAttribute('id', this.makeId());
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(element);
+        }
+        return element;
     }
 }
-

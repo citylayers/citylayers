@@ -7,9 +7,13 @@
     "preserveConstEnums": true,
     "target": "ES5",
     "outDir": "./dst",
-    "rootDir": "src",
+    "rootDir": "../",
+    "baseUrl": "./",
+    "paths": {
+      "@logic/*": ["../src/logic/*"]
+    }
     // "sourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../src/logic/**/*"],
   "exclude": ["**/*.spec.ts", "node_modules/**/*", "node_modules"]
 }

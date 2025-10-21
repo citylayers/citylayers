@@ -1,29 +1,34 @@
 
-import { CLASSNAMES } from "../../../classnames";
-import {TextElement} from "./textElement";
 
-class LinkElement extends TextElement {
-    link:string;
-    id: string;
-    parent: string;
-    onclick: ()=>{};
-    name: string;
-    constructor(parent:string, id:string, content?:string[]) {
-        super(parent, id, content[0]);
+/**
+ * Link element component for clickable links.
+ * Extends BaseComponent with proper OOP principles.
+ */
+class LinkElement extends BaseComponent {
+    private link: string;
+    private textContent: string;
+
+    constructor(parentId: string, id: string, content: string[]) {
+        super(parentId, ClassName.TEXT, id);
+        this.textContent = content[0];
         this.link = content[1];
     }
 
-    initiate() {
-        let el = document.createElement("a");
-        el.href = this.link;
-        this.getParent().appendChild(el);
-        
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        el.appendChild(element);
+    protected createElement(): HTMLElement {
+        // Create anchor element with text directly inside
+        const anchor = document.createElement("a");
+        anchor.href = this.link;
+        anchor.setAttribute('class', this.className);
+        anchor.setAttribute('id', this.makeId());
+        anchor.innerHTML = this.textContent;
+
+        // Append anchor to parent
+        const parent = this.getParent();
+        if (parent) {
+            parent.appendChild(anchor);
+        }
+
+        return anchor; // Return anchor as the tracked element
     }
 }
 
-export {LinkElement};
