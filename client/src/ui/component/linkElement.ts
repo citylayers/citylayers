@@ -15,25 +15,20 @@ class LinkElement extends BaseComponent {
     }
 
     protected createElement(): HTMLElement {
-        // Create anchor element
+        // Create anchor element with text directly inside
         const anchor = document.createElement("a");
         anchor.href = this.link;
+        anchor.setAttribute('class', this.className);
+        anchor.setAttribute('id', this.makeId());
+        anchor.innerHTML = this.textContent;
 
-        // Create div with content inside anchor
-        const div = document.createElement("div");
-        div.setAttribute('class', this.className);
-        div.setAttribute('id', this.makeId());
-        div.innerHTML = this.textContent;
-
-        anchor.appendChild(div);
-
-        // Append anchor to parent instead of div
+        // Append anchor to parent
         const parent = this.getParent();
         if (parent) {
             parent.appendChild(anchor);
         }
 
-        return div; // Return div as the tracked element
+        return anchor; // Return anchor as the tracked element
     }
 }
 
