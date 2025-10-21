@@ -3,6 +3,7 @@ import { BaseController } from './BaseController';
 import { ProjectService } from '../services/ProjectService';
 import { RoutePath, RouteParser } from '../config/RouteConstants';
 import { ViewTemplate } from '../config/PathConstants';
+import { AuthMiddleware } from '../middleware/AuthMiddleware';
 
 /**
  * Controller for Project-related routes.
@@ -29,9 +30,10 @@ export class ProjectController extends BaseController {
             this.asyncHandler(this.getAllProjects.bind(this))
         );
 
-        // Get projects list (API)
+        // Get projects list (API) - Protected
         this.router.get(
             RoutePath.GET_PROJECTS,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectsList.bind(this))
         );
 
@@ -41,33 +43,38 @@ export class ProjectController extends BaseController {
             this.asyncHandler(this.getProjectDetail.bind(this))
         );
 
-        // Get project team
+        // Get project team (API) - Protected
         this.router.get(
             RoutePath.PROJECT_TEAM,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectTeam.bind(this))
         );
 
-        // Get project illustrations
+        // Get project illustrations (API) - Protected
         this.router.get(
             RoutePath.PROJECT_ILLUSTRATIONS,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectIllustrations.bind(this))
         );
 
-        // Get project partners
+        // Get project partners (API) - Protected
         this.router.get(
             RoutePath.PROJECT_PARTNERS,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectPartners.bind(this))
         );
 
-        // Get project recognitions
+        // Get project recognitions (API) - Protected
         this.router.get(
             RoutePath.PROJECT_RECOGNITIONS,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectRecognitions.bind(this))
         );
 
-        // Get project info
+        // Get project info (API) - Protected
         this.router.get(
             RoutePath.PROJECT_INFO,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.getProjectInfo.bind(this))
         );
     }

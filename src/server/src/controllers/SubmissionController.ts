@@ -4,6 +4,7 @@ import { ObservationService } from '../services/ObservationService';
 import { RoutePath } from '../config/RouteConstants';
 import { ViewTemplate } from '../config/PathConstants';
 import { HttpStatus, HttpMethod, HttpHeader, CorsValue } from '../constants/HttpStatus';
+import { AuthMiddleware } from '../middleware/AuthMiddleware';
 
 /**
  * Controller for data submission routes.
@@ -20,8 +21,10 @@ export class SubmissionController extends BaseController {
     }
 
     private initializeRoutes(): void {
+        // POST /submit - Protected endpoint
         this.router.post(
             RoutePath.SUBMIT,
+            AuthMiddleware.verifyInternalAccess,
             this.asyncHandler(this.submitObservation.bind(this))
         );
     }

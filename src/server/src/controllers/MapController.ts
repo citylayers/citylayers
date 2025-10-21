@@ -3,6 +3,7 @@ import { BaseController } from './BaseController';
 import { ObservationService } from '../services/ObservationService';
 import { RoutePath, RouteParser } from '../config/RouteConstants';
 import { ViewTemplate } from '../config/PathConstants';
+import { AuthMiddleware } from '../middleware/AuthMiddleware';
 
 /**
  * Controller for Map and Pin routes.
@@ -19,13 +20,17 @@ export class MapController extends BaseController {
     }
 
     private initializeRoutes(): void {
+        // GET /pin/:project - Protected (allows browser access, blocks API scraping)
         this.router.get(
             RoutePath.PIN,
+            AuthMiddleware.verifyInternalOrBrowser,
             this.asyncHandler(this.getPinPage.bind(this))
         );
 
+        // GET /map/:project - Protected (allows browser access, blocks API scraping)
         this.router.get(
             RoutePath.MAP,
+            AuthMiddleware.verifyInternalOrBrowser,
             this.asyncHandler(this.getMapPage.bind(this))
         );
     }
