@@ -2,10 +2,8 @@ import { Request, Response, Router } from 'express';
 import { BaseController } from './BaseController';
 import { RoutePath } from '../config/RouteConstants';
 import multer from 'multer';
+import { GCSUpload } from '../utils/gcsUpload';
 
-/**
- * Controller for file upload routes.
- */
 export class UploadController extends BaseController {
     public router: Router;
     private upload: multer.Multer;
@@ -13,7 +11,7 @@ export class UploadController extends BaseController {
     constructor(upload: multer.Multer) {
         super();
         this.upload = upload;
-        this.router = Router();
+        this.router = Router(); 
         this.initializeRoutes();
     }
 
@@ -34,6 +32,7 @@ export class UploadController extends BaseController {
             return;
         }
 
-        this.sendSuccess(res, { content: req.file.filename });
+        const publicUrl = await GCSUpload.uploadFile(req.file);
+        this.sendSuccess(res, { content: publicUrl });
     }
 }

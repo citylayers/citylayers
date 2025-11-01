@@ -16,14 +16,7 @@ export class UploadMiddleware {
     public static initialize(pathConfig: PathConfig): multer.Multer {
         this.pathConfig = pathConfig;
 
-        const storage = multer.diskStorage({
-            destination: (req, file, cb) => {
-                cb(null, this.pathConfig.getUploadDestination());
-            },
-            filename: (req, file, cb) => {
-                cb(null, Date.now() + path.extname(file.originalname));
-            },
-        });
+        const storage = multer.memoryStorage();
 
         const fileFilter = (req, file, cb) => {
             if (FileTypeValidator.isAllowedImageExtension(file.originalname)) {
@@ -33,6 +26,12 @@ export class UploadMiddleware {
             }
         };
 
-        return multer({ storage, fileFilter });
+        return multer({ 
+            storage, 
+            fileFilter,
+            limits: {
+                fileSize: 5 * 1024 * 1024, // 5 mb limit
+            }
+        });
     }
 }
