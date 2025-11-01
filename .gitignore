@@ -36,3 +36,6 @@ npm-debug.log*
 tmp
 temp
 .cache
+
+# GCS 
+gcs-key.json

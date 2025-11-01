@@ -9,6 +9,8 @@ export enum EnvironmentKey {
     NEO4J_URI = 'NEO4J_URI',
     NEO4J_USER = 'NEO4J_USER',
     NEO4J_PWD = 'NEO4J_PWD',
+    GCS_KEY_FILE = 'GCS_KEY_FILE',
+    GCS_BUCKET_NAME = 'GCS_BUCKET_NAME',
 }
 
 /**
